@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>AI 寫作去味指南 · 讓 AI 寫得像人</title>
+<style>
+  :root{--ink:#17201d;--muted:#5e6b66;--paper:#f7f8f5;--panel:#fff;--line:#d8ded8;
+        --green:#1f6b4a;--green-bg:#e8f3ec;--blue:#245b8e;--blue-bg:#eaf1f8;
+        --amber:#9a651e;--amber-bg:#f8efe3;--red:#b5433a;--red-bg:#fcecea;--purple:#6b5bd6;--purple-bg:#efeaff;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:-apple-system,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+       background:var(--paper);color:var(--ink);line-height:1.7;}
+  .page{max-width:960px;margin:0 auto;padding:40px 30px 90px;}
+  .hero{padding:26px 0 20px;border-bottom:3px solid var(--green);margin-bottom:10px;}
+  .eyebrow{display:inline-block;padding:4px 12px;border-radius:999px;background:var(--green-bg);color:var(--green);font-size:13px;font-weight:800;margin-bottom:12px;}
+  h1{font-size:32px;line-height:1.2;letter-spacing:-.5px;}
+  .hero .sub{font-size:16px;color:#31413b;margin-top:12px;}
+  h2{font-size:23px;color:var(--green);margin:34px 0 8px;padding-top:22px;border-top:1px solid var(--line);display:flex;align-items:center;gap:10px;}
+  h2 .n{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:9px;background:var(--green);color:#fff;font-size:17px;font-weight:800;flex:none;}
+  h3{font-size:18px;margin:18px 0 6px;color:#26362f;}
+  p{margin:8px 0;} .intro{color:#31413b;font-size:15.5px;margin:6px 0;}
+  ul,ol{margin:8px 0 8px 22px;} li{margin-bottom:6px;} b{color:#17201d;}
+  .why{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0;}
+  .whyc{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;border-top:5px solid var(--purple);}
+  .whyc h4{font-size:16px;color:var(--purple);margin-bottom:4px;} .whyc p{font-size:14px;color:#3a463f;}
+  table{width:100%;border-collapse:collapse;margin:14px 0;background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  th,td{padding:10px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;font-size:14.5px;}
+  th{background:#eef3ef;font-size:13.5px;color:#283731;} tr:last-child td{border-bottom:0;}
+  .ba td.sym{font-weight:700;width:20%;}
+  .ba td.bad{background:var(--red-bg);color:#7a2f28;width:40%;} .ba td.good{background:var(--green-bg);color:#1c5238;width:40%;}
+  .ba .lbl{display:block;font-size:12px;font-weight:800;margin-bottom:2px;opacity:.8;}
+  .prompt{position:relative;background:#0f1a16;color:#e7f0ea;border-radius:10px;padding:17px 20px;margin:12px 0 14px;font-size:14.5px;line-height:1.7;white-space:pre-wrap;font-family:"Noto Sans TC","Microsoft JhengHei",monospace;}
+  .prompt .lbl{position:absolute;top:-11px;left:14px;background:var(--green);color:#fff;font-size:12px;font-weight:800;padding:2px 10px;border-radius:6px;}
+  .prompt .v{color:#ffd98a;}
+  .callout{background:var(--amber-bg);border-left:5px solid var(--amber);border-radius:0 8px 8px 0;padding:12px 16px;margin:10px 0;font-size:14.5px;} .callout b{color:var(--amber);}
+  .callout.b{background:var(--blue-bg);border-left-color:var(--blue);} .callout.b b{color:var(--blue);}
+  .callout.r{background:var(--red-bg);border-left-color:var(--red);} .callout.r b{color:var(--red);}
+  .steps{counter-reset:st;margin:12px 0;}
+  .steps>li{counter-increment:st;list-style:none;position:relative;padding-left:52px;margin-bottom:16px;}
+  .steps>li::before{content:counter(st);position:absolute;left:0;top:0;width:36px;height:36px;border-radius:9px;background:var(--green);color:#fff;font-size:18px;font-weight:800;display:grid;place-items:center;}
+  .steps h3{margin:2px 0 4px;}
+  .foot{margin-top:44px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px;text-align:center;}
+  @media (max-width:720px){.why{grid-template-columns:1fr;}}
+  @media print{body{background:#fff;font-size:12.5px;}.page{max-width:none;padding:0 6mm;}h2{break-inside:avoid;}
+    .box,.prompt,.callout,table,.whyc{break-inside:avoid;}.prompt{background:#f2f5f2;color:#17201d;border:1px solid #c9d2cb;}
+    .prompt .lbl{background:#1f6b4a;}.prompt .v{color:#9a651e;font-weight:700;}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hero">
+    <span class="eyebrow">寫作實用 · 可照抄 · 可列印</span>
+    <h1>AI 寫作去味指南：讓 AI 寫得像人</h1>
+    <div class="sub">AI 寫的東西,常常一看就知道「不是人寫的」。這份手冊教你辨認 8 個「AI 味」症狀,並用一套流程 + 可照抄的改寫提示詞,把它改回自然、像真人的文字。</div>
+  </div>
+
+  <!-- 0 為什麼 -->
+  <h2><span class="n">0</span>為什麼 AI 寫的東西「有味道」?</h2>
+  <p class="intro">先懂原因,才知道怎麼改。AI 的文字會「有味」,主要來自三件事:</p>
+  <div class="why">
+    <div class="whyc"><h4>① 它挑「最安全」的字</h4><p>AI 是猜「下一個最可能的字」。最可能=最普通,所以文字四平八穩、沒有個性,像官樣文章。</p></div>
+    <div class="whyc"><h4>② 它被訓練成「討好」</h4><p>為了讓人覺得「寫得好」,它愛用華麗詞、排比、每段收一個漂亮結論 —— 久了就變成套路。</p></div>
+    <div class="whyc"><h4>③ 中文特有的毛病</h4><p>中文語料裡公文、翻譯腔多,AI 就跟著堆名詞、用抽象主詞、塞成語口號,讀起來很「公家」。</p></div>
+  </div>
+  <div class="callout"><b>結論:</b>「去 AI 味」不是要它寫得花俏,而是把<b>空泛換成具體、把套路換成自然</b> —— 讓文字有重點、有人味。</div>
+
+  <!-- 1 症狀對照表 -->
+  <h2><span class="n">1</span>八個「AI 味」症狀對照表（附前後範例）</h2>
+  <p class="intro">下面每一列:左邊是症狀,中間 ❌ 是常見的 AI 寫法,右邊 ✅ 是改成人味的樣子。看熟這 8 個,你一眼就能抓出 AI 味。</p>
+
+  <h3>通用症狀（中英文都會有）</h3>
+  <table class="ba">
+    <tr><th>症狀</th><th>❌ 一看就 AI</th><th>✅ 改成人味</th></tr>
+    <tr><td class="sym">套路連接詞</td><td class="bad"><span class="lbl">濫用</span>這不僅提升了效率,而且改善了體驗。值得注意的是,它也降低了成本。</td><td class="good"><span class="lbl">拿掉</span>效率變好了,用起來更順,成本也降下來。</td></tr>
+    <tr><td class="sym">萬用空泛形容詞</td><td class="bad"><span class="lbl">空</span>這是一個強大且卓越的解決方案,能帶來全面的效益。</td><td class="good"><span class="lbl">改具體</span>這個做法把原本 3 天的流程,縮到 1 小時。</td></tr>
+    <tr><td class="sym">每段硬加結論</td><td class="bad"><span class="lbl">廢話收尾</span>…(講完重點後)綜上所述,這是一個值得我們持續關注的重要趨勢。</td><td class="good"><span class="lbl">直接刪</span>…(講完重點,就停,不用再總結一次)</td></tr>
+    <tr><td class="sym">破折號/冒號濫用</td><td class="bad"><span class="lbl">戲劇化</span>AI —— 一個改變世界的工具 —— 正重塑我們的一切。</td><td class="good"><span class="lbl">說白話</span>AI 正在改變我們的工作方式。</td></tr>
+    <tr><td class="sym">過度排比</td><td class="bad"><span class="lbl">三句一組</span>它能提升效率、它能節省成本、它能優化體驗。</td><td class="good"><span class="lbl">長短交錯</span>它能省成本,最有感的是效率 —— 做同一件事快了一半。</td></tr>
+  </table>
+
+  <h3>中文特有症狀</h3>
+  <table class="ba">
+    <tr><th>症狀</th><th>❌ 一看就 AI</th><th>✅ 改成人味</th></tr>
+    <tr><td class="sym">名詞堆疊</td><td class="bad"><span class="lbl">公文腔</span>進行客戶滿意度提升相關作業之推動。</td><td class="good"><span class="lbl">動詞化</span>想辦法讓客戶更滿意。</td></tr>
+    <tr><td class="sym">抽象主詞</td><td class="bad"><span class="lbl">沒有人</span>本專案之執行將帶來顯著效益。</td><td class="good"><span class="lbl">回到人</span>做完這個專案,你每週能省 5 小時。</td></tr>
+    <tr><td class="sym">成語/口號填充</td><td class="bad"><span class="lbl">湊字</span>我們秉持精益求精的精神,全力以赴打造卓越品質。</td><td class="good"><span class="lbl">講事實</span>我們每批都抽檢,不良品直接退。</td></tr>
+  </table>
+  <div class="callout b"><b>快速自測:</b>把文章讀出聲。凡是「講出來會覺得肉麻或很像在念稿」的句子,幾乎都是 AI 味,優先改它。</div>
+
+  <!-- 2 三階段流程 -->
+  <h2><span class="n">2</span>三階段實戰流程</h2>
+  <ol class="steps">
+    <li><h3>自我檢查:先抓出 AI 味</h3><p>用上面 8 個症狀掃一遍,或直接請 AI 幫你標:「請幫我找出這段文字裡『看起來像 AI 寫的』地方,標出來並說明原因,先不要改。」</p></li>
+    <li><h3>改寫:一次改一類</h3><p>用下一段的「去 AI 味改寫 prompt」讓 AI 改;或自己照症狀逐項修。重點:先去套路詞和空泛形容詞,效果最明顯。</p></li>
+    <li><h3>內化:寫成你的「風格說明」</h3><p>把你要的風格(例:口語、短句、少形容詞、不要總結句)寫成一小段,以後每次叫 AI 寫都附上它 —— 從此不用每次重改。</p></li>
+  </ol>
+
+  <!-- 3 改寫 prompt -->
+  <h2><span class="n">3</span>萬用「去 AI 味」改寫提示詞（照抄）</h2>
+  <span style="display:inline-block;background:var(--purple-bg);color:var(--purple);font-size:13px;font-weight:800;border-radius:999px;padding:3px 12px;">主力提示詞</span>
+  <div class="prompt"><span class="lbl">照抄 · 換黃字</span>請幫我改寫下面這段文字,目標是「讀起來像真人寫的,不像 AI」:
+<span class="v">【把要改的文字貼在這裡】</span>
+
+改寫規則:
+1. 刪掉套路連接詞(不僅…而且、值得注意的是、綜上所述、總而言之)。
+2. 空泛形容詞(強大、卓越、全面、多元)換成具體事實或數字。
+3. 每段結尾若是「廢話總結句」就刪掉。
+4. 少用破折號和排比;句子長短交錯,別每句一樣長。
+5. 公文腔/翻譯腔改成口語,像跟同事說話。
+6. 把抽象主詞換回「人」(我們、你、團隊)。
+
+保留原意和專業度,不要變得太隨便。繁體中文。</div>
+  <h3>單項小提示詞（想局部微調時用）</h3>
+  <div class="prompt"><span class="lbl">只去套路詞</span>幫我把這段裡「不僅…而且、值得注意的是、綜上所述」這類套話拿掉,句子重寫得自然一點,意思不變:<span class="v">【貼上】</span></div>
+  <div class="prompt"><span class="lbl">空泛變具體</span>這段太空泛,幫我把「強大、卓越、有效」這種形容詞,改成具體的例子、數字或動作:<span class="v">【貼上】</span></div>
+
+  <!-- 4 提醒 -->
+  <h2><span class="n">4</span>兩個一定要知道的提醒</h2>
+  <div class="callout r"><b>① AI 偵測器不可盡信:</b>市面上「AI 偵測工具」<b>誤判率很高</b> —— 真人認真寫的文章也常被判成 AI。不要因為偵測分數就否定內容,也別用它來「抓人」。</div>
+  <div class="callout"><b>② 潤稿 ≠ 造假:</b>把 AI 初稿改得更像人、更好讀,是<b>正當的編輯</b>。但如果目的是「規避抄襲/AI 偵測去交作業、造假論文」,那就踩線了 —— 這份手冊是幫你「寫得更好」,不是幫你「騙過檢查」。</div>
+
+  <!-- 結論 -->
+  <h2><span class="n">5</span>結論:把「AI 初稿」當草稿,不是成品</h2>
+  <p class="intro">AI 很會生「四平八穩的草稿」,但那只是起點。真正讓文字有價值的,是你加進去的<b>具體事實、真實例子、和你自己的觀點</b>。</p>
+  <p class="intro"><b>最快的習慣:</b>AI 寫完後,做三件事就好 —— 刪套路詞、空泛換具體、砍掉每段的總結句。光這三招,AI 味就去掉一大半。</p>
+  <div class="callout"><b>一句話:</b>不是不要用 AI,而是「AI 出草稿、你出人味」。</div>
+
+  <div class="foot">ECOxSTRAT 全感生態策略 · 企業 AI 知識化應用 · AI 寫作去味指南</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>用 AI 做出你的網站／系統（簡報版）</title>
+<style>
+  :root{
+    --cream:#f7f1e6;--panel:#fffdf8;--ink:#2b2545;--muted:#6b647e;--line:#e6ddcb;
+    --c1:#6b5bd6;--c1b:#efeaff;--c2:#e0842c;--c2b:#fce6cf;--c3:#2aa198;--c3b:#d9f2ef;
+    --c4:#d6608a;--c4b:#fbe3ec;--c5:#3b7dd8;--c5b:#e2edfb;--c6:#59a83f;--c6b:#e4f3dc;
+    --note:#fdf1b8;--term:#1b2233;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{font-family:-apple-system,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+       background:#e6e2d6;overflow:hidden;color:var(--ink);}
+  .stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+         background:radial-gradient(circle at 50% 20%,#f3ecdd,#ddd6c7 95%);}
+  .deck{position:relative;width:min(100vw,177.78vh);height:min(56.25vw,100vh);
+        background:var(--cream);border:1px solid var(--line);border-radius:18px;
+        box-shadow:0 22px 60px rgba(0,0,0,.24);overflow:hidden;container-type:size;}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;padding:5% 6%;}
+  .slide.active{display:flex;animation:fade .28s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .tag{display:inline-flex;align-items:center;gap:1cqw;font-size:2.5cqh;font-weight:800;
+       color:var(--c1);background:var(--c1b);padding:.7cqh 1.8cqw;border-radius:999px;width:max-content;}
+  .tag.a{color:var(--c2);background:var(--c2b);} .tag.b{color:var(--c5);background:var(--c5b);}
+  .badge{position:absolute;top:6%;right:6%;padding:1cqh 2cqw;border-radius:999px;font-weight:800;
+         font-size:2.6cqh;background:#fff;box-shadow:0 6px 16px rgba(0,0,0,.12);}
+  .badge.a{color:var(--c2);border:.4cqh solid var(--c2);} .badge.b{color:var(--c5);border:.4cqh solid var(--c5);}
+  h1{font-size:8cqh;font-weight:800;line-height:1.12;margin-top:2cqh;}
+  h1 .hl{color:var(--c2);} h1 .p{color:var(--c1);}
+  .sub{font-size:3.5cqh;color:#4a4463;margin-top:2.2cqh;font-weight:400;line-height:1.5;max-width:88%;}
+  h2{font-size:5.6cqh;font-weight:800;line-height:1.14;margin:1.1cqh 0 1cqh;}
+  h2 .hl{color:var(--c2);}
+  .lead{font-size:3.3cqh;color:#4a4463;line-height:1.45;} .lead b{color:var(--c1);}
+  .row{display:flex;gap:3cqw;align-items:center;} .col{flex:1;min-width:0;}
+  .bot{width:20cqh;height:auto;flex:none;}
+  .sticky{background:var(--note);border-radius:1.2cqh;padding:2.2cqh 2.4cqw;font-size:2.9cqh;line-height:1.5;
+          color:#7a5a12;font-weight:600;box-shadow:0 8px 18px rgba(0,0,0,.12);transform:rotate(2.5deg);
+          position:relative;max-width:32cqw;}
+  .sticky::before{content:"";position:absolute;top:-1.2cqh;left:50%;transform:translateX(-50%);
+          width:9cqw;height:2.4cqh;background:rgba(214,96,138,.5);border-radius:.4cqh;}
+  .sticky .hb{color:#c0392b;}
+  /* 兩種選擇 / 卡片 */
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:2.4cqw;margin-top:1.4cqh;}
+  .tcard{border-radius:1.8cqh;padding:2.6cqh 2cqw;border:2px solid;}
+  .tcard.A{background:var(--c2b);border-color:var(--c2);} .tcard.B{background:var(--c5b);border-color:var(--c5);}
+  .tcard .e{font-size:4cqh;} .tcard h3{font-size:3.6cqh;margin:.5cqh 0;} .tcard h3 .lv{font-size:2.4cqh;}
+  .tcard p{font-size:2.7cqh;line-height:1.4;color:#4a4463;} .tcard p b{color:var(--ink);}
+  .flow{display:flex;align-items:center;justify-content:center;gap:.6cqw;margin-top:2.4cqh;}
+  .fstep{flex:1;background:#fff;border:1px solid var(--line);border-radius:1.4cqh;padding:1.5cqh .6cqw;text-align:center;box-shadow:0 3px 10px rgba(0,0,0,.05);}
+  .fstep .e{font-size:3.2cqh;} .fstep .t{font-size:2.3cqh;font-weight:700;margin-top:.3cqh;}
+  .farrow{color:var(--c2);font-size:3cqh;font-weight:800;}
+  .rules{list-style:none;margin-top:1.2cqh;}
+  .rules li{font-size:3.3cqh;line-height:1.3;margin-bottom:1.5cqh;padding-left:5.5cqh;position:relative;}
+  .rules li b{color:var(--c1);}
+  .rules li .rn{position:absolute;left:0;top:0;width:4cqh;height:4cqh;border-radius:50%;background:var(--c1);color:#fff;
+                font-size:2.4cqh;font-weight:800;display:grid;place-items:center;}
+  .rules small{display:block;font-size:2.5cqh;color:var(--muted);margin-top:.1cqh;}
+  .term{position:relative;background:var(--term);color:#e9f0f7;border-radius:1.6cqh;
+        padding:3.4cqh 3cqw 2.8cqh;font-size:2.7cqh;line-height:1.5;white-space:pre-wrap;box-shadow:0 10px 28px rgba(0,0,0,.2);}
+  .termbar{position:absolute;top:1.4cqh;left:2cqw;display:flex;gap:1cqw;}
+  .td{width:1.6cqh;height:1.6cqh;border-radius:50%;}
+  .term .hd{color:#ffcf6e;font-weight:800;margin-bottom:1cqh;display:block;}
+  .term .v{color:#ffd98a;} .term .ok{color:#8ff0c2;font-weight:800;} .term .done{color:#ffcf6e;font-weight:800;}
+  .browser{border:1px solid var(--line);border-radius:1.4cqh;overflow:hidden;box-shadow:0 10px 26px rgba(0,0,0,.16);background:#fff;}
+  .bbar{background:#eee9dd;padding:1.1cqh 1.4cqw;display:flex;align-items:center;gap:.8cqw;}
+  .bdot{width:1.4cqh;height:1.4cqh;border-radius:50%;}
+  .burl{flex:1;background:#fff;border-radius:.8cqh;padding:.4cqh 1.2cqw;font-size:1.9cqh;color:var(--muted);}
+  .pnav{display:flex;justify-content:space-between;padding:1.4cqh 1.8cqw;font-size:2.1cqh;align-items:center;}
+  .pnav .b{font-weight:800;color:var(--c1);} .pnav span b{font-weight:400;margin-left:1.4cqw;color:#6b647e;}
+  .phero{background:linear-gradient(135deg,#4b3fa0,#6b5bd6);color:#fff;padding:3.2cqh 1.8cqw;}
+  .phero .h{font-size:4cqh;font-weight:800;} .phero .d{font-size:2.3cqh;opacity:.92;margin-top:.5cqh;}
+  .phero .btn{display:inline-block;margin-top:1.3cqh;background:#fff;color:var(--c1);font-weight:800;font-size:2.1cqh;padding:.8cqh 2cqw;border-radius:.9cqh;}
+  .checklist{list-style:none;margin-top:.6cqh;}
+  .checklist li{font-size:3cqh;line-height:1.3;margin-bottom:1.3cqh;padding-left:4.6cqh;position:relative;}
+  .checklist li::before{content:"✓";position:absolute;left:0;top:0;color:#fff;background:var(--c6);
+     width:3.4cqh;height:3.4cqh;border-radius:50%;font-size:2.1cqh;font-weight:800;display:grid;place-items:center;}
+  .fbox3{display:flex;align-items:center;justify-content:center;gap:1.6cqw;margin-top:2.6cqh;}
+  .fb{flex:1;background:var(--c1b);border:2px solid var(--c1);border-radius:1.8cqh;padding:2.8cqh 1cqw;text-align:center;}
+  .fb .t{font-size:4cqh;font-weight:800;color:var(--c1);} .fb .d{font-size:2.5cqh;color:#4a4463;margin-top:.6cqh;}
+  .spec{display:grid;grid-template-columns:1fr 1fr;gap:1.3cqh 3cqw;margin-top:1.6cqh;}
+  .si{font-size:3.1cqh;line-height:1.3;} .si b{color:var(--c5);} .si small{color:var(--muted);font-size:2.4cqh;}
+  .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6cqh 2.2cqw;margin-top:1.2cqh;}
+  .gc{background:#fff;border:1px solid var(--line);border-radius:1.6cqh;padding:2.2cqh 1.8cqw;box-shadow:0 3px 10px rgba(0,0,0,.05);}
+  .gc .e{font-size:3.2cqh;} .gc h3{font-size:2.9cqh;margin:.4cqh 0;} .gc p{font-size:2.4cqh;color:var(--muted);line-height:1.3;}
+  .steps{counter-reset:st;margin-top:1cqh;}
+  .steps li{counter-increment:st;list-style:none;font-size:3.2cqh;line-height:1.3;margin-bottom:1.5cqh;padding-left:6cqh;position:relative;}
+  .steps li::before{content:counter(st);position:absolute;left:0;top:0;width:4.4cqh;height:4.4cqh;border-radius:50%;
+     background:var(--c1);color:#fff;font-size:2.6cqh;font-weight:800;display:grid;place-items:center;}
+  .steps b{color:var(--c1);}
+  .callout{margin-top:1.4cqh;background:var(--c2b);border-left:.7cqh solid var(--c2);border-radius:0 1.4cqh 1.4cqh 0;
+           padding:1.8cqh 2.2cqw;font-size:2.9cqh;line-height:1.4;} .callout b{color:var(--c2);}
+  .src{position:absolute;left:6%;bottom:2.6%;font-size:1.9cqh;color:var(--muted);opacity:.8;}
+  .pg{position:fixed;left:50%;bottom:13px;transform:translateX(-50%);font-size:13px;color:#6b647e;}
+  .nav{position:fixed;bottom:10px;right:16px;display:flex;gap:8px;z-index:5;}
+  .nav button{border:0;cursor:pointer;background:rgba(107,91,214,.16);color:var(--c1);font-size:22px;width:48px;height:40px;border-radius:9px;font-weight:800;}
+  .nav button:hover{background:rgba(107,91,214,.32);}
+</style>
+</head>
+<body>
+<div class="stage"><div class="deck">
+
+  <!-- 1 封面 -->
+  <section class="slide active" style="justify-content:center;">
+    <div class="tag">🤖 動手做 · AI 幫你寫程式</div>
+    <div class="row" style="margin-top:2cqh;">
+      <div class="col">
+        <h1>用 <span class="p">AI</span> 做出<br><span class="hl">你的網站或系統</span> ✦</h1>
+        <div class="sub">不用會寫程式 —— 把需求講清楚,整段貼給 AI,一步步做出來,最後放上網路。</div>
+      </div>
+      <svg class="bot" viewBox="0 0 120 130" xmlns="http://www.w3.org/2000/svg">
+        <line x1="60" y1="10" x2="60" y2="24" stroke="#6b5bd6" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="60" cy="9" r="5.5" fill="#e0842c"/>
+        <rect x="20" y="22" width="80" height="60" rx="18" fill="#fff" stroke="#6b5bd6" stroke-width="4"/>
+        <circle cx="44" cy="50" r="8.5" fill="#2b2545"/><circle cx="76" cy="50" r="8.5" fill="#2b2545"/>
+        <circle cx="46.5" cy="47.5" r="2.6" fill="#fff"/><circle cx="78.5" cy="47.5" r="2.6" fill="#fff"/>
+        <path d="M46 66 Q60 76 74 66" stroke="#6b5bd6" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <rect x="32" y="86" width="56" height="36" rx="12" fill="#6b5bd6"/>
+        <rect x="41" y="96" width="38" height="22" rx="4" fill="#1b2233"/>
+        <text x="60" y="111" font-size="12" fill="#8ff0c2" text-anchor="middle" font-family="monospace">&lt;/&gt;</text>
+      </svg>
+    </div>
+    <div class="src">教學流程啟發來源:Threads @smartwork_ai_tips;本教材為 ECOxSTRAT 原創改編,範例與圖示皆自製。</div>
+  </section>
+
+  <!-- 2 兩種選擇 + 流程 -->
+  <section class="slide">
+    <div class="tag">先決定 · 你要做哪一種</div>
+    <h2>兩條路線,<span class="hl">通用一套流程</span></h2>
+    <div class="two">
+      <div class="tcard A"><div class="e">🌐</div><h3>A 展示型網站 <span class="lv">(最簡單)</span></h3><p>作品集、商家一頁式介紹。<br><b>一段 prompt 就生出來。</b></p></div>
+      <div class="tcard B"><div class="e">🗂️</div><h3>B 功能型系統 <span class="lv">(進階)</span></h3><p>打卡、表單、產品管理。<br><b>有登入、能記資料,分步驟做。</b></p></div>
+    </div>
+    <div class="flow">
+      <div class="fstep"><div class="e">💬</div><div class="t">描述需求</div></div><div class="farrow">→</div>
+      <div class="fstep"><div class="e">🤖</div><div class="t">AI 生成</div></div><div class="farrow">→</div>
+      <div class="fstep"><div class="e">🖥️</div><div class="t">預覽</div></div><div class="farrow">→</div>
+      <div class="fstep"><div class="e">🔧</div><div class="t">微調</div></div><div class="farrow">→</div>
+      <div class="fstep"><div class="e">🌐</div><div class="t">上線</div></div>
+    </div>
+  </section>
+
+  <!-- 3 五條鐵則 -->
+  <section class="slide">
+    <div class="tag">開始前 · 五條鐵則</div>
+    <h2>兩條路線<span class="hl">都適用</span></h2>
+    <ul class="rules">
+      <li><span class="rn">1</span><b>只做「單一 HTML 檔」</b><small>叫 AI 把程式全寫在一個 .html 檔,雙擊就能開,不裝任何工具。</small></li>
+      <li><span class="rn">2</span><b>要登入就用「假登入」</b><small>帳號資料都存瀏覽器(localStorage),不碰後端資料庫。</small></li>
+      <li><span class="rn">3</span><b>一次只做一步</b><small>照步驟一步做完、確認 OK,再進下一步。</small></li>
+      <li><span class="rn">4</span><b>每次存成新檔名</b><small>v1、v2… 壞了可退回上一版;每次都要 AI 給「完整檔」。</small></li>
+    </ul>
+  </section>
+
+  <!-- 4 Track A 描述需求 -->
+  <section class="slide">
+    <div class="badge a">路線 A · 展示網站</div>
+    <div class="tag a">💬 一段 prompt 搞定</div>
+    <h2>描述清楚,<span class="hl">網站立刻生出來</span></h2>
+    <div class="row">
+      <div class="col">
+        <div class="term"><span class="termbar"><span class="td" style="background:#ff5f57"></span><span class="td" style="background:#febc2e"></span><span class="td" style="background:#28c840"></span></span><span class="hd">整段貼給 AI</span>請幫我做一個<span class="v">個人作品集網站</span>,用<span class="v">單一 HTML 檔</span>(HTML+CSS+JS 都在裡面)。
+需求:① 首頁 Hero(名字+自我介紹)② 關於我 ③ 作品集 ④ 聯絡我。
+風格:<span class="v">簡約、現代、藍色系</span>;要響應式(手機也好看)、加平滑捲動。
+完成後給我完整、可直接執行的檔案。請開始!</div>
+      </div>
+      <div class="sticky">越清楚描述,<br>AI 越能生出<br>你要的<span class="hb">完美網站</span>!💜</div>
+    </div>
+    <div class="callout"><b>四個關鍵:</b>說清楚功能 · 指定風格配色 · 提醒響應式 · 要求完整檔案。</div>
+  </section>
+
+  <!-- 5 Track A 預覽 -->
+  <section class="slide">
+    <div class="badge a">路線 A · 展示網站</div>
+    <div class="tag a">🖥️ 幾分鐘後</div>
+    <h2>網站<span class="hl">就長出來了</span></h2>
+    <div class="row">
+      <div class="col" style="flex:1.25;">
+        <div class="browser">
+          <div class="bbar"><span class="bdot" style="background:#ff5f57"></span><span class="bdot" style="background:#febc2e"></span><span class="bdot" style="background:#28c840"></span><span class="burl">my-portfolio.netlify.app</span></div>
+          <div class="pnav"><span class="b">My Portfolio</span><span><b>首頁</b><b>關於我</b><b>作品集</b><b>聯絡我</b></span></div>
+          <div class="phero"><div class="h">Hi, 我是 小美 👋</div><div class="d">網頁設計師 / 熱愛把想法變成畫面</div><span class="btn">看我的作品 →</span></div>
+        </div>
+      </div>
+      <div class="col">
+        <ul class="checklist"><li>首頁 Hero 區塊</li><li>關於我 / 作品集</li><li>聯絡我</li><li>RWD 響應式</li><li>可直接上線</li></ul>
+      </div>
+    </div>
+    <div class="lead" style="margin-top:1cqh;">不滿意?再補一句「<b>顏色換暖色 / 字大一點</b>」,它就幫你改。</div>
+  </section>
+
+  <!-- 6 Track B 三選一 + 骨架 -->
+  <section class="slide">
+    <div class="badge b">路線 B · 功能系統</div>
+    <div class="tag b">🗂️ 有登入、能記資料</div>
+    <h2>三選一,<span class="hl">同一個骨架</span></h2>
+    <div class="two" style="grid-template-columns:repeat(3,1fr);">
+      <div class="tcard B" style="background:#fff;border-color:var(--line);"><div class="e">🕒</div><h3 style="font-size:3cqh;">打卡系統</h3><p style="font-size:2.4cqh;">出勤、簽到、拜訪</p></div>
+      <div class="tcard B" style="background:#fff;border-color:var(--line);"><div class="e">📝</div><h3 style="font-size:3cqh;">表單系統</h3><p style="font-size:2.4cqh;">報修、回饋、報名</p></div>
+      <div class="tcard B" style="background:#fff;border-color:var(--line);"><div class="e">📦</div><h3 style="font-size:3cqh;">產品管理</h3><p style="font-size:2.4cqh;">商品、庫存清單</p></div>
+    </div>
+    <div class="fbox3">
+      <div class="fb"><div class="t">登入</div><div class="d">帳密進首頁</div></div>
+      <div class="farrow" style="font-size:4cqh;">→</div>
+      <div class="fb"><div class="t">新增一筆</div><div class="d">填欄位、存起來</div></div>
+      <div class="farrow" style="font-size:4cqh;">→</div>
+      <div class="fb"><div class="t">看清單</div><div class="d">列出、可刪除</div></div>
+    </div>
+  </section>
+
+  <!-- 7 Track B 規格單 -->
+  <section class="slide">
+    <div class="badge b">路線 B · 功能系統</div>
+    <div class="tag b">📋 先想清楚 5 件事</div>
+    <h2>填完再開口,<span class="hl">成功率翻倍</span></h2>
+    <div class="spec">
+      <div class="si"><b>① 系統名稱</b><small>例:員工打卡系統</small></div>
+      <div class="si"><b>② 使用者是誰</b><small>例:公司內部同仁</small></div>
+      <div class="si"><b>③ 一筆資料的欄位 ★</b><small>例:姓名、日期時間、地點、備註</small></div>
+      <div class="si"><b>④ 首頁顯示什麼</b><small>例:今天已打卡名單</small></div>
+      <div class="si"><b>⑤ 風格色系</b><small>例:乾淨專業、藍白色</small></div>
+    </div>
+    <div class="callout" style="background:var(--c5b);border-left-color:var(--c5);"><b style="color:var(--c5);">③ 欄位</b>是你和別人最不一樣的地方 —— 它決定了系統做什麼。</div>
+  </section>
+
+  <!-- 8 Track B Step 1 -->
+  <section class="slide">
+    <div class="badge b">路線 B · Step 1</div>
+    <div class="tag b">🧱 做出骨架</div>
+    <h2>註冊 → 登入 → 首頁</h2>
+    <div class="term"><span class="termbar"><span class="td" style="background:#ff5f57"></span><span class="td" style="background:#febc2e"></span><span class="td" style="background:#28c840"></span></span><span class="hd">整段貼給 AI</span>請用「單一 HTML 檔」做一個<span class="v">員工打卡系統</span>,規則完全照做:
+1. HTML、CSS、JavaScript 全寫在同一個 .html 檔,瀏覽器打開就能執行,不用任何需安裝的工具。
+2. 純前端,不要後端或資料庫;帳號和資料都存 localStorage,重整後要保留。
+3. 介面全繁體中文,簡潔易讀,手機和電腦都好看(RWD)。
+4. 這步只做三個畫面:註冊(輸入帳密→存起來→提示成功)、登入(正確進首頁,錯誤顯示紅字)、首頁(顯示「歡迎,○○」和登出鈕)。
+5. 直接給我完整、可馬上執行的 HTML 檔,不要只給片段。</div>
+  </section>
+
+  <!-- 9 Track B Step 2 -->
+  <section class="slide">
+    <div class="badge b">路線 B · Step 2</div>
+    <div class="tag b">➕ 加核心功能</div>
+    <h2>新增一筆 ＋ 看清單</h2>
+    <div class="term"><span class="termbar"><span class="td" style="background:#ff5f57"></span><span class="td" style="background:#febc2e"></span><span class="td" style="background:#28c840"></span></span><span class="hd">整段貼給 AI</span>很好,請在「同一個 HTML 檔」上繼續加功能,已完成的不要改壞:
+1. 首頁加一個表單,新增一筆<span class="v">打卡紀錄</span>,欄位:<span class="v">姓名、日期時間、地點、備註</span>。
+2. 按「送出」後存進 localStorage,並清空表單。
+3. 首頁下方用表格列出所有紀錄,最新的排最上面。
+4. 每筆後面加「刪除」按鈕,點了刪掉該筆並更新畫面。
+5. 重整頁面後資料要還在。
+請給我完整、可直接執行的 HTML 檔。</div>
+  </section>
+
+  <!-- 10 Track B Step 3+4 -->
+  <section class="slide">
+    <div class="badge b">路線 B · Step 3 & 4</div>
+    <div class="tag b">🎨 美化 ＋ 加分</div>
+    <h2>先變好看,<span class="hl">再加分功能</span></h2>
+    <div class="row">
+      <div class="col">
+        <div class="term"><span class="hd">Step 3 · 美化(不改功能)</span>只調整外觀,不動功能:風格<span class="v">乾淨專業、藍白色</span>;加標題列、圓角、間距;按鈕輸入框加大;表格加斑馬紋;手機也好看。給我完整檔。</div>
+      </div>
+      <div class="col">
+        <div class="term"><span class="hd">Step 4 · 加分(三選一)</span>加一個功能,不改壞現有的:
+‧ 統計:顯示「今天幾筆 / 總筆數」
+‧ 搜尋:關鍵字即時篩選
+‧ 匯出:下載 CSV
+我選:<span class="v">統計</span>。給我完整檔。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 除錯 -->
+  <section class="slide">
+    <div class="tag">🔧 卡住了怎麼辦</div>
+    <h2>會<span class="hl">除錯</span>才是真本事</h2>
+    <div class="term"><span class="termbar"><span class="td" style="background:#ff5f57"></span><span class="td" style="background:#febc2e"></span><span class="td" style="background:#28c840"></span></span><span class="hd">出問題就貼這段</span>出現問題了。狀況是:<span class="v">（描述畫面怎麼了,或按 F12 → Console,把紅色錯誤訊息整段貼上）</span>
+請只修這個問題,不要更動其他已經正常的功能;修好後給我「完整的」HTML 檔,不要只給片段。</div>
+    <div class="callout"><b>三句心法:</b>一次只改一件事 · 講清楚哪裡壞 · 每次都要完整檔案。</div>
+  </section>
+
+  <!-- 12 部署 -->
+  <section class="slide">
+    <div class="tag">🌐 放上網路</div>
+    <h2>把檔案<span class="hl">拖進去就上線</span></h2>
+    <div class="row">
+      <div class="col">
+        <ol class="steps">
+          <li>把檔案命名為 <b>index.html</b>。</li>
+          <li>打開 <b>app.netlify.com/drop</b>,把檔案<b>直接拖進去</b>。</li>
+          <li>幾秒後拿到網址(像 <b>xxxx.netlify.app</b>)。</li>
+          <li>分享出去,全世界都看得到!🎉</li>
+        </ol>
+      </div>
+      <div class="sticky">免費就能上線!<br>(Netlify / GitHub Pages)<br>沒網路也能本機 demo 😊</div>
+    </div>
+  </section>
+
+  <!-- 13 小技巧 -->
+  <section class="slide">
+    <div class="tag">💡 讓 AI 更精準</div>
+    <h2>同一句話,<span class="hl">結果差很多</span></h2>
+    <div class="g3">
+      <div class="gc"><div class="e">🎯</div><h3>描述越詳細</h3><p>功能、頁面、順序講清楚</p></div>
+      <div class="gc"><div class="e">🎨</div><h3>指定風格配色</h3><p>直接說「藍色系、簡約」</p></div>
+      <div class="gc"><div class="e">📱</div><h3>提醒響應式</h3><p>加一句「手機也要好看」</p></div>
+      <div class="gc"><div class="e">📄</div><h3>要求完整檔案</h3><p>「給我完整檔」不要片段</p></div>
+      <div class="gc"><div class="e">🔖</div><h3>善用參考</h3><p>貼喜歡的網站樣子給它</p></div>
+      <div class="gc"><div class="e">🔄</div><h3>持續優化</h3><p>一次改一處,越調越好</p></div>
+    </div>
+  </section>
+
+  <!-- 14 結尾 -->
+  <section class="slide" style="justify-content:center;">
+    <div class="tag">✨ 從想法到上線</div>
+    <h2>你負責<span class="hl">想法</span>,AI 負責<span class="p" style="color:var(--c1)">實現</span></h2>
+    <div class="flow">
+      <div class="fstep"><div class="e">💬</div><div class="t">描述需求</div></div><div class="farrow">→</div>
+      <div class="fstep"><div class="e">🤖</div><div class="t">AI 生成</div></div><div class="farrow">→</div>
+      <div class="fstep"><div class="e">🖥️</div><div class="t">預覽微調</div></div><div class="farrow">→</div>
+      <div class="fstep"><div class="e">🌐</div><div class="t">部署上線</div></div><div class="farrow">→</div>
+      <div class="fstep"><div class="e">🎉</div><div class="t">完成</div></div>
+    </div>
+    <div class="row" style="margin-top:2.6cqh;align-items:center;justify-content:center;">
+      <svg class="bot" viewBox="0 0 120 130" xmlns="http://www.w3.org/2000/svg" style="width:13cqh;">
+        <line x1="60" y1="10" x2="60" y2="24" stroke="#6b5bd6" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="60" cy="9" r="5.5" fill="#e0842c"/>
+        <rect x="20" y="22" width="80" height="60" rx="18" fill="#fff" stroke="#6b5bd6" stroke-width="4"/>
+        <circle cx="44" cy="50" r="8.5" fill="#2b2545"/><circle cx="76" cy="50" r="8.5" fill="#2b2545"/>
+        <circle cx="46.5" cy="47.5" r="2.6" fill="#fff"/><circle cx="78.5" cy="47.5" r="2.6" fill="#fff"/>
+        <path d="M46 66 Q60 76 74 66" stroke="#6b5bd6" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <rect x="32" y="86" width="56" height="36" rx="12" fill="#6b5bd6"/>
+        <rect x="41" y="96" width="38" height="22" rx="4" fill="#1b2233"/>
+        <text x="60" y="111" font-size="12" fill="#8ff0c2" text-anchor="middle" font-family="monospace">&lt;/&gt;</text>
+      </svg>
+      <div class="sticky" style="transform:rotate(-2deg);">持續創作,<br>未來就是<span class="hb">你的</span>!💜</div>
+    </div>
+  </section>
+
+</div></div>
+
+<div class="pg"><span id="pgn">1</span> / <span id="pgt">14</span></div>
+<div class="nav"><button class="nobtn" onclick="go(-1)">‹</button><button class="nobtn" onclick="go(1)">›</button></div>
+<script>
+  var s=[].slice.call(document.querySelectorAll('.slide')), i=0;
+  document.getElementById('pgt').textContent=s.length;
+  function show(n){i=Math.max(0,Math.min(s.length-1,n));s.forEach(function(el,k){el.classList.toggle('active',k===i);});document.getElementById('pgn').textContent=(i+1);}
+  function go(d){show(i+d);}
+  document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){go(1);e.preventDefault();}else if(e.key==='ArrowLeft'||e.key==='PageUp'){go(-1);e.preventDefault();}});
+  document.addEventListener('click',function(e){if(e.target.closest('.nobtn'))return;go(1);});
+  var _h=parseInt((location.hash||'').replace('#',''))||1; show(_h-1);
+  if(location.search.indexOf('bare')>=0){var _n=document.querySelector('.nav'),_p=document.querySelector('.pg');if(_n)_n.style.display='none';if(_p)_p.style.display='none';}
+</script>
+</body>
+</html>

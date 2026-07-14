@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>單元四｜流程理順後的場景落地 — 企業 AI 知識化應用</title>
+<style>
+  :root{
+    --navy:#10243E; --teal:#00A6A6; --teal-light:#2FC5BB; --green-ops:#2F7D68;
+    --gold:#D2A84A; --gold-hi:#FFE08A; --red:#C0492F;
+    --cream:#F7F8FA; --cream-deep:#E9EEF3; --paper:#FFFFFF; --soft:#F1F4F7;
+    --ink:#172033; --ink-soft:#415066; --ink-faint:#7B8796; --line:#DDE4EC;
+    --teal-bg:#E5F7F6; --gold-bg:#FFF3D1; --green-bg:#E7F2EE; --red-bg:#FBEAE5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{width:100%;height:100%;overflow:hidden;}
+  body{font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif;background:#111827;color:var(--ink);}
+  .deck{width:100vw;height:100vh;display:grid;place-items:center;overflow:hidden;}
+  .slide{width:1280px;height:720px;position:relative;overflow:hidden;background:var(--cream);
+    border-radius:6px;box-shadow:0 10px 40px rgba(16,36,62,.22);display:none;
+    transform:scale(var(--slide-scale,1));transform-origin:center center;}
+  .slide.is-active{display:block;}
+  .slide::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(90deg,rgba(16,36,62,.045) 1px,transparent 1px),
+               linear-gradient(0deg,rgba(16,36,62,.035) 1px,transparent 1px);
+    background-size:48px 48px;opacity:.45;}
+  .in{position:absolute;inset:0;padding:44px 72px 74px;display:flex;flex-direction:column;}
+  .wm{position:absolute;left:76px;bottom:26px;font-size:15px;color:var(--ink-faint);letter-spacing:.04em;}
+  .pg{position:absolute;right:76px;bottom:26px;font-size:15px;color:var(--ink-faint);}
+  .tag{display:inline-block;background:var(--teal);color:#fff;font-size:16.5px;font-weight:600;
+    letter-spacing:1.8px;padding:8px 17px;border-radius:5px;margin-bottom:20px;align-self:flex-start;}
+  .tag.gold{background:var(--gold);} .tag.green{background:var(--green-ops);} .tag.navy{background:var(--navy);} .tag.red{background:var(--red);}
+  h1{color:var(--navy);font-size:42px;font-weight:700;letter-spacing:-.4px;line-height:1.24;margin-bottom:10px;}
+  h1,.lead,.card p,.card li,.callout,.bigslogan{text-wrap:pretty;}
+  .lead{color:var(--ink-soft);font-size:22px;line-height:1.7;max-width:1090px;margin-top:8px;}
+  .lead strong{color:var(--navy);}
+  .eyebrow{font-size:17px;letter-spacing:.22em;color:var(--teal);font-weight:600;text-transform:uppercase;margin-bottom:20px;}
+  .ic{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:8px;background:var(--teal-bg);color:var(--teal);margin-bottom:14px;}
+  .ic svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+  .ic.gold{background:var(--gold-bg);color:var(--gold);} .ic.green{background:var(--green-bg);color:var(--green-ops);}
+  .ic.navy{background:#E3E9F1;color:var(--navy);} .ic.red{background:var(--red-bg);color:var(--red);}
+  /* cover */
+  .cover{background:linear-gradient(135deg,var(--navy) 0%,#14385B 52%,var(--teal) 100%);}
+  .cover::before{background:linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px),
+               linear-gradient(0deg,rgba(255,255,255,.04) 1px,transparent 1px),
+               linear-gradient(135deg,transparent 0 64%,rgba(255,224,138,.18) 64% 72%,transparent 72%);
+    background-size:54px 54px,54px 54px,100% 100%;opacity:1;}
+  .cover .in{justify-content:center;color:#fff;}
+  .cover .eyebrow{color:rgba(255,255,255,.82);}
+  .cover .unit-no{font-size:24px;font-weight:700;letter-spacing:.3em;color:var(--gold-hi);margin-bottom:16px;}
+  .cover h1{color:#fff;font-size:60px;line-height:1.2;letter-spacing:-.5px;}
+  .cover .gold{color:var(--gold-hi);}
+  .cover .sub{font-size:24px;color:rgba(255,255,255,.94);font-weight:300;margin-top:22px;max-width:960px;line-height:1.7;}
+  .cover .meta{margin-top:44px;display:flex;gap:40px;font-size:17.5px;color:rgba(255,255,255,.9);flex-wrap:wrap;}
+  .cover .meta span{opacity:.6;margin-right:6px;}
+  .cover .wm,.cover .pg{color:rgba(255,255,255,.62);}
+  /* divider */
+  .divider{background:linear-gradient(135deg,#14385B,var(--navy));}
+  .divider .in{justify-content:center;color:#fff;}
+  .divider h1{color:#fff;font-size:48px;}
+  .divider .lead{color:rgba(255,255,255,.9);max-width:940px;}
+  .divider .wm,.divider .pg{color:rgba(255,255,255,.55);}
+  /* cards */
+  .grid{display:grid;gap:18px;margin-top:auto;margin-bottom:auto;}
+  .g2{grid-template-columns:1fr 1fr;} .g3{grid-template-columns:repeat(3,1fr);} .g4{grid-template-columns:repeat(4,1fr);}
+  .card{background:var(--paper);border-radius:10px;padding:30px 32px;box-shadow:0 6px 22px rgba(16,36,62,.07);border:1px solid var(--line);}
+  .card h3{color:var(--navy);font-size:25px;font-weight:700;margin-bottom:11px;line-height:1.4;}
+  .card p{color:var(--ink-soft);font-size:19.5px;line-height:1.68;}
+  .card .num{font-size:16.5px;font-weight:700;color:var(--teal);letter-spacing:1px;margin-bottom:10px;}
+  .card ul{margin:12px 0 0 2px;list-style:none;} .card li{color:var(--ink-soft);font-size:18.5px;line-height:1.7;margin-bottom:8px;padding-left:22px;position:relative;}
+  .card li::before{content:"›";position:absolute;left:4px;color:var(--teal);font-weight:700;}
+  .card.hl{border:2px solid var(--teal);background:#fbfdfd;}
+  .card.gold li::before{color:var(--gold);} .card.green li::before{color:var(--green-ops);} .card.red li::before{color:var(--red);}
+  .card .cap{color:var(--green-ops);font-size:17px;background:var(--green-bg);border-radius:8px;padding:11px 15px;margin-top:14px;line-height:1.6;}
+  /* objectives */
+  .obj{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin:auto 0;}
+  .obj .o{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:38px 34px;box-shadow:0 6px 22px rgba(16,36,62,.07);position:relative;min-height:290px;}
+  .obj .o .n{width:60px;height:60px;border-radius:50%;background:var(--navy);color:#fff;font-weight:700;font-size:29px;display:flex;align-items:center;justify-content:center;margin-bottom:22px;}
+  .obj .o h3{color:var(--navy);font-size:27px;font-weight:700;line-height:1.4;}
+  .obj .o p{color:var(--ink-soft);font-size:20px;line-height:1.65;margin-top:14px;}
+  /* model strip */
+  .model{display:flex;align-items:center;justify-content:center;gap:14px;margin:auto 0;flex-wrap:wrap;}
+  .mstep{background:var(--navy);color:#fff;border-radius:12px;padding:26px 34px;text-align:center;min-width:235px;}
+  .mstep.teal{background:linear-gradient(135deg,#0FA3A8,#14B8A6);} .mstep.gold{background:linear-gradient(135deg,#C8A24A,#b8902f);}
+  .mstep .t{font-size:25px;font-weight:700;} .mstep .d{font-size:17.5px;opacity:.9;margin-top:8px;line-height:1.55;}
+  .marrow{color:var(--gold);font-size:34px;font-weight:700;}
+  /* flow */
+  .flow{display:flex;align-items:stretch;gap:10px;margin:auto 0;}
+  .fstep{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:26px 16px;text-align:center;box-shadow:0 6px 22px rgba(16,36,62,.06);}
+  .fstep .n{width:48px;height:48px;border-radius:50%;background:var(--teal);color:#fff;font-weight:700;font-size:21px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;}
+  .fstep h4{color:var(--navy);font-size:20.5px;font-weight:700;margin-bottom:9px;} .fstep p{color:var(--ink-soft);font-size:16.5px;line-height:1.6;}
+  /* why grid */
+  .why{display:grid;grid-template-columns:1fr 1fr;gap:16px 22px;margin:auto 0;}
+  .wrow{display:flex;gap:18px;align-items:flex-start;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:24px 28px;box-shadow:0 4px 18px rgba(16,36,62,.06);}
+  .wrow .ic{width:54px;height:54px;margin-bottom:0;flex:none;} .wrow .ic svg{width:28px;height:28px;}
+  .wrow h4{color:var(--navy);font-size:22px;font-weight:700;margin-bottom:6px;} .wrow p{color:var(--ink-soft);font-size:18px;line-height:1.6;}
+  /* vs compare */
+  .vs{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:auto 0;position:relative;}
+  .vs .side{border-radius:12px;padding:30px 34px;}
+  .vs .side.a{background:var(--cream-deep);border:1px solid var(--line);} .vs .side.b{background:var(--navy);color:#fff;}
+  .vs .side h3{font-size:27px;font-weight:700;margin-bottom:14px;}
+  .vs .side.a h3{color:var(--ink-soft);} .vs .side.b h3{color:var(--gold-hi);}
+  .vs .side p{font-size:19px;line-height:1.68;} .vs .side.a p{color:var(--ink-soft);} .vs .side.b p{color:rgba(255,255,255,.92);}
+  .vs .side ul{list-style:none;margin-top:12px;} .vs .side li{font-size:18px;line-height:1.7;padding-left:22px;position:relative;margin-bottom:7px;}
+  .vs .side.a li::before{content:"—";position:absolute;left:2px;color:var(--ink-faint);}
+  .vs .side.b li{color:rgba(255,255,255,.92);} .vs .side.b li::before{content:"✓";position:absolute;left:2px;color:var(--teal-light);font-weight:700;}
+  .vs .vs-badge{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:64px;height:64px;border-radius:50%;background:var(--gold);color:#fff;font-weight:800;font-size:21px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.2);z-index:2;}
+  /* stats */
+  .stats{display:flex;gap:18px;margin:auto 0;}
+  .stat{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:30px 28px;box-shadow:0 6px 22px rgba(16,36,62,.07);}
+  .stat .big{font-size:60px;font-weight:800;color:var(--red);letter-spacing:-1px;line-height:1;}
+  .stat.teal .big{color:var(--teal);} .stat.gold .big{color:var(--gold);}
+  .stat .lab{font-size:20px;color:var(--navy);font-weight:700;margin-top:14px;} .stat .src{font-size:14.5px;color:var(--ink-faint);margin-top:8px;line-height:1.5;}
+  /* callout */
+  .callout{background:var(--soft);border-left:6px solid var(--teal);border-radius:0 10px 10px 0;padding:20px 26px;margin-top:18px;font-size:20px;color:var(--ink-soft);line-height:1.62;}
+  .callout strong{color:var(--navy);}
+  .callout.gold{border-left-color:var(--gold);background:#faf4e6;} .callout.green{border-left-color:var(--green-ops);background:var(--green-bg);} .callout.red{border-left-color:var(--red);background:var(--red-bg);}
+  /* big slogan */
+  .bigslogan{font-size:47px;font-weight:800;color:var(--navy);line-height:1.32;letter-spacing:-.5px;margin:auto 0;}
+  .divider .bigslogan{margin:20px 0 0;}
+  .bigslogan .hl{color:var(--teal);} .bigslogan .gd{color:var(--gold);}
+  /* speaker (自我介紹) */
+  .speaker{display:flex;gap:44px;align-items:center;margin:auto 0;}
+  .sp-photo{flex:none;width:300px;height:340px;border-radius:16px;background:linear-gradient(135deg,var(--cream-deep),#cfd9e4);
+    border:6px solid #fff;box-shadow:0 10px 32px rgba(31,58,95,.14);display:flex;align-items:center;justify-content:center;color:var(--ink-faint);font-size:18px;text-align:center;line-height:1.6;}
+  .sp-body{flex:1;}
+  .sp-name{display:flex;align-items:baseline;gap:16px;margin-bottom:8px;}
+  .sp-name .en{font-size:52px;font-weight:700;color:var(--navy);letter-spacing:-.5px;}
+  .sp-name .zh{font-size:28px;font-weight:600;color:var(--ink-soft);}
+  .sp-title{display:inline-block;background:var(--navy);color:#fff;font-size:18px;font-weight:600;padding:9px 18px;border-radius:8px;margin:6px 0 14px;}
+  .sp-body ul{list-style:none;} .sp-body li{font-size:20px;color:var(--ink-soft);line-height:1.75;padding-left:26px;position:relative;margin-bottom:8px;}
+  .sp-body li::before{content:"▹";position:absolute;left:2px;color:var(--teal);font-weight:700;}
+  .fillme{color:var(--red);font-weight:600;background:var(--red-bg);padding:1px 8px;border-radius:5px;font-size:17px;}
+  /* chips */
+  .chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:8px;}
+  .chip{background:var(--teal-bg);color:var(--teal);font-size:16.5px;font-weight:600;padding:8px 16px;border-radius:999px;}
+  /* course map */
+  .cmap{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:auto 0;}
+  .cnode{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:20px 18px;box-shadow:0 4px 16px rgba(16,36,62,.06);position:relative;}
+  .cnode .cn{font-size:15px;font-weight:700;color:var(--teal);letter-spacing:1px;}
+  .cnode h4{color:var(--navy);font-size:19px;font-weight:700;margin:6px 0 5px;line-height:1.35;}
+  .cnode p{color:var(--ink-faint);font-size:14.5px;line-height:1.5;}
+  .cnode.here{border:2px solid var(--teal);background:#fbfdfd;}
+  .cnode.here .cn{color:var(--gold);}
+  .cnode .badge{position:absolute;top:-12px;right:12px;background:var(--gold);color:#fff;font-size:13px;font-weight:700;padding:3px 10px;border-radius:999px;}
+  /* nav */
+  .slide-nav{position:fixed;inset:0;z-index:20;pointer-events:none;}
+  .nav-btn{position:fixed;top:50%;width:48px;height:64px;border:0;border-radius:999px;transform:translateY(-50%);display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.92);color:var(--navy);font-size:34px;line-height:1;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.22);pointer-events:auto;transition:background .18s ease,opacity .18s ease,transform .18s ease;}
+  .nav-btn:hover{background:#fff;transform:translateY(-50%) scale(1.04);}
+  .nav-btn:disabled{opacity:.32;cursor:default;transform:translateY(-50%);}
+  .nav-prev{left:18px;} .nav-next{right:18px;}
+  .slide-status{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);min-width:82px;padding:7px 13px;border-radius:999px;text-align:center;background:rgba(255,255,255,.9);color:var(--navy);font-size:13px;font-weight:700;letter-spacing:.08em;box-shadow:0 8px 24px rgba(0,0,0,.18);pointer-events:none;}
+  .dots{position:fixed;right:14px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:9px;z-index:25;}
+  .dots button{width:11px;height:11px;border-radius:50%;border:0;padding:0;cursor:pointer;background:rgba(255,255,255,.45);box-shadow:0 1px 4px rgba(0,0,0,.28);position:relative;transition:background .18s ease,transform .18s ease;}
+  .dots button:hover{background:var(--teal-light);transform:scale(1.25);}
+  .dots button.on{background:var(--gold);transform:scale(1.4);}
+  .dots button .tip{position:absolute;right:22px;top:50%;transform:translateY(-50%);white-space:nowrap;background:rgba(16,36,62,.94);color:#fff;font-size:12px;padding:5px 11px;border-radius:6px;opacity:0;pointer-events:none;transition:opacity .15s ease;max-width:300px;overflow:hidden;text-overflow:ellipsis;}
+  .dots button:hover .tip{opacity:1;}
+  .menu-btn{position:fixed;top:16px;right:16px;z-index:28;border:0;cursor:pointer;letter-spacing:.06em;background:rgba(255,255,255,.92);color:var(--navy);font-size:14px;font-weight:700;padding:9px 15px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.2);transition:background .16s ease;}
+  .menu-btn:hover{background:#fff;}
+  .outline{position:fixed;inset:0;z-index:30;background:rgba(16,36,62,.55);backdrop-filter:blur(3px);display:none;}
+  .outline.open{display:block;}
+  .outline-panel{position:absolute;right:0;top:0;height:100%;width:410px;max-width:88vw;background:#fff;box-shadow:-12px 0 40px rgba(0,0,0,.3);overflow-y:auto;padding:26px 24px 44px;}
+  .outline-panel h2{color:var(--navy);font-size:20px;font-weight:700;margin-bottom:4px;}
+  .outline-panel .osub{color:var(--ink-faint);font-size:12.5px;margin-bottom:18px;line-height:1.6;}
+  .outline-item{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;border:0;background:transparent;cursor:pointer;padding:11px 12px;border-radius:8px;transition:background .14s ease;}
+  .outline-item:hover{background:var(--soft);} .outline-item.on{background:var(--teal-bg);}
+  .outline-item .oi-n{flex:none;width:26px;height:26px;border-radius:6px;background:var(--cream-deep);color:var(--ink-soft);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+  .outline-item.on .oi-n{background:var(--teal);color:#fff;}
+  .outline-item .oi-t{color:var(--ink);font-size:15px;line-height:1.45;font-weight:500;}
+  .outline-close{position:absolute;top:14px;right:16px;border:0;background:transparent;font-size:26px;color:var(--ink-faint);cursor:pointer;line-height:1;}
+  /* subset layers（AI/ML/DL/生成式 巢狀關係） */
+  .subset{display:flex;flex-direction:column;gap:12px;margin:auto 0;}
+  .slayer{margin:0 auto;border-radius:10px;padding:18px 28px;color:#fff;display:flex;align-items:center;gap:20px;box-shadow:0 4px 16px rgba(16,36,62,.12);}
+  .slayer .st{font-size:22px;font-weight:700;flex:none;min-width:200px;}
+  .slayer .sd{font-size:17px;opacity:.96;line-height:1.5;}
+  .sl1{background:#5A6B80;width:100%;} .sl2{background:#3F7D86;width:90%;} .sl3{background:#1F8A8A;width:78%;} .sl4{background:linear-gradient(135deg,#C8A24A,#b8902f);width:64%;}
+  @media print{
+    @page{size:1280px 720px;margin:0;}
+    html,body{width:auto;height:auto;overflow:visible;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .deck{display:flex;flex-direction:column;gap:0;padding:0;width:auto;height:auto;overflow:visible;}
+    .slide{display:block!important;border-radius:0;box-shadow:none;break-after:page;page-break-after:always;margin:0;transform:none!important;}
+    .slide-nav,.dots,.menu-btn,.outline{display:none!important;}
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- 1 封面 -->
+  <section class="slide cover" data-title="封面 · 單元四">
+    <div class="in">
+      <div class="eyebrow">企業 AI 知識化應用｜經濟部產業發展署 115 年度在職菁英培訓</div>
+      <div class="unit-no">單元 04</div>
+      <h1>流程理順後的<br><span class="gold">場景落地</span></h1>
+      <div class="sub">流程梳理好了，AI 到底能落在哪些「真正有價值」的場景？</div>
+      <div class="meta">
+        <div><span>時數</span>3 小時 · 講授</div>
+        <div><span>講師</span>Amigo 藍幼玟</div>
+        <div><span>模組</span>4 / 7</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 學習目標 -->
+  <section class="slide" data-title="本單元學習目標">
+    <div class="in">
+      <div class="tag navy">本單元學習目標</div>
+      <h1>上完這一單元，你會帶走三件事</h1>
+      <div class="obj">
+        <div class="o"><div class="n">1</div><h3>辨識高價值場景</h3><p>能看出自身業務裡，哪些場景最適合、最值得讓 AI 落地。</p></div>
+        <div class="o"><div class="n">2</div><h3>懂共享閉環</h3><p>理解「知識共享閉環」如何讓 AI 越用越懂你的公司。</p></div>
+        <div class="o"><div class="n">3</div><h3>會評估工具</h3><p>能評估入門 AI 工具的適用範圍與限制，知道從哪一級、哪個工具起步。</p></div>
+      </div>
+      <div class="callout"><strong>承上單元：</strong>你已經會「把流程拆解、標出 AI 介入點」了；這一單元，看這些介入點能長成哪些真正有價值的場景。</div>
+    </div>
+  </section>
+
+  <!-- 3 開場橋接 -->
+  <section class="slide divider" data-title="開場｜找對場景，比買對工具更重要">
+    <div class="in">
+      <div class="eyebrow">承接單元三｜流程理順之後</div>
+      <div class="bigslogan" style="color:#fff;">找對<span class="gd">場景</span>，<br>比買對工具更重要。</div>
+      <p class="lead">流程梳理好、介入點也標出來了。接下來的問題是：<strong style="color:var(--gold-hi)">哪些場景，能讓 AI 真正發揮價值？</strong>這一單元帶你看幾個高價值、可落地的方向。</p>
+    </div>
+  </section>
+
+  <!-- 4 場景地圖 -->
+  <section class="slide" data-title="高價值場景地圖">
+    <div class="in">
+      <div class="tag">場景總覽</div>
+      <h1>AI 能落地的四個高價值場景</h1>
+      <div class="grid g4">
+        <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2a4 4 0 0 0-4 4v6a4 4 0 0 0 8 0V6a4 4 0 0 0-4-4z"/><path d="M5 12a7 7 0 0 0 14 0"/></svg></div><h3>新人快充</h3><p>AI 當 24 小時的資深導師。</p></div>
+        <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 4h16v12H4z"/><path d="M8 20h8"/></svg></div><h3>顧問式提案</h3><p>把老手的提案功力複製給全隊。</p></div>
+        <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 1 9 9"/><path d="M3 12h6M3 12v6"/></svg></div><h3>知識共享閉環</h3><p>AI 越用越懂你的公司。</p></div>
+        <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-6 10-6 10 6 10 6-3 6-10 6-10-6-10-6z"/></svg></div><h3>眼耳感知</h3><p>視覺／語音／空間辨識。</p></div>
+      </div>
+      <div class="callout">這四類場景的共同點：都是把「<strong>散落的經驗與資料</strong>」，變成「<strong>隨手可用的能力</strong>」。</div>
+    </div>
+  </section>
+
+  <!-- 5 場景一 新人快充 -->
+  <section class="slide" data-title="場景一：新人快充大腦">
+    <div class="in">
+      <div class="tag gold">場景一</div>
+      <h1>新人快充：讓 AI 當「24 小時的資深導師」</h1>
+      <div style="display:flex;gap:38px;align-items:center;margin:auto 0;">
+        <svg viewBox="0 0 360 220" style="flex:none;width:350px;" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
+          <rect x="18" y="34" width="64" height="40" rx="10" fill="#E3E9F1"/><path d="M40 74 l8 12 6-12 z" fill="#E3E9F1"/><text x="50" y="62" text-anchor="middle" font-size="26" font-weight="800" fill="#10243E">?</text>
+          <circle cx="50" cy="120" r="22" fill="#8A94A0"/><path d="M22 178 a28 28 0 0 1 56 0 z" fill="#8A94A0"/><text x="50" y="205" text-anchor="middle" font-size="15" fill="#7B8796">新人</text>
+          <path d="M92 120 H150" stroke="#D2A84A" stroke-width="5"/><path d="M150 111 l16 9 -16 9 z" fill="#D2A84A"/>
+          <rect x="182" y="58" width="90" height="54" rx="14" fill="#00A6A6"/><text x="227" y="93" text-anchor="middle" font-size="24" font-weight="800" fill="#fff">AI</text>
+          <path d="M184 128 v32 a43 11 0 0 0 86 0 v-32" fill="#10243E"/><ellipse cx="227" cy="128" rx="43" ry="11" fill="#1d3f63"/><text x="227" y="133" text-anchor="middle" font-size="13" fill="#fff">知識庫</text>
+          <rect x="288" y="58" width="56" height="38" rx="10" fill="#FFF3D1"/><path d="M302 96 l-4 12 12 -12 z" fill="#FFF3D1"/><text x="316" y="84" text-anchor="middle" font-size="24" font-weight="800" fill="#b0842a">!</text>
+        </svg>
+        <div style="flex:1;">
+          <div class="card" style="margin-bottom:14px;"><div class="num">過去</div><p>新人「跟三年才會」，問題只能等資深有空、或翻散落各處的文件。</p></div>
+          <div class="card hl"><div class="num">有了知識化之後</div><p>把老師傅的判斷、SOP、常見問答變成<strong>可問答的知識</strong>——新人隨時問、秒得答案，還附出處。</p></div>
+        </div>
+      </div>
+      <div class="callout gold"><strong>製造業例（虛擬機台老師傅）：</strong>設備故障排除、備件維護、生產線設置指南……都能直接問 AI。</div>
+    </div>
+  </section>
+
+  <!-- 6 場景二 顧問式提案 -->
+  <section class="slide" data-title="場景二：顧問式提案與複刻">
+    <div class="in">
+      <div class="tag gold">場景二</div>
+      <h1>顧問式提案：把「老手的功力」複製給全隊</h1>
+      <div class="vs">
+        <div class="side a"><h3>Before</h3><p>提案品質看「碰到哪個業務」。</p><ul><li>老手提案又快又準</li><li>新手從零摸索、良莠不齊</li><li>成功經驗留在個人身上</li></ul></div>
+        <div class="side b"><h3>After</h3><p>提取過往成功案例的脈絡與結構。</p><ul><li>AI 依新客戶情境生成高規格提案初稿</li><li>即時調出「類似成功案例＋為何有效」</li><li>從賣產品，變賣專業</li></ul></div>
+        <div class="vs-badge">→</div>
+      </div>
+      <div class="callout gold"><strong>前提：</strong>先把成功案例用單元 3 的方式<strong>結構化</strong>（I／P／O、脈絡），AI 才複刻得出來。</div>
+    </div>
+  </section>
+
+  <!-- 7 場景三 知識共享閉環 -->
+  <section class="slide" data-title="場景三：知識共享閉環">
+    <div class="in">
+      <div class="tag gold">場景三</div>
+      <h1>知識共享閉環：讓 AI 越用越懂你的公司</h1>
+      <div style="display:flex;align-items:stretch;gap:4px;margin:auto 0;">
+        <div style="flex:1;background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 16px;text-align:center;box-shadow:0 6px 22px rgba(16,36,62,.07);"><div style="font-size:15px;font-weight:700;color:var(--teal);">①</div><h3 style="color:var(--navy);font-size:19px;margin:8px 0 6px;">員工用 AI 做事</h3><p style="color:var(--ink-soft);font-size:15px;line-height:1.5;">在真實工作中使用。</p></div>
+        <div style="display:flex;align-items:center;font-size:26px;color:var(--gold);font-weight:800;flex:none;">→</div>
+        <div style="flex:1;background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 16px;text-align:center;box-shadow:0 6px 22px rgba(16,36,62,.07);"><div style="font-size:15px;font-weight:700;color:var(--teal);">②</div><h3 style="color:var(--navy);font-size:19px;margin:8px 0 6px;">產生回饋／新案例</h3><p style="color:var(--ink-soft);font-size:15px;line-height:1.5;">哪裡答得好、哪裡要修。</p></div>
+        <div style="display:flex;align-items:center;font-size:26px;color:var(--gold);font-weight:800;flex:none;">→</div>
+        <div style="flex:1;background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 16px;text-align:center;box-shadow:0 6px 22px rgba(16,36,62,.07);"><div style="font-size:15px;font-weight:700;color:var(--teal);">③</div><h3 style="color:var(--navy);font-size:19px;margin:8px 0 6px;">回填、修正知識</h3><p style="color:var(--ink-soft);font-size:15px;line-height:1.5;">把新知識補進知識庫。</p></div>
+        <div style="display:flex;align-items:center;font-size:26px;color:var(--gold);font-weight:800;flex:none;">↻</div>
+        <div style="flex:1;background:#fbfdfd;border:2px solid var(--teal);border-radius:12px;padding:22px 16px;text-align:center;box-shadow:0 8px 24px rgba(0,166,166,.12);"><div style="font-size:15px;font-weight:700;color:var(--teal);">④</div><h3 style="color:var(--navy);font-size:19px;margin:8px 0 6px;">AI 下次更準</h3><p style="color:var(--ink-soft);font-size:15px;line-height:1.5;">越用越懂 → 回到 ①。</p></div>
+      </div>
+      <div class="callout"><strong>知識庫不是建一次就結束。</strong>每一次使用都讓它更厚、更準——這才是「活的」知識庫，也是 AI 導入能長期見效的關鍵。</div>
+    </div>
+  </section>
+
+  <!-- 8 三類辨識總覽 -->
+  <!-- 情境① 採購比價 -->
+  <section class="slide" data-title="情境①：製造業採購比價">
+    <div class="in">
+      <div class="tag gold">知識庫問答 · 情境①（製造業）</div>
+      <h1>採購經理的一個下午：30 秒完成比價</h1>
+      <div style="margin:auto 0;">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:14px;">
+          <div style="background:var(--navy);color:#fff;border-radius:16px 16px 4px 16px;padding:14px 20px;font-size:19px;max-width:78%;">比較供應商 ABC 和 XYZ，過去 2 年的電阻報價與交期。</div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <div style="flex:none;width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#0FA3A8,#14B8A6);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;">✦</div>
+          <div style="background:var(--soft);border-left:5px solid var(--teal);border-radius:4px 14px 14px 14px;padding:16px 22px;font-size:18.5px;line-height:1.7;flex:1;">
+            <strong style="color:var(--navy);">AI 助理</strong><br>
+            <strong>供應商 ABC：</strong>均價 NT$2.3 ／ 交期 14 天 ／ 2024/3 曾有不良率 2.1%<br>
+            <strong>供應商 XYZ：</strong>均價 NT$2.1 ／ 交期 21 天 ／ 無品質紀錄<br>
+            <span style="font-size:15px;color:var(--ink-faint);">🔗 來源：採購紀錄 2023/2024、QC 異常報告 202403、供應商評核表</span>
+          </div>
+        </div>
+      </div>
+      <div class="callout gold"><strong>串聯 4 份文件，30 秒完成</strong>過去需要 30 分鐘的比對工作——而且每個數字都附來源、可查證。</div>
+    </div>
+  </section>
+
+  <!-- 情境② 門市店員 -->
+  <section class="slide" data-title="情境②：零售門市即問即答">
+    <div class="in">
+      <div class="tag gold">知識庫問答 · 情境②（零售）</div>
+      <h1>門市店長的週末：客人問什麼都答得出來</h1>
+      <div style="margin:auto 0;">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:14px;">
+          <div style="background:var(--navy);color:#fff;border-radius:16px 16px 4px 16px;padding:14px 20px;font-size:19px;max-width:78%;">M-2024W 防水嗎？可以機洗嗎？客人正在問。</div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <div style="flex:none;width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#0FA3A8,#14B8A6);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;">✦</div>
+          <div style="background:var(--soft);border-left:5px solid var(--teal);border-radius:4px 14px 14px 14px;padding:16px 22px;font-size:18.5px;line-height:1.7;flex:1;">
+            <strong style="color:var(--navy);">AI 助理</strong><br>
+            防水係數 3,000mm（可擋陣雨，不適合暴雨）<br>
+            建議溫水機洗 ≤30°C，勿烘乾<br>
+            <span style="color:var(--green-ops);">💬 可以這樣跟客人說：「這件擋一般雨沒問題，洗的時候用溫水、不要烘乾就好。」</span>
+          </div>
+        </div>
+      </div>
+      <div class="callout gold"><strong>新進店員也能秒答</strong>——不用背商品手冊、不用等資深同事，還附上「可以這樣說」的話術。</div>
+    </div>
+  </section>
+
+  <!-- 情境③ 疊券計算 -->
+  <section class="slide" data-title="情境③：複雜規則 30 秒釐清">
+    <div class="in">
+      <div class="tag gold">知識庫問答 · 情境③（零售）</div>
+      <h1>最複雜的活動規則，30 秒釐清</h1>
+      <div style="margin:auto 0;">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:14px;">
+          <div style="background:var(--navy);color:#fff;border-radius:16px 16px 4px 16px;padding:14px 20px;font-size:18.5px;max-width:82%;">金卡會員買打折外套＋正價襯衫，可合併算週年慶滿額禮嗎？生日券可以疊嗎？</div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <div style="flex:none;width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#0FA3A8,#14B8A6);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;">✦</div>
+          <div style="background:var(--soft);border-left:5px solid var(--teal);border-radius:4px 14px 14px 14px;padding:16px 22px;font-size:18.5px;line-height:1.7;flex:1;">
+            <strong style="color:var(--navy);">AI 助理</strong><br>
+            ✓ 滿額禮：兩件可合併計算（折後金額累計）<br>
+            ✓ 生日券：可與滿額禮疊用<br>
+            ✗ 但生日券不可與「單品折扣」再疊<br>
+            <span style="font-size:15px;color:var(--ink-faint);">🔗 來源：週年慶活動辦法、會員權益說明</span>
+          </div>
+        </div>
+      </div>
+      <div class="callout gold">最容易出錯、最花時間的<strong>規則疊加問題</strong>，AI 依活動辦法即時釐清——不怕算錯、不怕客訴。</div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="AI 的眼、耳、感：視覺／語音／空間">
+    <div class="in">
+      <div class="tag">場景四 · 讓「看得到、用不了」變資產</div>
+      <h1>AI 的「眼、耳、感」：把非結構化資料變資產</h1>
+      <p class="lead">還記得單元 2 說的嗎——企業<strong>八成資料是非結構化</strong>的，鎖在紙本、聲音、現場。這三類 AI，正是把它們解放出來的鑰匙。</p>
+      <div class="grid g3">
+        <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-6 10-6 10 6 10 6-3 6-10 6-10-6-10-6z"/></svg></div><h3>視覺辨識（眼）</h3><p>看懂文件與影像。</p></div>
+        <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></div><h3>語音辨識（耳）</h3><p>聽懂會議與電話。</p></div>
+        <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M9 20l-5-3V4l5 3 6-3 5 3v13l-5-3-6 3z"/><path d="M9 7v13M15 4v13"/></svg></div><h3>空間觀察（感）</h3><p>感知人流與動線。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 視覺辨識 -->
+  <section class="slide" data-title="視覺辨識：讓 AI 看得懂文件與影像">
+    <div class="in">
+      <div class="tag gold">視覺辨識 AI（眼）</div>
+      <h1>把「看得到、用不了」的紙本，變可搜尋的資產</h1>
+      <div style="display:flex;gap:38px;align-items:center;margin:auto 0;">
+        <svg viewBox="0 0 360 190" style="flex:none;width:350px;" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
+          <rect x="10" y="40" width="78" height="100" rx="6" fill="#fff" stroke="#CBD5E0" stroke-width="2"/><path d="M76 40 l12 12 h-12 z" fill="#E3E9F1"/><line x1="22" y1="66" x2="70" y2="66" stroke="#B9C4D0" stroke-width="4"/><line x1="22" y1="80" x2="70" y2="80" stroke="#B9C4D0" stroke-width="4"/><line x1="22" y1="94" x2="60" y2="94" stroke="#B9C4D0" stroke-width="4"/><text x="49" y="162" text-anchor="middle" font-size="14" fill="#7B8796">紙本</text>
+          <path d="M100 90 H140" stroke="#D2A84A" stroke-width="5"/><path d="M140 81 l16 9 -16 9 z" fill="#D2A84A"/>
+          <rect x="150" y="46" width="86" height="88" rx="10" fill="#E5F7F6" stroke="#00A6A6" stroke-width="2"/><circle cx="186" cy="86" r="20" fill="none" stroke="#00A6A6" stroke-width="4"/><line x1="200" y1="100" x2="216" y2="116" stroke="#00A6A6" stroke-width="5"/><text x="193" y="160" text-anchor="middle" font-size="14" fill="#00A6A6">AI 辨識</text>
+          <path d="M248 90 H286" stroke="#D2A84A" stroke-width="5"/><path d="M286 81 l16 9 -16 9 z" fill="#D2A84A"/>
+          <rect x="300" y="44" width="56" height="92" rx="6" fill="#10243E"/><line x1="300" y1="70" x2="356" y2="70" stroke="#3b5372" stroke-width="2"/><line x1="328" y1="44" x2="328" y2="136" stroke="#3b5372" stroke-width="2"/><line x1="300" y1="96" x2="356" y2="96" stroke="#3b5372" stroke-width="2"/><line x1="300" y1="118" x2="356" y2="118" stroke="#3b5372" stroke-width="2"/><text x="328" y="160" text-anchor="middle" font-size="14" fill="#7B8796">結構化欄位</text>
+        </svg>
+        <div style="flex:1;">
+          <div class="card" style="margin-bottom:14px;"><div class="num">能做什麼</div><p>紙本單據、合約、技術文件 → 自動辨識、抽欄位、建檔；商品照片、標籤 → 自動分類。</p></div>
+          <div class="card hl"><div class="num">案例：DocBridge／SnapBridge</div><p>單據辨識、自動建檔，取代人工謄打；建檔即結構化、錯誤率下降。</p></div>
+        </div>
+      </div>
+      <div class="callout gold"><strong>起手式重點：</strong>視覺辨識常是 AI 導入第一步——先把資產數位化、結構化，後面應用才有原料。</div>
+    </div>
+  </section>
+
+  <!-- 10 空間觀察 -->
+  <section class="slide" data-title="空間觀察：從憑感覺到有數據">
+    <div class="in">
+      <div class="tag gold">空間觀察 AI（感）</div>
+      <h1>把「憑感覺」的場域，變成「有數據」的決策</h1>
+      <div style="display:flex;gap:38px;align-items:center;margin:auto 0;">
+        <svg viewBox="0 0 360 210" style="flex:none;width:350px;" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
+          <rect x="14" y="20" width="332" height="150" rx="8" fill="#F1F4F7" stroke="#CBD5E0" stroke-width="2"/>
+          <rect x="40" y="46" width="70" height="34" rx="4" fill="#E3E9F1"/><rect x="150" y="46" width="70" height="34" rx="4" fill="#E3E9F1"/><rect x="260" y="46" width="60" height="34" rx="4" fill="#E3E9F1"/><rect x="40" y="110" width="90" height="34" rx="4" fill="#E3E9F1"/><rect x="230" y="110" width="90" height="34" rx="4" fill="#E3E9F1"/>
+          <path d="M30 160 C 90 150 120 60 180 96 S 300 150 335 60" fill="none" stroke="#415066" stroke-width="2.5" stroke-dasharray="6 5"/>
+          <circle cx="120" cy="95" r="26" fill="#C0492F" opacity="0.30"/><circle cx="120" cy="95" r="13" fill="#C0492F" opacity="0.55"/>
+          <circle cx="235" cy="120" r="20" fill="#D2A84A" opacity="0.35"/><circle cx="235" cy="120" r="9" fill="#D2A84A" opacity="0.6"/>
+          <circle cx="300" cy="66" r="14" fill="#00A6A6" opacity="0.35"/>
+          <text x="180" y="192" text-anchor="middle" font-size="14" fill="#7B8796">賣場人流熱點與動線</text>
+        </svg>
+        <div style="flex:1;">
+          <div class="card" style="margin-bottom:14px;"><div class="num">能做什麼</div><p>人流、動線、停留熱點、使用率感測；賣場／展場／辦公空間智慧化。</p></div>
+          <div class="card hl"><div class="num">帶來的改變</div><p>櫃位配置、人力排班、活動檔期<strong>不再靠猜</strong>——用累積的空間數據回答「該怎麼調」。</p></div>
+        </div>
+      </div>
+      <div class="callout gold">從「憑感覺」到「有數據佐證」：過去只能靠現場經驗判斷的事，變成可回看、可比對的紀錄。</div>
+    </div>
+  </section>
+
+  <!-- 11 語音辨識 -->
+  <section class="slide" data-title="語音辨識：讓說出來的話留下來">
+    <div class="in">
+      <div class="tag gold">語音辨識 AI（耳）</div>
+      <h1>讓「說出來的話」留下來、可搜尋、可追蹤</h1>
+      <div style="display:flex;gap:38px;align-items:center;margin:auto 0;">
+        <svg viewBox="0 0 360 190" style="flex:none;width:350px;" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
+          <rect x="34" y="44" width="40" height="66" rx="20" fill="#10243E"/><path d="M28 96 a26 26 0 0 0 52 0" fill="none" stroke="#10243E" stroke-width="4"/><line x1="54" y1="122" x2="54" y2="138" stroke="#10243E" stroke-width="4"/><line x1="40" y1="138" x2="68" y2="138" stroke="#10243E" stroke-width="4"/><text x="54" y="162" text-anchor="middle" font-size="14" fill="#7B8796">會議 / 電話</text>
+          <g stroke="#00A6A6" stroke-width="5" stroke-linecap="round"><line x1="104" y1="77" x2="104" y2="103"/><line x1="118" y1="66" x2="118" y2="114"/><line x1="132" y1="82" x2="132" y2="98"/><line x1="146" y1="60" x2="146" y2="120"/><line x1="160" y1="74" x2="160" y2="106"/></g>
+          <path d="M176 90 H210" stroke="#D2A84A" stroke-width="5"/><path d="M210 81 l16 9 -16 9 z" fill="#D2A84A"/>
+          <rect x="224" y="40" width="126" height="104" rx="8" fill="#fff" stroke="#CBD5E0" stroke-width="2"/>
+          <rect x="238" y="56" width="12" height="12" rx="3" fill="#00A6A6"/><line x1="258" y1="62" x2="336" y2="62" stroke="#B9C4D0" stroke-width="4"/>
+          <rect x="238" y="80" width="12" height="12" rx="3" fill="#00A6A6"/><line x1="258" y1="86" x2="336" y2="86" stroke="#B9C4D0" stroke-width="4"/>
+          <rect x="238" y="104" width="12" height="12" rx="3" fill="#00A6A6"/><line x1="258" y1="110" x2="320" y2="110" stroke="#B9C4D0" stroke-width="4"/>
+          <text x="287" y="162" text-anchor="middle" font-size="14" fill="#7B8796">逐字稿 · 重點 · 待辦</text>
+        </svg>
+        <div style="flex:1;">
+          <div class="card" style="margin-bottom:14px;"><div class="num">能做什麼</div><p>會議語音自動轉逐字稿 → AI 整理重點、決議、待辦；電話／語音留言自動辨識、分類、轉派。</p></div>
+          <div class="card hl"><div class="num">案例：VCA 會議語音助手</div><p>散會即有紀錄、決議有人追；把「開完會才整理」的成本壓到接近零。</p></div>
+        </div>
+      </div>
+      <div class="callout gold"><strong>起手式重點：</strong>從「會議紀錄」開始最無痛——每家公司都開會，每場會都能立刻省下整理時間。</div>
+    </div>
+  </section>
+
+  <!-- 製造業場景 開場：先評估再執行 -->
+  <section class="slide" data-title="製造業場景：先評估，再執行">
+    <div class="in">
+      <div class="tag">場景 · 製造業（1／5）</div>
+      <h1>製造業導入 AI：先評估，再執行</h1>
+      <p class="lead">把最先進的 AI，裝在<strong>還沒準備好</strong>的工廠——就像把頂級 GPS 裝在一台<strong>沒有輪子的老爺車</strong>上。這是高達九成製造業導入 AI 常犯的錯。</p>
+      <div class="grid g2">
+        <div class="card hl"><div class="num">第一階段：構想評估</div><p>像醫生看診——先<strong>掌握企業課題</strong>、找出痛點、畫好藍圖。絕對不是直接做 POC。</p></div>
+        <div class="card"><div class="num">第二階段：執行</div><p>藍圖對了，再進 POC、導入、上線。</p></div>
+      </div>
+      <div class="callout"><strong>順序顛倒，專案往往失敗、資金浪費。</strong>這正是全課主軸「先盤點、先理流程」在製造業的版本。</div>
+    </div>
+  </section>
+
+  <!-- IT × OT -->
+  <section class="slide" data-title="製造業：打通 IT 與 OT">
+    <div class="in">
+      <div class="tag">場景 · 製造業（2／5）</div>
+      <h1>打通「大腦」與「肌肉」：IT × OT</h1>
+      <div class="vs">
+        <div class="side a"><h3>IT｜工廠的大腦</h3><p>ERP、MES 等系統的數據分析。</p><ul><li>負責整理、運算、判斷</li><li>要的是「看懂數據」</li></ul></div>
+        <div class="side b"><h3>OT｜工廠的肌肉</h3><p>直接控制產線機台。</p><ul><li>要即時反應、絕不當機</li><li>要的是「穩定運轉」</li></ul></div>
+        <div class="vs-badge">×</div>
+      </div>
+      <div class="callout"><strong>兩邊長期語言不通。</strong>但如果產線（OT）的即時數據傳不到大腦（IT）的 AI 模型，AI 就像瞎子——<strong>IT／OT 整合，是製造業 AI 成功的必備條件</strong>。</div>
+    </div>
+  </section>
+
+  <!-- OEE -->
+  <section class="slide" data-title="製造業：用 OEE 衡量 AI 的價值">
+    <div class="in">
+      <div class="tag">場景 · 製造業（3／5）· 衡量</div>
+      <h1>用 OEE 衡量 AI 到底帶來多少價值</h1>
+      <div class="callout" style="background:var(--navy);color:#fff;border-left-color:var(--gold);text-align:center;font-size:24px;margin-top:6px;"><strong style="color:#fff;">OEE ＝ 可用率 × 效能率 × 良品率</strong>　<span style="font-size:16px;opacity:.9;">（相乘，不是相加）</span></div>
+      <div class="grid g2">
+        <div class="card"><div class="num">黃金標準</div><p>OEE（整體設備效率）＝工廠運作時間裡，有多少比例真的在「產生價值」。</p></div>
+        <div class="card red"><div class="num">數學陷阱</div><p>AI 把良品率拉到 99%，但系統不穩讓<strong>可用率從 95% 掉到 80%</strong>——因為是相乘，<strong>總 OEE 反而下降</strong>。</p></div>
+      </div>
+      <div class="callout"><strong>呼應單元 3「換量尺」：</strong>別只看單一數據，要拆解三個指標，才看得清 AI 真正的效益。</div>
+    </div>
+  </section>
+
+  <!-- 智慧維護 PM→PdM -->
+  <section class="slide" data-title="製造業：從預防性到預測性維護">
+    <div class="in">
+      <div class="tag">場景 · 製造業（4／5）</div>
+      <h1>智慧維護：從「定期換」到「快壞才換」</h1>
+      <div class="vs">
+        <div class="side a"><h3>預防性維護 PM</h3><p>依固定時間／週期保養（像車子每開 5000 公里就保養）。</p><ul><li>零件還沒壞就被換掉</li><li>造成不必要的浪費</li></ul></div>
+        <div class="side b"><h3>AI 預測性維護 PdM</h3><p>用真實數據監控每個零件的即時健康。</p><ul><li>直到「快壞了」才更換</li><li>省維護成本</li></ul></div>
+        <div class="vs-badge">→</div>
+      </div>
+      <div class="callout gold"><strong>最大的價值：</strong>避免產線「<strong>無預警停機</strong>」的重大災難——那往往是製造業最痛、最貴的損失。</div>
+    </div>
+  </section>
+
+  <!-- 案例：資料治理優先 -->
+  <section class="slide" data-title="製造業案例：想做瑕疵檢測，卻卡在資料">
+    <div class="in">
+      <div class="tag gold">案例 · 製造業（5／5）</div>
+      <h1>想做 AI 瑕疵檢測，卻卡在「資料」</h1>
+      <div class="grid g2">
+        <div class="card red"><div class="num">現實落差</div><ul><li>檢測照片<strong>沒有標籤</strong></li><li>20 年的舊 MES <strong>數據撈不出來</strong></li><li>公司<strong>沒有 AI 工程師</strong></li></ul></div>
+        <div class="card hl"><div class="num">正確解方</div><ul><li>立刻<strong>暫停 POC</strong>，別急著買貴軟體</li><li>先從「資料治理」做起（如人工標註照片）</li><li>從離線分析開始，用培訓／外部專家補人才</li></ul></div>
+      </div>
+      <div class="callout gold"><strong>呼應單元 2：</strong>先把資料整成 AI-Ready，別花大錢蓋危樓。而且最大的挑戰其實是「<strong>人</strong>」——資深老師傅怕被取代而抗拒，這正是單元 3 說的「要賦能、不是取代」。</div>
+    </div>
+  </section>
+
+  <!-- 12 AI 四等級 -->
+  <section class="slide" data-title="AI 四等級：對症選級">
+    <div class="in">
+      <div class="tag">怎麼評估 · 我需要哪一級</div>
+      <h1>AI 的四個等級：對症選級，別過度投資</h1>
+      <div class="grid g4">
+        <div class="card"><div class="num">L1</div><h3>自動問答</h3><p>固定 FAQ、關鍵字回覆。</p></div>
+        <div class="card"><div class="num">L2</div><h3>對話理解</h3><p>聽懂你的意思、多輪對話。</p></div>
+        <div class="card"><div class="num">L3</div><h3>生成創作</h3><p>讀你的資料、生成內容與答案。</p></div>
+        <div class="card hl"><div class="num">L4</div><h3>AI 員工（代理）</h3><p>自己拆步驟、用工具、完成任務。</p></div>
+      </div>
+      <div class="callout"><strong>不是越高級越好：</strong>先看你的場景需要哪一級。多數中小企業，從 L2–L3（讀你的知識庫、生成初稿）就能創造巨大價值。</div>
+    </div>
+  </section>
+
+  <!-- 13 入門工具 -->
+  <section class="slide" data-title="入門工具：先從哪個開始玩">
+    <div class="in">
+      <div class="tag green">動手玩 · 零負擔起步</div>
+      <h1>今晚就能玩：三個低門檻的入門工具</h1>
+      <div class="grid g3">
+        <div class="card green"><div class="ic green"><svg viewBox="0 0 24 24"><path d="M4 4h16v12H4z"/><path d="M8 20h8"/></svg></div><h3>生成式 AI</h3><p>ChatGPT／Claude／Gemini——寫初稿、問答、翻譯、摘要。</p></div>
+        <div class="card green"><div class="ic green"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg></div><h3>NotebookLM</h3><p>把你的文件丟進去，變成「可問答」的私人知識庫。</p></div>
+        <div class="card green"><div class="ic green"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/></svg></div><h3>會議轉錄工具</h3><p>自動把會議變逐字稿與待辦。</p></div>
+      </div>
+      <div class="callout green"><strong>怎麼開始：</strong>挑一個「你這週就會用到」的場景，用<strong>單元 3 的商務指令模板</strong>寫一則指令，今晚就丟給 AI 試試看。</div>
+    </div>
+  </section>
+
+  <!-- 14 導入節奏 -->
+  <section class="slide" data-title="導入節奏：訪談→體驗→學會→上線">
+    <div class="in">
+      <div class="tag">導入節奏</div>
+      <h1>別想一步到位：分四階段慢慢來</h1>
+      <div class="flow">
+        <div class="fstep"><div class="n">1</div><h4>了解</h4><p>訪談盤點、找痛點與場景。</p></div>
+        <div class="fstep"><div class="n">2</div><h4>體驗</h4><p>小範圍試用、快速看成效。</p></div>
+        <div class="fstep"><div class="n">3</div><h4>學會</h4><p>教育訓練、養成使用習慣。</p></div>
+        <div class="fstep"><div class="n">4</div><h4>上線優化</h4><p>正式導入、持續迭代。</p></div>
+      </div>
+      <div class="callout">這其實就是全課主軸五步的落地版——<strong>先小範圍驗證，見效再擴大</strong>，風險低、阻力小。</div>
+    </div>
+  </section>
+
+  <!-- 15 成效數字牆 -->
+  <section class="slide" data-title="成效數字牆：這些場景省了多少">
+    <div class="in">
+      <div class="tag navy">成效佐證</div>
+      <h1>這些場景，實際能省多少？</h1>
+      <div class="stats">
+        <div class="stat"><div class="big">−85%</div><div class="lab">會議準備時間</div><div class="src">ECOxSTRAT 自研案例</div></div>
+        <div class="stat gold"><div class="big">−90%</div><div class="lab">週報製作時間</div><div class="src">ECOxSTRAT 自研案例</div></div>
+        <div class="stat teal"><div class="big">1.8h</div><div class="lab">每人每天找資料 → 大幅降低</div><div class="src">PureTech（廠商宣稱）</div></div>
+      </div>
+      <div class="callout"><strong>數字會說話，但別只看數字：</strong>真正的價值，是把人從瑣事裡釋放出來，去做更需要「判斷力」的事。</div>
+    </div>
+  </section>
+
+  <!-- 16 場景落地心法 -->
+  <!-- 落地方法：先拆到本質 -->
+  <section class="slide" data-title="落地關鍵：先拆到『本質』">
+    <div class="in">
+      <div class="tag">場景落地 · 方法</div>
+      <h1>落地的關鍵：先拆到「本質」，方案就變簡單</h1>
+      <p class="lead">找到痛點後，別急著找工具——先問一句：<strong>「這件事的本質差別，到底是什麼？」</strong>拆對了，方案往往簡單到出乎意料。</p>
+      <div class="grid g2">
+        <div class="card"><div class="num">情境</div><p>疫情期間，客戶無法來現場驗收一台幾千萬的工具機。</p></div>
+        <div class="card hl"><div class="num">拆到本質 → 最小可行方案</div><p>人到現場的本質差別，只是「能從<strong>不同角度</strong>看機器有沒有問題」。→ 架 <strong>5 台手機開視訊</strong>，客戶要哪個角度就切哪個、要試什麼就試。</p></div>
+      </div>
+      <div class="callout"><strong>結果：</strong>疫情期間一台機器都沒延誤，同業卻全數卡死。<strong>工具不是關鍵，拆解框架才是。</strong></div>
+    </div>
+  </section>
+
+  <!-- ===== 旗艦案例：直播代購電商 端到端落地（去識別化）start ===== -->
+
+  <!-- 案例1 開場：直播噴單 → 交付堆積 -->
+  <section class="slide" data-title="旗艦案例：一場直播賣掉一週的貨，然後呢？">
+    <div class="in">
+      <div class="tag gold">場景落地 · 真實客戶案例（本公司輔導 · 已去識別化）</div>
+      <h1>一場直播賣掉一週的貨——<span style="color:var(--teal)">然後呢？</span></h1>
+      <div style="display:flex;gap:40px;align-items:center;margin:auto 0;">
+        <svg viewBox="0 0 360 220" style="flex:none;width:340px;" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
+          <!-- 手機直播 -->
+          <rect x="14" y="26" width="104" height="168" rx="14" fill="#10243E"/>
+          <rect x="24" y="40" width="84" height="126" rx="8" fill="#1d3f63"/>
+          <circle cx="66" cy="92" r="24" fill="#00A6A6"/><path d="M44 150 a22 22 0 0 1 44 0 z" fill="#00A6A6"/>
+          <circle cx="38" cy="52" r="5" fill="#E5484D"/><text x="50" y="56" font-size="11" font-weight="800" fill="#fff">LIVE</text>
+          <!-- 噴單泡泡 -->
+          <g>
+            <rect x="128" y="40" width="74" height="30" rx="15" fill="#FFF3D1"/><text x="165" y="60" text-anchor="middle" font-size="15" font-weight="800" fill="#b0842a">1200+1</text>
+            <rect x="140" y="80" width="70" height="28" rx="14" fill="#E3E9F1"/><text x="175" y="99" text-anchor="middle" font-size="14" font-weight="700" fill="#10243E">XL粉+1</text>
+            <rect x="128" y="118" width="80" height="28" rx="14" fill="#FFF3D1"/><text x="168" y="137" text-anchor="middle" font-size="14" font-weight="800" fill="#b0842a">2280+1</text>
+          </g>
+          <!-- 箭頭 -->
+          <path d="M214 96 H250" stroke="#D2A84A" stroke-width="6"/><path d="M250 85 l18 11 -18 11 z" fill="#D2A84A"/>
+          <!-- 交付堆積 -->
+          <rect x="276" y="120" width="70" height="46" rx="6" fill="#E3E9F1" transform="rotate(-6 311 143)"/>
+          <rect x="282" y="96" width="66" height="44" rx="6" fill="#cfd9e4" transform="rotate(4 315 118)"/>
+          <rect x="286" y="70" width="62" height="42" rx="6" fill="#E3E9F1" transform="rotate(-3 317 91)"/>
+          <text x="316" y="97" text-anchor="middle" font-size="30" font-weight="800" fill="#B4472F">?</text>
+          <text x="312" y="188" text-anchor="middle" font-size="15" fill="#7B8796">然後呢？</text>
+        </svg>
+        <div style="flex:1;">
+          <div class="card" style="margin-bottom:14px;"><div class="num">生意很好</div><p>一場直播就賣掉<strong>一週的貨量</strong>，客群黏著度極高、封館 3 小時售罄。</p></div>
+          <div class="card hl"><div class="num">但真正的瓶頸</div><p>不是「賣不賣得掉」，而是——<strong>賣掉之後，能不能不出錯地交付？</strong></p></div>
+        </div>
+      </div>
+      <div class="callout"><strong>顧問觀點：生意做得越好，人工流程越追不上。</strong>爆量的那一刻，正是最容易出錯的時刻。</div>
+    </div>
+  </section>
+
+  <!-- 案例2 六環節：全寬 SVG 流程圖 -->
+  <section class="slide" data-title="案例｜盤點：一筆貨要走過六個環節">
+    <div class="in">
+      <div class="tag">案例 · 第一步：盤點現況</div>
+      <h1>一筆貨，要走過「六個環節」才到客人手上</h1>
+      <div style="margin:auto 0;">
+      <svg viewBox="0 0 1040 210" style="width:100%;height:auto;" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
+        <defs><marker id="ar" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="#D2A84A"/></marker></defs>
+        <g><rect x="10" y="34" width="150" height="104" rx="12" fill="#fff" stroke="#DDE4EC" stroke-width="2"/><circle cx="85" cy="66" r="20" fill="#00A6A6"/><text x="85" y="73" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">1</text><text x="85" y="112" text-anchor="middle" font-size="21" font-weight="700" fill="#10243E">美國採購</text><rect x="49" y="150" width="72" height="26" rx="13" fill="#EEE3CB"/><text x="85" y="168" text-anchor="middle" font-size="13" font-weight="700" fill="#9a7420">人工</text></g><g><rect x="180" y="34" width="150" height="104" rx="12" fill="#fff" stroke="#DDE4EC" stroke-width="2"/><circle cx="255" cy="66" r="20" fill="#00A6A6"/><text x="255" y="73" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">2</text><text x="255" y="112" text-anchor="middle" font-size="21" font-weight="700" fill="#10243E">收據入庫</text><rect x="219" y="150" width="72" height="26" rx="13" fill="#EEE3CB"/><text x="255" y="168" text-anchor="middle" font-size="13" font-weight="700" fill="#9a7420">人工</text></g><g><rect x="350" y="34" width="150" height="104" rx="12" fill="#fff" stroke="#DDE4EC" stroke-width="2"/><circle cx="425" cy="66" r="20" fill="#00A6A6"/><text x="425" y="73" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">3</text><text x="425" y="112" text-anchor="middle" font-size="21" font-weight="700" fill="#10243E">直播喊單</text><rect x="389" y="150" width="72" height="26" rx="13" fill="#EEE3CB"/><text x="425" y="168" text-anchor="middle" font-size="13" font-weight="700" fill="#9a7420">人工</text></g><g><rect x="520" y="34" width="150" height="104" rx="12" fill="#fff" stroke="#DDE4EC" stroke-width="2"/><circle cx="595" cy="66" r="20" fill="#00A6A6"/><text x="595" y="73" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">4</text><text x="595" y="112" text-anchor="middle" font-size="21" font-weight="700" fill="#10243E">湊單上架</text><rect x="559" y="150" width="72" height="26" rx="13" fill="#EEE3CB"/><text x="595" y="168" text-anchor="middle" font-size="13" font-weight="700" fill="#9a7420">人工</text></g><g><rect x="690" y="34" width="150" height="104" rx="12" fill="#fff" stroke="#DDE4EC" stroke-width="2"/><circle cx="765" cy="66" r="20" fill="#00A6A6"/><text x="765" y="73" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">5</text><text x="765" y="112" text-anchor="middle" font-size="21" font-weight="700" fill="#10243E">對帳</text><rect x="729" y="150" width="72" height="26" rx="13" fill="#EEE3CB"/><text x="765" y="168" text-anchor="middle" font-size="13" font-weight="700" fill="#9a7420">人工</text></g><g><rect x="860" y="34" width="150" height="104" rx="12" fill="#fff" stroke="#DDE4EC" stroke-width="2"/><circle cx="935" cy="66" r="20" fill="#00A6A6"/><text x="935" y="73" text-anchor="middle" font-size="20" font-weight="800" fill="#fff">6</text><text x="935" y="112" text-anchor="middle" font-size="21" font-weight="700" fill="#10243E">出貨</text><rect x="899" y="150" width="72" height="26" rx="13" fill="#EEE3CB"/><text x="935" y="168" text-anchor="middle" font-size="13" font-weight="700" fill="#9a7420">人工</text></g>
+        <path d="M162 86 H176" stroke="#D2A84A" stroke-width="4" marker-end="url(#ar)"/>
+        <path d="M332 86 H346" stroke="#D2A84A" stroke-width="4" marker-end="url(#ar)"/>
+        <path d="M502 86 H516" stroke="#D2A84A" stroke-width="4" marker-end="url(#ar)"/>
+        <path d="M672 86 H686" stroke="#D2A84A" stroke-width="4" marker-end="url(#ar)"/>
+        <path d="M842 86 H856" stroke="#D2A84A" stroke-width="4" marker-end="url(#ar)"/>
+      </svg>
+      </div>
+      <div class="callout gold">觀察：通路與品項越多，<strong>環節之間的「人工銜接成本」不是線性、而是非線性上升</strong>——這正是系統化最有價值的切入點。</div>
+    </div>
+  </section>
+
+  <!-- 案例3 困境：圖示列 -->
+  <section class="slide" data-title="案例｜困境：資料『進系統』是最大的時間黑洞">
+    <div class="in">
+      <div class="tag red">案例 · 第二步：找出痛點</div>
+      <h1>每一站「現在怎麼做、付出什麼代價」</h1>
+      <div class="why" style="margin:20px 0;">
+        <div class="wrow"><div class="ic red"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M10.5 18h3"/></svg></div><div><h4>直播喊單</h4><p>邊播邊抄、翻截圖還原 → <strong style="color:#B4472F">漏單、抄錯，整理一整晚</strong></p></div></div>
+        <div class="wrow"><div class="ic red"><svg viewBox="0 0 24 24"><path d="M4 4h16v14H4z"/><path d="M8 9h8M8 13h5"/></svg></div><div><h4>美國收據</h4><p>逐張敲款號與成本 → <strong style="color:#B4472F">建到半夜、毛利失真</strong></p></div></div>
+        <div class="wrow"><div class="ic red"><svg viewBox="0 0 24 24"><path d="M3 6h6l3 3h9v9H3z"/></svg></div><div><h4>湊單上架</h4><p>人工併單、手算金額 → <strong style="color:#B4472F">金額加錯、帳對不上</strong></p></div></div>
+        <div class="wrow"><div class="ic red"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-3-6.2M20 4v4h-4"/></svg></div><div><h4>對帳／庫存</h4><p>逐筆核對、靠記憶 → <strong style="color:#B4472F">漏出／重複出貨、超賣</strong></p></div></div>
+      </div>
+      <div class="callout red">🙋 <strong>小思考：</strong>回你自己公司，六個環節裡——<strong>哪一站，是你們最大的「時間黑洞」？</strong>（先想一個，等一下用得到）</div>
+    </div>
+  </section>
+
+  <!-- 案例4 共同根因：資料孤島 → 單一資料流 SVG -->
+  <section class="slide" data-title="案例｜共同根因：六個痛點，其實是同一個病">
+    <div class="in">
+      <div class="tag">案例 · 追根究柢</div>
+      <h1>六個痛點，其實是<span style="color:var(--teal)">同一個結構問題</span>的六種症狀</h1>
+      <div style="display:flex;gap:38px;align-items:center;margin:auto 0;">
+        <svg viewBox="0 0 360 210" style="flex:none;width:346px;" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
+          <!-- 亂線 -->
+          <path d="M40 60 L110 120 M110 55 L45 120 M75 45 L95 130 M35 95 L120 90" stroke="#C6CDD6" stroke-width="2" fill="none"/>
+          <!-- 6 座小資料島 -->
+          <g><ellipse cx="45" cy="52" rx="20" ry="6" fill="#8A94A0"/><path d="M25 52 v22 a20 6 0 0 0 40 0 v-22" fill="#9aa3ae"/><ellipse cx="45" cy="52" rx="20" ry="6" fill="#aab2bc"/></g><g><ellipse cx="95" cy="44" rx="20" ry="6" fill="#8A94A0"/><path d="M75 44 v22 a20 6 0 0 0 40 0 v-22" fill="#9aa3ae"/><ellipse cx="95" cy="44" rx="20" ry="6" fill="#aab2bc"/></g><g><ellipse cx="120" cy="88" rx="20" ry="6" fill="#8A94A0"/><path d="M100 88 v22 a20 6 0 0 0 40 0 v-22" fill="#9aa3ae"/><ellipse cx="120" cy="88" rx="20" ry="6" fill="#aab2bc"/></g><g><ellipse cx="40" cy="100" rx="20" ry="6" fill="#8A94A0"/><path d="M20 100 v22 a20 6 0 0 0 40 0 v-22" fill="#9aa3ae"/><ellipse cx="40" cy="100" rx="20" ry="6" fill="#aab2bc"/></g><g><ellipse cx="88" cy="108" rx="20" ry="6" fill="#8A94A0"/><path d="M68 108 v22 a20 6 0 0 0 40 0 v-22" fill="#9aa3ae"/><ellipse cx="88" cy="108" rx="20" ry="6" fill="#aab2bc"/></g><g><ellipse cx="120" cy="140" rx="20" ry="6" fill="#8A94A0"/><path d="M100 140 v22 a20 6 0 0 0 40 0 v-22" fill="#9aa3ae"/><ellipse cx="120" cy="140" rx="20" ry="6" fill="#aab2bc"/></g>
+          <text x="82" y="182" text-anchor="middle" font-size="14" fill="#7B8796">各自為政 · 對不上的資料</text>
+          <!-- 箭頭 -->
+          <path d="M158 95 H196" stroke="#D2A84A" stroke-width="6"/><path d="M196 83 l20 12 -20 12 z" fill="#D2A84A"/>
+          <text x="188" y="76" text-anchor="middle" font-size="13" font-weight="700" fill="#b0842a">整合</text>
+          <!-- 單一資料流大圓柱 -->
+          <ellipse cx="290" cy="58" rx="46" ry="14" fill="#00A6A6"/>
+          <path d="M244 58 v78 a46 14 0 0 0 92 0 v-78" fill="#0e7d7d"/>
+          <ellipse cx="290" cy="58" rx="46" ry="14" fill="#14B8A6"/>
+          <text x="290" y="112" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">單一</text>
+          <text x="290" y="132" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">真實來源</text>
+        </svg>
+        <div style="flex:1;">
+          <div class="card"><div class="num">六個症狀 · 同一個根因</div><p>每個環節<strong>各自維護一份資料</strong>、同一筆貨被人手<strong>重打 3–4 次</strong>、沒有任何地方是「唯一且即時正確」的真相——<strong style="color:#B4472F">搬一次就可能錯一次</strong>，一爆量就放到最大。</p></div>
+          <div class="callout gold" style="margin-top:14px;">↩️ 回扣單元一 <strong>「資料庫 ≠ 知識庫」</strong>：資料明明都在，卻散在六處、彼此對不上，就不是「能用的知識」。解法不是請更多人，而是<strong>一條貫穿全程的單一資料流</strong>。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 案例5 AI 介入點：橫向資料流 SVG -->
+  <section class="slide" data-title="案例｜核心：標出『AI 該在哪一站出手』">
+    <div class="in">
+      <div class="tag gold">案例 · 第三步：標出 AI 介入點（本案核心）</div>
+      <h1>AI 只在<span style="color:var(--teal)">「輸入端讀」＋「重複比對」</span>出手，決定權留給人</h1>
+      <div style="margin:14px 0;">
+      <svg viewBox="0 0 1040 240" style="width:100%;height:auto;" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
+        <defs><marker id="ar2" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="#8A94A0"/></marker></defs>
+        <!-- 輸入 -->
+        <rect x="8" y="70" width="188" height="112" rx="12" fill="#fff" stroke="#DDE4EC" stroke-width="2"/>
+        <text x="102" y="58" text-anchor="middle" font-size="18" font-weight="800" fill="#10243E">輸入（拍照／截圖）</text>
+        <rect x="26" y="92" width="72" height="70" rx="8" fill="#E3E9F1"/><path d="M40 108h44M40 122h44M40 136h30" stroke="#8A94A0" stroke-width="3"/><text x="62" y="176" text-anchor="middle" font-size="13" fill="#7B8796">收據</text>
+        <rect x="112" y="92" width="66" height="70" rx="8" fill="#E3E9F1"/><rect x="130" y="100" width="30" height="50" rx="4" fill="#8A94A0"/><text x="145" y="176" text-anchor="middle" font-size="13" fill="#7B8796">喊單</text>
+        <path d="M198 126 H236" stroke="#8A94A0" stroke-width="3" marker-end="url(#ar2)"/>
+        <!-- AI 讀+比對 -->
+        <rect x="240" y="66" width="210" height="120" rx="14" fill="#00A6A6"/>
+        <text x="345" y="112" text-anchor="middle" font-size="26" font-weight="800" fill="#fff">AI</text>
+        <text x="345" y="144" text-anchor="middle" font-size="18" font-weight="700" fill="#EAFBFB">讀 ＋ 比對</text>
+        <text x="345" y="52" text-anchor="middle" font-size="15" fill="#0e7d7d">OCR 辨識 · 自動對應 SKU</text>
+        <path d="M452 126 H490" stroke="#8A94A0" stroke-width="3" marker-end="url(#ar2)"/>
+        <!-- 你確認 -->
+        <circle cx="556" cy="126" r="58" fill="#FFF3D1" stroke="#D2A84A" stroke-width="3"/>
+        <circle cx="556" cy="108" r="16" fill="#D2A84A"/><path d="M534 156 a22 22 0 0 1 44 0 z" fill="#D2A84A"/>
+        <text x="556" y="200" text-anchor="middle" font-size="17" font-weight="800" fill="#b0842a">你 · 只在此確認</text>
+        <path d="M616 126 H654" stroke="#8A94A0" stroke-width="3" marker-end="url(#ar2)"/>
+        <!-- 自動履約 -->
+        <rect x="658" y="66" width="374" height="120" rx="14" fill="#10243E"/>
+        <text x="845" y="52" text-anchor="middle" font-size="15" fill="#7B8796">系統自動</text>
+        <g fill="#1d3f63" stroke="#3a5f85">
+          <rect x="676" y="92" width="108" height="68" rx="8"/><rect x="792" y="92" width="108" height="68" rx="8"/><rect x="908" y="92" width="108" height="68" rx="8"/>
+        </g>
+        <text x="730" y="123" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">一鍵組合</text><text x="730" y="145" text-anchor="middle" font-size="13" fill="#B9C6D6">金額加總</text>
+        <text x="846" y="123" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">自動對帳</text><text x="846" y="145" text-anchor="middle" font-size="13" fill="#B9C6D6">勾稽扣庫存</text>
+        <text x="962" y="123" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">即時庫存</text><text x="962" y="145" text-anchor="middle" font-size="13" fill="#B9C6D6">不足攔阻</text>
+      </svg>
+      </div>
+      <div class="callout"><strong>看懂這頁就看懂 AI 落地：</strong>AI 只做「讀」與「比對」，人只在關鍵處確認——而且<strong>不追求 100% 自動化</strong>，接受「平台沒 API」的現實，把介入點標清楚就好。</div>
+    </div>
+  </section>
+
+  <!-- 案例6 導入前後：.vs 元件 -->
+  <section class="slide" data-title="案例｜導入前後：你的角色變了">
+    <div class="in">
+      <div class="tag">案例 · 端到端對照</div>
+      <h1>同一條六站流程，導入前後<span style="color:var(--teal)">差在哪</span></h1>
+      <div class="vs">
+        <div class="side a">
+          <h3>導入前 · 站站人工銜接</h3>
+          <ul>
+            <li>逐張手敲成本，做到半夜</li>
+            <li>邊播邊抄，整理一整晚</li>
+            <li>人工併單、手算金額</li>
+            <li>逐筆核對、手動扣庫存易超賣</li>
+          </ul>
+        </div>
+        <div class="side b">
+          <h3>導入後 · 資料一次流經全程</h3>
+          <ul>
+            <li>拍照 AI 辨識建檔（自動）</li>
+            <li>截圖上傳、自動對應 SKU（自動）</li>
+            <li>一鍵併單、複製上架（自動）</li>
+            <li>上傳對帳、即時扣補、不足攔阻（自動）</li>
+          </ul>
+        </div>
+        <div class="vs-badge">VS</div>
+      </div>
+      <div class="callout gold">關鍵差異：你的角色，從<strong>「每一站都要動手」</strong>變成<strong>「只在關鍵處確認」</strong>——<strong>越爆量、效益越顯著。</strong></div>
+    </div>
+  </section>
+
+  <!-- 案例7 分階段：SVG 階梯圖 -->
+  <section class="slide" data-title="案例｜落地路徑：先打底、再開 AI">
+    <div class="in">
+      <div class="tag">案例 · 第四步：分階段低風險導入</div>
+      <h1>不是一次到位，而是<span style="color:var(--teal)">先打底、再開 AI</span></h1>
+      <div style="margin:auto 0;">
+      <svg viewBox="0 0 1000 300" style="width:100%;height:auto;max-height:330px;" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif">
+        <!-- 上升虛線 -->
+        <path d="M40 250 L960 60" stroke="#D2A84A" stroke-width="3" stroke-dasharray="8 7" fill="none"/>
+        <path d="M960 60 l-22 2 12 18 z" fill="#D2A84A"/>
+        <!-- 4 階 -->
+        <g>
+          <rect x="40" y="196" width="200" height="70" rx="10" fill="#5A6B80"/>
+          <text x="140" y="228" text-anchor="middle" font-size="19" font-weight="800" fill="#fff">Phase 0</text>
+          <text x="140" y="252" text-anchor="middle" font-size="15" fill="#E3E9F1">設定與訓練</text>
+        </g>
+        <g>
+          <rect x="270" y="156" width="200" height="110" rx="10" fill="#3F7D86"/>
+          <text x="370" y="190" text-anchor="middle" font-size="19" font-weight="800" fill="#fff">Phase 1</text>
+          <text x="370" y="214" text-anchor="middle" font-size="15" fill="#E3F5F5">庫存履約打底</text>
+          <text x="370" y="238" text-anchor="middle" font-size="13" fill="#CDECEC">先上成熟功能</text>
+        </g>
+        <g>
+          <rect x="500" y="116" width="200" height="150" rx="10" fill="#1F8A8A"/>
+          <text x="600" y="150" text-anchor="middle" font-size="19" font-weight="800" fill="#fff">Phase 2</text>
+          <text x="600" y="174" text-anchor="middle" font-size="15" fill="#E3F5F5">直播流程上線</text>
+          <text x="600" y="198" text-anchor="middle" font-size="13" fill="#CDECEC">喊單匯入·SKU對應</text>
+        </g>
+        <g>
+          <rect x="730" y="70" width="220" height="196" rx="10" fill="#C8A24A"/>
+          <rect x="760" y="52" width="70" height="30" rx="15" fill="#10243E"/><text x="795" y="73" text-anchor="middle" font-size="15" font-weight="800" fill="#FFD98A">AI 上場</text>
+          <text x="840" y="112" text-anchor="middle" font-size="19" font-weight="800" fill="#fff">Phase 3</text>
+          <text x="840" y="136" text-anchor="middle" font-size="15" fill="#fff">AI 辨識調準</text>
+          <text x="840" y="160" text-anchor="middle" font-size="13" fill="#FBEED0">用真實收據微調</text>
+        </g>
+      </svg>
+      </div>
+      <div class="callout">呼應主軸 <strong>「小範圍先驗證 → 穩了再擴大」</strong>：確定性高的環節先上線，最不確定的 AI 辨識<strong>放到最後、用真實資料慢慢調</strong>——風險低、見效快。</div>
+    </div>
+  </section>
+
+  <!-- 案例8 三原則：帶 icon 卡片 -->
+  <section class="slide" data-title="案例｜三個帶得走的原則">
+    <div class="in">
+      <div class="tag gold">案例 · 收斂</div>
+      <h1>這個案例，給你三個「帶得走」的原則</h1>
+      <div class="grid g3">
+        <div class="card hl"><div class="ic navy"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div><div class="num">原則一</div><h3>先拆流程，再選工具</h3><p>拆不出六個環節，買什麼系統都是白買。</p></div>
+        <div class="card hl"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M2 12s3-6 10-6 10 6 10 6-3 6-10 6-10-6-10-6z"/></svg></div><div class="num">原則二</div><h3>AI 用在「讀」與「比對」</h3><p>決定權留給人；不追求全自動，標清楚介入點。</p></div>
+        <div class="card hl"><div class="ic gold"><svg viewBox="0 0 24 24"><path d="M3 20h4v-5h4V9h4V4h6"/></svg></div><div class="num">原則三</div><h3>分階段：先打底、再開 AI</h3><p>成熟的先上線，最不確定的 AI 最後調。</p></div>
+      </div>
+      <div class="callout gold">🙋 <strong>換你想：</strong>剛才你想到公司那個「時間黑洞」——<strong>如果只做一件事，你會先讓 AI 接手哪一站？為什麼？</strong>（兩兩討論 2 分鐘）</div>
+    </div>
+  </section>
+
+  <!-- ===== 旗艦案例 end ===== -->
+
+  <!-- 換你畫：你的時間黑洞 -->
+  <section class="slide" data-title="🖋 換你畫：你自己的時間黑洞">
+    <div class="in">
+      <div class="tag gold">換你想 · 動手畫</div>
+      <h1>看完別人的六環節——換你畫：你自己的<span style="color:var(--teal)">時間黑洞</span>在哪？</h1>
+      <div style="display:flex;gap:36px;align-items:center;margin:auto 0;">
+        <svg viewBox="0 0 330 200" style="flex:none;width:312px;" xmlns="http://www.w3.org/2000/svg" font-family="'Noto Sans TC',sans-serif"><rect x="5" y="20" width="320" height="172" rx="14" fill="#F8FAFC" stroke="#C6CDD6" stroke-width="2" stroke-dasharray="7 6"/><text x="165" y="42" text-anchor="middle" font-size="13" fill="#7B8796">✎ 在這裡，把你的流程畫下來</text><g fill="#fff" stroke="#C6CDD6" stroke-width="2"><rect x="16" y="74" width="56" height="44" rx="8"/><rect x="94" y="74" width="56" height="44" rx="8"/><rect x="172" y="74" width="56" height="44" rx="8"/><rect x="250" y="74" width="56" height="44" rx="8"/></g><g fill="#C6CDD6" font-size="20"><text x="44" y="102" text-anchor="middle">?</text><text x="122" y="102" text-anchor="middle">?</text><text x="200" y="102" text-anchor="middle">?</text><text x="278" y="102" text-anchor="middle">?</text></g><g stroke="#C9D2DC" stroke-width="3" fill="#C9D2DC"><path d="M74 96 H90"/><path d="M90 91 l7 5 -7 5 z"/><path d="M152 96 H168"/><path d="M168 91 l7 5 -7 5 z"/><path d="M230 96 H246"/><path d="M246 91 l7 5 -7 5 z"/></g><circle cx="200" cy="96" r="40" fill="none" stroke="#D2A84A" stroke-width="3" stroke-dasharray="6 5"/><text x="200" y="158" text-anchor="middle" font-size="12.5" font-weight="700" fill="#b0842a">你的時間黑洞？</text><g transform="translate(276 150) rotate(45)"><rect x="0" y="0" width="11" height="30" rx="2" fill="#D2A84A"/><path d="M0 30 l5.5 9 5.5 -9 z" fill="#8A6a1f"/><rect x="0" y="0" width="11" height="6" fill="#b0842a"/></g></svg>
+        <div style="flex:1;">
+          <div class="card" style="margin-bottom:10px;padding:15px 22px;"><div class="num">① 想一個</div><p>你工作或生活中，<strong>必要、卻很花時間</strong>的流程。</p></div>
+          <div class="card" style="margin-bottom:10px;padding:15px 22px;"><div class="num">② 畫下來</div><p>像剛剛的六環節，用箭頭把你的流程畫出來。</p></div>
+          <div class="card hl" style="padding:15px 22px;"><div class="num">③ 標兩站</div><p>圈「最花時間」的一站；再標一站「<strong>可交給 AI 讀或比對</strong>」的。</p></div>
+        </div>
+      </div>
+      <div class="callout gold">🙋 <strong>兩兩交換草圖：</strong>幫對方看——哪一站最像他的時間黑洞？哪一站 AI 幫得上？（5 分鐘）</div>
+    </div>
+  </section>
+
+  <!-- 四個跨產業落地實例 -->
+  <section class="slide" data-title="四個跨產業落地實例">
+    <div class="in">
+      <div class="tag gold">場景落地 · 跨產業實例</div>
+      <h1>同一套「拆解思維」，四個產業都見效</h1>
+      <table style="width:100%;border-collapse:separate;border-spacing:0 7px;margin:auto 0;font-size:16.5px;">
+        <thead><tr style="background:var(--navy);color:#fff;">
+          <th style="text-align:left;padding:11px 16px;border-radius:8px 0 0 8px;width:20%;">產業／情境</th>
+          <th style="text-align:left;padding:11px 16px;width:33%;">用的拆解框架</th>
+          <th style="text-align:left;padding:11px 16px;border-radius:0 8px 8px 0;">落地與成效</th>
+        </tr></thead>
+        <tbody>
+          <tr style="background:#fff;"><td style="padding:11px 16px;border:1px solid var(--line);border-right:0;border-radius:8px 0 0 8px;font-weight:700;color:var(--navy);">工具機驗收</td><td style="padding:11px 16px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--teal);font-weight:700;">拆到第一性（本質差異）</td><td style="padding:11px 16px;border:1px solid var(--line);border-left:0;border-radius:0 8px 8px 0;color:var(--ink-soft);">5 支手機視訊多角度 → 零延誤</td></tr>
+          <tr style="background:#fff;"><td style="padding:11px 16px;border:1px solid var(--line);border-right:0;border-radius:8px 0 0 8px;font-weight:700;color:var(--navy);">半導體除錯</td><td style="padding:11px 16px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--teal);font-weight:700;">多層次分析（軟／硬／通訊／廠務）</td><td style="padding:11px 16px;border:1px solid var(--line);border-left:0;border-radius:0 8px 8px 0;color:var(--ink-soft);">逐層列檢查點 → 找到問題、變成 SOP</td></tr>
+          <tr style="background:#fff;"><td style="padding:11px 16px;border:1px solid var(--line);border-right:0;border-radius:8px 0 0 8px;font-weight:700;color:var(--navy);">問卷分析</td><td style="padding:11px 16px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--teal);font-weight:700;">敘述統計 ＋ 依受眾分類</td><td style="padding:11px 16px;border:1px solid var(--line);border-left:0;border-radius:0 8px 8px 0;color:var(--ink-soft);">按老師／助教／行政分類 → 各自看到要改的</td></tr>
+          <tr style="background:#fff;"><td style="padding:11px 16px;border:1px solid var(--line);border-right:0;border-radius:8px 0 0 8px;font-weight:700;color:var(--navy);">社區回收</td><td style="padding:11px 16px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--teal);font-weight:700;">行為塑造（創造選項）</td><td style="padding:11px 16px;border:1px solid var(--line);border-left:0;border-radius:0 8px 8px 0;color:var(--ink-soft);">放美工刀＋擺好樣板 → 大家自發折箱</td></tr>
+        </tbody>
+      </table>
+      <div class="callout gold"><strong>有了拆解框架，同一份工作的價值會翻倍</strong>——關鍵從來不是工具多炫，而是「怎麼想」。</div>
+    </div>
+  </section>
+
+  <!-- 教 AI 怎麼想 -->
+  <!-- SotaAgents 四個企業案例 -->
+  <section class="slide" data-title="跨國企業案例：四個產業的 AI 落地">
+    <div class="in">
+      <div class="tag">跨產業案例 · 帶量化成果</div>
+      <h1>四個產業，四種 AI 落地的真實成果</h1>
+      <div class="grid g4">
+        <div class="card"><div class="num">日本 · 電子製造</div><p>用技術手冊做故障排除。<br><strong style="color:var(--teal);">服務時間縮短 40%</strong></p></div>
+        <div class="card"><div class="num">美國 · 食品實驗室</div><p>處理安全檢驗報告。<br><strong style="color:var(--teal);">速度與準確度提升</strong></p></div>
+        <div class="card"><div class="num">日本 · 汽車集團</div><p>引導客戶選車。<br><strong style="color:var(--teal);">增加潛在客戶</strong></p></div>
+        <div class="card"><div class="num">日本 · 觀光局</div><p>協助旅客探索在地體驗。<br><strong style="color:var(--teal);">提升服務體驗</strong></p></div>
+      </div>
+      <div class="callout"><strong>共同點：</strong>都是把「散在文件、手冊、報告裡的知識」變成隨問隨答的助手。<br><span style="font-size:14.5px;color:var(--ink-faint);">資料來源：SotaAgents 企業 AI 導入報告（廠商案例）</span></div>
+    </div>
+  </section>
+
+  <!-- 更多落地場景（NotebookLM/簡立峰） -->
+  <section class="slide" data-title="更多落地場景：業界實例">
+    <div class="in">
+      <div class="tag">更多高價值場景 · 業界訪談</div>
+      <h1>還有這些：AI 已經落地的高價值場景</h1>
+      <div class="grid g4">
+        <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><h3>研發加速</h3><p>AI 讀數萬篇論文，找材料／配方新解。<strong style="color:var(--teal);">研發產出躍升</strong>（化工龍頭找半導體材料配方）。</p></div>
+        <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></div><h3>決策支援</h3><p>內部資料接好，主管直接問 AI 要策略。<strong style="color:var(--teal);">少開會</strong>，從 Work Faster 到 Work Smarter。</p></div>
+        <div class="card hl"><div class="ic gold"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><h3>不漏接獲客</h3><p>忙不過來時，AI 代理人先接住客戶詢問。<strong style="color:var(--teal);">中小企業「增營收」</strong>勝過「省成本」。</p></div>
+        <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 4h16v12H4z"/><path d="M8 20h8M12 16v4"/></svg></div><h3>個人生產力</h3><p>AI 幫寫講稿、做簡報、整理文件。<strong style="color:var(--teal);">把時間留給判斷與決策</strong>。</p></div>
+      </div>
+      <div class="callout">這些都不是未來式——是<strong>現在進行式</strong>。關鍵都一樣：把 AI 放進「真正有價值的那件事」，而不是拿來做花俏的實驗。<br><span style="font-size:14.5px;color:var(--ink-faint);">來源：簡立峰 · 商周 MEGA TALK（NotebookLM 整理）</span></div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="落地關鍵：先『教 AI 怎麼想』">
+    <div class="in">
+      <div class="tag red">落地關鍵</div>
+      <h1>同一個 AI，差別在你有沒有「教它怎麼想」</h1>
+      <div class="stats">
+        <div class="stat"><div class="big">20–30%</div><div class="lab">完全不教它怎麼想</div><div class="src">通用素材、幻覺多</div></div>
+        <div class="stat gold"><div class="big">50%</div><div class="lab">教它一些思考步驟</div><div class="src">給部分框架</div></div>
+        <div class="stat teal"><div class="big">70–80%</div><div class="lab">給它完整的思考框架</div><div class="src">先教「怎麼想」</div></div>
+      </div>
+      <div class="callout red"><strong>「你都沒教 AI 怎麼想，怎麼能期待它給你意想不到的東西？」</strong>場景落地不是把資料丟給 AI，而是先給它<strong>拆解問題的方法</strong>——呼應單元 3 的商務提問：把「怎麼想」講清楚。</div>
+    </div>
+  </section>
+
+  <!-- 台灣 AI 導入實況：政府與企業數據 -->
+  <section class="slide" data-title="台灣 AI 導入實況：政府與企業數據">
+    <div class="in">
+      <div class="tag navy">數據佐證 · 台灣現況</div>
+      <h1>不是趨勢，是現在：台灣企業已經在做了</h1>
+      <div class="stats">
+        <div class="stat teal"><div class="big">1.2 萬+</div><div class="lab">家企業已獲輔導導入 AI</div><div class="src">經濟部商業發展署 114 年度</div></div>
+        <div class="stat gold"><div class="big">+5.4%</div><div class="lab">導入後營收平均成長</div><div class="src">經濟部商業發展署 114 年度</div></div>
+        <div class="stat"><div class="big">−50%+</div><div class="lab">店員行政作業時間</div><div class="src">經濟部商業發展署 114 年度</div></div>
+      </div>
+      <div class="grid g2" style="margin-top:4px;">
+        <div class="card"><div class="num">製造業 · 鹿港水龍頭廠</div><p>30 年老廠導入 <strong>AI 智慧排程</strong>（依訂單／機台／庫存自動排程、預測故障）：半年<strong style="color:var(--teal);">產能 +15%</strong>、準時達交率 <strong style="color:var(--teal);">80% → 95%</strong>。</p></div>
+        <div class="card"><div class="num">餐飲 · Q Burger</div><p>整合全台 370 家門店數據 ＋ <strong>AI 輿情分析</strong>自動蒐集顧客評論：線上訂單占比突破 <strong style="color:var(--teal);">60%</strong>。</p></div>
+      </div>
+      <div class="callout"><strong>政府正大力推動</strong>——這門課本身，就是經濟部補助的在職培訓。趨勢站在你這邊，現在動手正是時候。</div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="場景落地心法：從人的痛點出發">
+    <div class="in">
+      <div class="tag gold">心法</div>
+      <h1>所有場景的共同起點：從「人的痛點」出發</h1>
+      <div class="grid g3">
+        <div class="card"><div class="num">別這樣</div><p>看到別人用什麼炫工具，就跟風導入。</p></div>
+        <div class="card hl"><div class="num">要這樣</div><p>先問「哪個場景最痛、最花時間」→ 選場景 → 小範圍驗證 → 見效擴大。</p></div>
+        <div class="card"><div class="num">關鍵</div><p>賦能最懂業務、最懂現場的人（呼應單元 3 影片）。</p></div>
+      </div>
+      <div class="callout gold"><strong>場景選對了，AI 才落得了地。</strong>工具永遠為人服務——先從人的痛點，找到那個「最值得做」的場景。</div>
+    </div>
+  </section>
+
+  <!-- 17 五步回扣 -->
+  <section class="slide" data-title="回扣主軸｜標出介入點、看場景">
+    <div class="in">
+      <div class="tag gold">回扣全課主軸</div>
+      <h1>五步起手式：你正在做第 3 步</h1>
+      <div class="flow">
+        <div class="fstep"><div class="n">1</div><h4>盤點現況</h4><p>單元 2</p></div>
+        <div class="fstep"><div class="n">2</div><h4>拆解流程</h4><p>單元 3</p></div>
+        <div class="fstep hl" style="border:2px solid var(--teal);background:#fbfdfd;"><div class="n">3</div><h4>標出介入點</h4><p>← 看場景（本單元）</p></div>
+        <div class="fstep"><div class="n">4</div><h4>小範圍驗證</h4><p>單元 6</p></div>
+        <div class="fstep"><div class="n">5</div><h4>擴大導入</h4><p>單元 6–7</p></div>
+      </div>
+      <div class="callout gold">看懂了哪些場景值得做，下一步就是把它「建起來」——單元 5 帶你動手建企業知識庫，讓這些場景有共同的地基。</div>
+    </div>
+  </section>
+
+  <!-- 18 小結 -->
+  <section class="slide divider" data-title="單元四 · 小結">
+    <div class="in">
+      <div class="eyebrow">單元四 · 小結</div>
+      <h1>這一單元，請帶走這三句話</h1>
+      <p class="lead" style="font-size:26px;line-height:1.95;">
+        1. <strong style="color:var(--gold-hi)">找對場景，比買對工具更重要</strong>。<br>
+        2. 知識共享閉環，讓 AI <strong style="color:var(--gold-hi)">越用越懂你的公司</strong>。<br>
+        3. 視覺／語音／空間，把<strong style="color:var(--gold-hi)">非結構化資料變資產</strong>。
+      </p>
+      <div class="callout" style="background:rgba(255,255,255,.12);border-left-color:var(--gold-hi);color:rgba(255,255,255,.95);"><strong style="color:#fff;">下一單元預告：</strong>場景看清楚了，來把地基建起來——單元五〈企業知識庫建置工作坊〉，動手設計你的知識庫分類、命名與權限。</div>
+    </div>
+  </section>
+
+
+</div>
+
+<div class="slide-nav" aria-label="簡報導覽">
+  <button class="nav-btn nav-prev" type="button" aria-label="上一頁" data-slide-prev>&#8592;</button>
+  <button class="nav-btn nav-next" type="button" aria-label="下一頁" data-slide-next>&#8594;</button>
+  <div class="slide-status" aria-live="polite" data-slide-status>01 / 22</div>
+</div>
+
+<button class="menu-btn" type="button" data-outline-toggle>☰ 目錄</button>
+<div class="dots" data-dots aria-label="頁面浮點導覽"></div>
+<div class="outline" data-outline>
+  <div class="outline-panel">
+    <button class="outline-close" type="button" data-outline-toggle aria-label="關閉目錄">&times;</button>
+    <h2>單元四 · 大綱</h2>
+    <div class="osub">點任一頁即可跳轉　·　快捷鍵 O 開關目錄　·　Esc 關閉</div>
+    <div data-outline-list></div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const prevBtn = document.querySelector('[data-slide-prev]');
+  const nextBtn = document.querySelector('[data-slide-next]');
+  const status = document.querySelector('[data-slide-status]');
+  const dotsWrap = document.querySelector('[data-dots]');
+  const outline = document.querySelector('[data-outline]');
+  const outlineList = document.querySelector('[data-outline-list]');
+  const pad = v => String(v).padStart(2, '0');
+  const clamp = v => Math.max(0, Math.min(slides.length - 1, v));
+  let current = 0, pointerStart = null;
+
+  function titleOf(s, i){
+    const dt = s.getAttribute('data-title'); if (dt) return dt;
+    const h = s.querySelector('h1'); if (h && h.textContent.trim()) return h.textContent.trim().replace(/\s+/g,' ');
+    const e = s.querySelector('.eyebrow'); if (e && e.textContent.trim()) return e.textContent.trim().replace(/\s+/g,' ');
+    return '第 ' + (i + 1) + ' 頁';
+  }
+  const titles = slides.map(titleOf);
+  // 自動編頁碼
+  slides.forEach((s, i) => { let pg = s.querySelector('.pg'); if (!pg){ pg = document.createElement('div'); pg.className='pg'; s.querySelector('.in').appendChild(pg);} pg.textContent = pad(i + 1); });
+
+  const dotBtns = slides.map((s, i) => {
+    const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', titles[i]);
+    const tip = document.createElement('span'); tip.className = 'tip'; tip.textContent = pad(i + 1) + '　' + titles[i]; b.appendChild(tip);
+    b.addEventListener('click', () => showSlide(i)); dotsWrap.appendChild(b); return b;
+  });
+  const outItems = slides.map((s, i) => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'outline-item';
+    b.innerHTML = '<span class="oi-n">' + pad(i + 1) + '</span><span class="oi-t"></span>';
+    b.querySelector('.oi-t').textContent = titles[i];
+    b.addEventListener('click', () => { showSlide(i); closeOutline(); }); outlineList.appendChild(b); return b;
+  });
+
+  function fitSlide(){ const scale = Math.max(0.2, Math.min(window.innerWidth/1280, window.innerHeight/720)*0.98); document.documentElement.style.setProperty('--slide-scale', scale.toFixed(4)); }
+  function showSlide(index, updateHash = true){
+    current = clamp(index);
+    slides.forEach((s, i) => { const a = i === current; s.classList.toggle('is-active', a); s.setAttribute('aria-hidden', a ? 'false' : 'true'); });
+    prevBtn.disabled = current === 0; nextBtn.disabled = current === slides.length - 1;
+    status.textContent = pad(current + 1) + ' / ' + pad(slides.length);
+    dotBtns.forEach((b, i) => b.classList.toggle('on', i === current));
+    outItems.forEach((b, i) => b.classList.toggle('on', i === current));
+    if (updateHash) history.replaceState(null, '', '#slide-' + pad(current + 1));
+  }
+  function indexFromHash(){ const m = window.location.hash.match(/slide-(\d+)/); if (!m) return 0; const i = parseInt(m[1],10)-1; return Number.isFinite(i) ? clamp(i) : 0; }
+  function shouldIgnore(e){ const t=e.target; if(!t) return false; const tag=t.tagName; return t.isContentEditable||tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'; }
+  function toggleOutline(){ outline.classList.toggle('open'); }
+  function closeOutline(){ outline.classList.remove('open'); }
+
+  document.querySelectorAll('[data-outline-toggle]').forEach(b => b.addEventListener('click', toggleOutline));
+  outline.addEventListener('click', e => { if (e.target === outline) closeOutline(); });
+  prevBtn.addEventListener('click', () => showSlide(current - 1));
+  nextBtn.addEventListener('click', () => showSlide(current + 1));
+  window.addEventListener('keydown', e => {
+    if (shouldIgnore(e)) return;
+    if (e.key === 'Escape') { closeOutline(); return; }
+    if (e.key === 'o' || e.key === 'O') { e.preventDefault(); toggleOutline(); return; }
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); showSlide(current + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); showSlide(current - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); showSlide(0); }
+    else if (e.key === 'End') { e.preventDefault(); showSlide(slides.length - 1); }
+  });
+  window.addEventListener('pointerdown', e => { pointerStart = { x: e.clientX, y: e.clientY }; });
+  window.addEventListener('pointerup', e => {
+    if (!pointerStart) return; const dx = e.clientX-pointerStart.x, dy = e.clientY-pointerStart.y;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) { showSlide(current + (dx < 0 ? 1 : -1)); } pointerStart = null;
+  });
+  window.addEventListener('resize', fitSlide);
+  window.addEventListener('hashchange', () => showSlide(indexFromHash()));
+  fitSlide(); showSlide(indexFromHash(), false);
+})();
+</script>
+</body>
+</html>

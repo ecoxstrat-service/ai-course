@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>職場 AI 提示詞手冊 · 10 大情境</title>
+<style>
+  :root{--ink:#17201d;--muted:#5e6b66;--paper:#f7f8f5;--panel:#fff;--line:#d8ded8;
+        --green:#1f6b4a;--green-bg:#e8f3ec;--blue:#245b8e;--blue-bg:#eaf1f8;
+        --amber:#9a651e;--amber-bg:#f8efe3;--purple:#6b5bd6;--purple-bg:#efeaff;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:-apple-system,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+       background:var(--paper);color:var(--ink);line-height:1.7;}
+  .page{max-width:960px;margin:0 auto;padding:40px 30px 90px;}
+  .hero{padding:26px 0 20px;border-bottom:3px solid var(--green);margin-bottom:10px;}
+  .eyebrow{display:inline-block;padding:4px 12px;border-radius:999px;background:var(--green-bg);
+           color:var(--green);font-size:13px;font-weight:800;margin-bottom:12px;}
+  h1{font-size:33px;line-height:1.2;letter-spacing:-.5px;}
+  .hero .sub{font-size:16px;color:#31413b;margin-top:12px;}
+  h2{font-size:23px;color:var(--green);margin:34px 0 8px;padding-top:22px;border-top:1px solid var(--line);
+     display:flex;align-items:center;gap:10px;}
+  h2 .n{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:9px;
+        background:var(--green);color:#fff;font-size:17px;font-weight:800;flex:none;}
+  h3{font-size:18px;margin:18px 0 6px;color:#26362f;}
+  p{margin:8px 0;} .intro{color:#31413b;font-size:15.5px;margin:6px 0;}
+  ul,ol{margin:8px 0 8px 22px;} li{margin-bottom:6px;}
+  b{color:#17201d;}
+  .box{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 20px;margin:12px 0;}
+  .fw{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0;}
+  .fwcard{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;border-left:5px solid var(--purple);}
+  .fwcard h4{font-size:16px;color:var(--purple);margin-bottom:4px;}
+  .fwcard p{font-size:14px;color:#3a463f;margin:3px 0;}
+  .tagf{display:inline-block;background:var(--purple-bg);color:var(--purple);font-size:13px;font-weight:800;
+        border-radius:999px;padding:3px 12px;margin:4px 0 2px;}
+  .prompt{position:relative;background:#0f1a16;color:#e7f0ea;border-radius:10px;padding:17px 20px;
+          margin:12px 0 14px;font-size:14.5px;line-height:1.7;white-space:pre-wrap;
+          font-family:"Noto Sans TC","Microsoft JhengHei",monospace;}
+  .prompt .lbl{position:absolute;top:-11px;left:14px;background:var(--green);color:#fff;
+               font-size:12px;font-weight:800;padding:2px 10px;border-radius:6px;}
+  .prompt .v{color:#ffd98a;}
+  .callout{background:var(--amber-bg);border-left:5px solid var(--amber);border-radius:0 8px 8px 0;
+           padding:12px 16px;margin:10px 0;font-size:14.5px;} .callout b{color:var(--amber);}
+  .callout.b{background:var(--blue-bg);border-left-color:var(--blue);} .callout.b b{color:var(--blue);}
+  table{width:100%;border-collapse:collapse;margin:14px 0;background:var(--panel);
+        border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  th,td{padding:10px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;font-size:14.5px;}
+  th{background:#eef3ef;font-size:13.5px;color:#283731;} tr:last-child td{border-bottom:0;}
+  .foot{margin-top:44px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px;text-align:center;}
+  @media (max-width:720px){.fw{grid-template-columns:1fr;}}
+  @media print{
+    body{background:#fff;font-size:12.5px;} .page{max-width:none;padding:0 6mm;}
+    h2{break-inside:avoid;break-before:page;} h2:first-of-type{break-before:avoid;}
+    .box,.prompt,.callout,table,.fwcard{break-inside:avoid;}
+    .prompt{background:#f2f5f2;color:#17201d;border:1px solid #c9d2cb;}
+    .prompt .lbl{background:#1f6b4a;} .prompt .v{color:#9a651e;font-weight:700;}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hero">
+    <span class="eyebrow">職場實用 · 可照抄 · 可列印</span>
+    <h1>職場 AI 提示詞手冊：10 大情境</h1>
+    <div class="sub">同樣一個 AI,會問的人省一半時間。這份手冊給你 10 個最常用的職場情境,每個都有「可直接照抄、換掉黃字就能用」的範例提示詞。</div>
+  </div>
+
+  <!-- 概念 -->
+  <h2><span class="n">0</span>先懂一件事：贏的不是「會用工具」,是「會下指令」</h2>
+  <p class="intro">AI 就像一個能力很強、但只照你說的做的<b>新同事</b>。你交代得越清楚,他做得越好;交代得含糊,他就亂猜。</p>
+  <p class="intro">所以真正的差距不在「你用哪個 AI」,而在<b>「你會不會把事情講清楚」</b> —— 這個能力,就叫<b>提示力(Prompting)</b>。這份手冊教你用 5 個框架,把任何工作講成 AI 聽得懂的指令。</p>
+  <div class="callout"><b>一句話心法:</b>不要問「幫我處理一下」,要問「幫我<u>做什麼</u>、給<u>誰</u>看、用<u>什麼格式</u>、<u>幾個</u>、<u>什麼語氣</u>」。</div>
+
+  <!-- 5 框架 -->
+  <h2><span class="n">1</span>五個提示框架（先學這五招,情境再多都夠用）</h2>
+  <div class="fw">
+    <div class="fwcard"><h4>① 填空模板</h4><p>把好用的提示做成有【　】空格的範本,每次換內容就好,不用重想。<b>本手冊的範例都是這種。</b></p></div>
+    <div class="fwcard"><h4>② 角色設定</h4><p>開頭先給 AI 一個身份:「你是資深○○」。給了角色,回答的專業度和口吻立刻不同。</p></div>
+    <div class="fwcard"><h4>③ 目標＋限制＋範例</h4><p>講清楚「要達成什麼」＋「限制(字數/語氣/對象)」＋「給一個範例」。越具體,越接近你要的。</p></div>
+    <div class="fwcard"><h4>④ 指定輸出格式</h4><p>直接說要「表格／條列／分四段／150 字內／3 個版本」,省去來回修改。</p></div>
+    <div class="fwcard"><h4>⑤ 多輪對話</h4><p>不要一次問完。讓 AI 一步一步來、你邊看邊修 —— 演練、家教、面試特別好用。</p></div>
+    <div class="fwcard" style="border-left-color:var(--green);"><h4 style="color:var(--green);">★ 組合起來</h4><p>好的提示通常是幾招一起用:先設角色 → 講目標與限制 → 指定格式。下面每個情境都會標「用了哪幾招」。</p></div>
+  </div>
+
+  <!-- 情境 1 -->
+  <h2><span class="n">2</span>情境 1：會議記錄與摘要</h2>
+  <p class="intro"><b>情境:</b>開完會,一堆筆記或錄音逐字稿,要整理成正式紀錄又要寄摘要,很花時間。</p>
+  <span class="tagf">用了:④ 輸出格式 ＋ ② 角色設定</span>
+  <div class="prompt"><span class="lbl">照抄 · 換黃字</span>你是專業的會議記錄員。以下是這場會議的逐字稿(或我口述的重點):
+<span class="v">【把逐字稿或重點貼在這裡】</span>
+
+請幫我整理成正式會議記錄,格式如下:
+一、會議資訊：日期、與會者、主題
+二、討論重點(條列)
+三、決議事項(條列)
+四、待辦事項(表格：項目／負責人／期限)
+五、待確認問題
+
+最後,另附一段 150 字以內、可直接寄出的 Email 摘要。
+繁體中文;逐字稿沒提到的請標「未提及」,不要自行編造。</div>
+  <div class="callout"><b>進階:</b>常開同類型會議,就把這段存成「範本」,以後每次只換逐字稿。想更快?把它做成 NotebookLM 的提示詞來源(見 NotebookLM 手冊)。</div>
+
+  <!-- 情境 2 -->
+  <h2><span class="n">3</span>情境 2：客戶溝通／銷售演練</h2>
+  <p class="intro"><b>情境:</b>要見難搞的客戶、要練習處理反對意見,又沒人陪你演練。</p>
+  <span class="tagf">用了:② 角色設定 ＋ ⑤ 多輪對話</span>
+  <div class="prompt"><span class="lbl">照抄 · 換黃字</span>請扮演一位<span class="v">【常殺價、講話直接的採購客戶】</span>,和我進行一場銷售對話演練。
+情境:我要向你推銷<span class="v">【你的產品／服務】</span>。
+
+規則:
+1. 你一次只講一句話,像真人一樣提出質疑或反對意見,等我回覆後再繼續。
+2. 過程中請故意提出 3 個最常見的拒絕理由(例如太貴、沒需求、要再考慮)。
+3. 對話結束後,改用「銷售教練」身分,點評我的回應,並給我 3 個具體改進建議。
+
+現在請你先開口。</div>
+  <div class="callout b"><b>換個用法:</b>把角色換成「面試官、記者、談判對手、奧客」,就能練各種場合的臨場反應。</div>
+
+  <!-- 情境 3 -->
+  <h2><span class="n">4</span>情境 3：簡報開場白</h2>
+  <p class="intro"><b>情境:</b>簡報前 30 秒最關鍵,但常常不知道怎麼開頭才抓得住人。</p>
+  <span class="tagf">用了:③ 目標＋限制 ＋ ④ 輸出格式</span>
+  <div class="prompt"><span class="lbl">照抄 · 換黃字</span>幫我寫 3 個版本的簡報開場白。
+主題:<span class="v">【你的簡報主題】</span>;對象:<span class="v">【聽眾是誰】</span>;長度:每個 30 秒內。
+
+三個版本分別走不同路線:
+① 故事型：用一個小故事或場景切入
+② 數據型：用一個令人驚訝的數字開場
+③ 提問型：用一個問題勾住聽眾
+
+語氣<span class="v">【專業有活力】</span>,繁體中文。每個版本後面附一句「為什麼這樣開有效」。</div>
+  <div class="callout"><b>進階:</b>選定一個版本後,再追一句「幫我把這個開場延伸成前 3 張投影片的大綱」。</div>
+
+  <!-- 情境 4 -->
+  <h2><span class="n">5</span>情境 4：資料分析與視覺化</h2>
+  <p class="intro"><b>情境:</b>手上一堆數字,要看出重點、還要跟主管說結論,但不知從何下手。</p>
+  <span class="tagf">用了:③ 目標 ＋ ④ 輸出格式</span>
+  <div class="prompt"><span class="lbl">照抄 · 換黃字</span>以下是一批資料(表格或數字):
+<span class="v">【貼上你的資料】</span>
+
+請幫我:
+1. 算出關鍵指標:總和、平均、成長率、占比(能算的都算)。
+2. 找出 3 個最重要的發現,並各推測一個可能原因。
+3. 建議最適合的圖表類型,並說明為什麼(例如趨勢用折線、占比用圓餅)。
+4. 用一句話下結論,寫成可以直接對主管講的版本。
+
+用條列＋表格呈現,繁體中文。</div>
+  <div class="callout b"><b>提醒:</b>AI 算數字可能出錯,關鍵數字請自己再核一次(人工覆核)。要它幫你直接畫圖?可接 ChatGPT/Gemini 的資料分析功能。</div>
+
+  <!-- 情境 5 -->
+  <h2><span class="n">6</span>情境 5：問題拆解與邏輯整理</h2>
+  <p class="intro"><b>情境:</b>遇到一個很大、很亂的問題,腦子打結,不知道先從哪裡解。</p>
+  <span class="tagf">用了:② 角色設定 ＋ ④ 輸出格式</span>
+  <div class="prompt"><span class="lbl">照抄 · 換黃字</span>我遇到一個問題:<span class="v">【描述你的問題,越具體越好】</span>。
+
+請用「問題樹」的方式幫我拆解:
+1. 先把大問題拆成 3–5 個子問題。
+2. 每個子問題,再列出可能的原因。
+3. 針對每個原因,給一個可行的檢查方法或解法。
+4. 最後,排出「應該先做什麼」的優先順序,並說明理由。
+
+用階層式條列呈現,繁體中文。</div>
+  <div class="callout"><b>進階:</b>拆完後追問「假設我只有一週,你會建議我先動手做哪 2 件事?」</div>
+
+  <!-- 情境 6 -->
+  <h2><span class="n">7</span>情境 6：Email／商務文件撰寫</h2>
+  <p class="intro"><b>情境:</b>要寫道歉信、催款信、邀約或婉拒,措辭拿捏很累,又怕失禮。</p>
+  <span class="tagf">用了:② 角色 ＋ ③ 目標＋限制</span>
+  <div class="prompt"><span class="lbl">照抄 · 換黃字</span>幫我寫一封<span class="v">【道歉／催款／邀約／婉拒】</span>的商務 Email。
+收件人:<span class="v">【對方是誰】</span>;情境:<span class="v">【發生什麼事】</span>;我想達成:<span class="v">【目的】</span>。
+
+要求:
+- 語氣<span class="v">【專業有禮但立場清楚】</span>,繁體中文,150–200 字。
+- 分四段:開頭問候／說明情況／請求或結論／結尾。
+
+寫完後,再給我一個「更委婉」和一個「更直接」的版本,讓我挑。</div>
+  <div class="callout b"><b>省時法:</b>常寫的信(如報價、催款)存成範本,以後只換「情境」和「目的」兩格。</div>
+
+  <!-- 情境 7 -->
+  <h2><span class="n">8</span>情境 7：學習與研究加速</h2>
+  <p class="intro"><b>情境:</b>要快速搞懂一個陌生主題(新產業、新工具、新法規),但不知從哪學起。</p>
+  <span class="tagf">用了:② 角色設定 ＋ ⑤ 多輪對話</span>
+  <div class="prompt"><span class="lbl">照抄 · 換黃字</span>我想快速搞懂<span class="v">【主題】</span>,我目前的程度是<span class="v">【完全新手／有一點基礎】</span>。
+請你當我的家教,一步一步來:
+1. 先用一個「生活比喻」解釋核心概念。
+2. 列出我一定要懂的 5 個關鍵名詞,各用一句話說明。
+3. 給我一個「如果只記一件事」的重點。
+4. 出 3 題小測驗檢查我懂不懂,等我答完再繼續下一個層次。
+
+繁體中文,講白話,不要一次全部倒給我。</div>
+  <div class="callout"><b>進階:</b>把相關文件或 YouTube 丟進 NotebookLM,再用這個提示,學得更扎實(答案還會附出處)。</div>
+
+  <!-- 情境 8 -->
+  <h2><span class="n">9</span>情境 8：專案規劃與排程</h2>
+  <p class="intro"><b>情境:</b>接了一個新專案,要排時程、分工、抓風險,一時理不出頭緒。</p>
+  <span class="tagf">用了:③ 目標＋限制 ＋ ④ 輸出格式</span>
+  <div class="prompt"><span class="lbl">照抄 · 換黃字</span>幫我規劃一個專案。
+目標:<span class="v">【專案要達成什麼】</span>;期限:<span class="v">【多久】</span>;可用人力:<span class="v">【幾個人／哪些角色】</span>。
+
+請產出:
+1. 里程碑:切成 3–5 個大階段。
+2. 每個階段的關鍵任務,以及建議由誰負責。
+3. 用表格排時間軸:任務／負責人／起訖日／產出物。
+4. 標出 2 個最可能卡關的風險,各給一個預防作法。
+
+繁體中文。</div>
+  <div class="callout b"><b>接下去:</b>追問「幫我把這份規劃,整理成可以貼進 Google Sheets 的表格」,直接複製就能用。</div>
+
+  <!-- 情境 9 -->
+  <h2><span class="n">10</span>情境 9：行銷與社群內容</h2>
+  <p class="intro"><b>情境:</b>要發社群貼文、寫文案,天天想梗很燒腦,還要顧到不同平台。</p>
+  <span class="tagf">用了:② 角色 ＋ ③ 目標＋範例 ＋ ④ 格式</span>
+  <div class="prompt"><span class="lbl">照抄 · 換黃字</span>你是社群小編。幫我針對<span class="v">【產品／活動】</span>寫 3 篇<span class="v">【IG／FB／LINE】</span>貼文。
+目標:<span class="v">【導購／報名／曝光】</span>;受眾:<span class="v">【誰】</span>;風格:<span class="v">【親切／專業／幽默】</span>。
+
+每一篇請包含:
+① 一句抓眼球的開頭
+② 3 行內文
+③ 一個明確的行動呼籲(CTA)
+④ 5 個適合的 hashtag
+
+繁體中文,每篇後面附一句「這篇為什麼會有效」。</div>
+  <div class="callout"><b>搭配:</b>文案配一張圖更好 —— 把貼文主題拿去生圖工具(Gemini／Copilot)生一張社群配圖。</div>
+
+  <!-- 情境 10 -->
+  <h2><span class="n">11</span>情境 10：面試與職涯準備</h2>
+  <p class="intro"><b>情境:</b>要面試、要準備自我介紹或談加薪,想先練習、想被問到痛點。</p>
+  <span class="tagf">用了:② 角色設定 ＋ ⑤ 多輪對話</span>
+  <div class="prompt"><span class="lbl">照抄 · 換黃字</span>請扮演<span class="v">【應徵職缺】</span>的面試官,幫我做一場模擬面試。
+我的背景:<span class="v">【簡述你的經歷】</span>。
+
+規則:
+1. 一次問一題,從「自我介紹」開始,依序問到專業題和情境題,共約 6 題。
+2. 我每答完一題,你先簡短點評(一個優點＋一個可改進),再問下一題。
+3. 全部結束後,給我整體評分(1–10)和 3 個最該加強的地方。
+
+繁體中文,像真的面試一樣。</div>
+  <div class="callout b"><b>延伸:</b>換角色就能練別的:「扮演我主管,我要跟你談加薪」「扮演評審,聽我 3 分鐘提案」。</div>
+
+  <!-- 對照表 -->
+  <h2><span class="n">12</span>快速對照表：情境 ↔ 主要框架</h2>
+  <table>
+    <tr><th style="width:44%">職場情境</th><th>主要用到的框架</th></tr>
+    <tr><td>1 會議記錄與摘要</td><td>④ 輸出格式 ＋ ② 角色設定</td></tr>
+    <tr><td>2 客戶溝通／銷售演練</td><td>② 角色設定 ＋ ⑤ 多輪對話</td></tr>
+    <tr><td>3 簡報開場白</td><td>③ 目標＋限制 ＋ ④ 輸出格式</td></tr>
+    <tr><td>4 資料分析與視覺化</td><td>③ 目標 ＋ ④ 輸出格式</td></tr>
+    <tr><td>5 問題拆解與邏輯整理</td><td>② 角色設定 ＋ ④ 輸出格式</td></tr>
+    <tr><td>6 Email／文件撰寫</td><td>② 角色 ＋ ③ 目標＋限制</td></tr>
+    <tr><td>7 學習與研究加速</td><td>② 角色設定 ＋ ⑤ 多輪對話</td></tr>
+    <tr><td>8 專案規劃與排程</td><td>③ 目標＋限制 ＋ ④ 輸出格式</td></tr>
+    <tr><td>9 行銷與社群內容</td><td>② 角色 ＋ ③ 目標＋範例 ＋ ④ 格式</td></tr>
+    <tr><td>10 面試與職涯準備</td><td>② 角色設定 ＋ ⑤ 多輪對話</td></tr>
+  </table>
+  <div class="callout"><b>看出規律了嗎?</b>幾乎每個情境都在用「② 角色設定」開頭、用「④ 指定格式」收尾 —— 這兩招最萬用,先練熟這兩個。</div>
+
+  <!-- 結論 -->
+  <h2><span class="n">13</span>結論：從「用工具的人」變成「設計問題的人」</h2>
+  <p class="intro">工具會一直換,但「把問題講清楚、把需求拆明白」的能力不會過時。當你能精準地告訴 AI 你要什麼,你就從「操作工具的人」,升級成「<b>設計問題、指揮 AI 的人</b>」。</p>
+  <p class="intro"><b>今天就挑一個情境開始:</b>找一件你最常重複做的工作,把上面對應的提示詞複製下來,換成你的內容貼給 AI —— 你會立刻感覺到差別。</p>
+  <div class="callout"><b>練習建議:</b>先從「① 會議記錄」或「⑥ Email」開始(最有感、最省時),用順了再往其他情境擴。</div>
+
+  <div class="foot">ECOxSTRAT 全感生態策略 · 企業 AI 知識化應用 · 職場提示詞手冊</div>
+</div>
+</body>
+</html>

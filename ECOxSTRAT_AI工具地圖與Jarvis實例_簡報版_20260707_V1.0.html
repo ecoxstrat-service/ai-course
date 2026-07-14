@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>生成式 AI 工具地圖 × Jarvis 實例（簡報版）</title>
+<style>
+  :root{--navy:#10243E;--navy2:#14385B;--teal:#00A6A6;--teal-l:#4FD1D1;--gold:#E0B24A;--ink:#EAF0F6;--soft:rgba(255,255,255,.10);--soft2:rgba(255,255,255,.06);--line:rgba(255,255,255,.14);}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif;background:#05121f;color:var(--ink);overflow:hidden;}
+  /* 16:9 舞台,置中、等比縮放 */
+  .stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 30%,#12324f,#05121f 80%);}
+  .deck{position:relative;width:min(100vw,177.78vh);height:min(56.25vw,100vh);background:linear-gradient(135deg,var(--navy),var(--navy2) 60%,#0d5c5c);overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5);container-type:size;}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;padding:5% 6%;}
+  .slide.active{display:flex;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .kicker{font-size:1.9cqh;font-weight:800;letter-spacing:.22em;color:var(--gold);margin-bottom:1.8cqh;}
+  h1{font-size:6.2cqh;font-weight:800;line-height:1.22;letter-spacing:-.5px;margin-bottom:2cqh;}
+  h1 .hl{color:var(--teal-l);}
+  .lead{font-size:3.1cqh;opacity:.92;font-weight:300;line-height:1.55;margin-bottom:2.2cqh;max-width:94%;}
+  /* 工具列表 */
+  .tools{display:grid;grid-template-columns:1fr 1fr;gap:1.4cqh 3cqw;}
+  .tools.one{grid-template-columns:1fr;}
+  .tl{display:flex;gap:1.4cqw;align-items:baseline;padding:1.2cqh 0;border-bottom:1px solid var(--soft2);}
+  .tl .nm{flex:none;width:16cqw;font-weight:800;color:var(--teal-l);font-size:3cqh;}
+  .tl .nm small{display:block;color:rgba(255,255,255,.5);font-weight:600;font-size:1.9cqh;}
+  .tl .ds{font-size:2.6cqh;opacity:.94;line-height:1.42;}
+  .tl .st{color:var(--gold);font-weight:800;}
+  /* 概念卡 */
+  .cards{display:flex;gap:1.8cqw;margin-top:1.2cqh;}
+  .cards.col{flex-direction:column;gap:1.3cqh;}
+  .card{flex:1;background:var(--soft2);border:1px solid var(--line);border-radius:1.6cqh;padding:2.2cqh 2cqw;}
+  .card .n{font-size:1.9cqh;font-weight:800;color:var(--gold);letter-spacing:1px;margin-bottom:.8cqh;}
+  .card .h{font-size:3cqh;font-weight:800;margin-bottom:.6cqh;}
+  .card .b{font-size:2.4cqh;opacity:.92;line-height:1.48;}
+  .card.hl{background:rgba(0,166,166,.18);border-color:rgba(79,209,209,.5);}
+  /* 四層 */
+  .layer{display:flex;align-items:center;gap:1.4cqw;background:var(--soft2);border:1px solid var(--line);border-radius:1.2cqh;padding:1.5cqh 1.8cqw;margin-bottom:1cqh;}
+  .layer .lv{flex:none;width:6cqw;font-size:2.8cqh;font-weight:800;color:var(--teal-l);}
+  .layer .lt{font-size:2.7cqh;font-weight:700;flex:none;width:24cqw;}
+  .layer .ld{font-size:2.4cqh;opacity:.88;}
+  .layer.gold{background:rgba(224,178,74,.16);border-color:rgba(224,178,74,.5);}
+  /* 流程 */
+  .flow{display:flex;align-items:stretch;gap:.9cqw;margin-top:1.2cqh;}
+  .fstep{flex:1;background:var(--soft2);border:1px solid var(--line);border-radius:1.4cqh;padding:1.8cqh 1cqw;text-align:center;}
+  .fstep .fn{font-size:1.9cqh;color:var(--gold);font-weight:800;}
+  .fstep .ft{font-size:2.7cqh;font-weight:700;margin-top:.6cqh;line-height:1.32;}
+  .arrow{align-self:center;color:var(--gold);font-size:3.6cqh;font-weight:800;}
+  .egrow{display:flex;gap:1.4cqw;margin-top:2cqh;}
+  .eg{flex:1;background:var(--soft2);border:1px solid var(--line);border-radius:1.2cqh;padding:1.5cqh 1.5cqw;font-size:2.4cqh;line-height:1.42;}
+  .eg b{color:var(--teal-l);}
+  /* 數據 */
+  .stats{display:flex;gap:1.8cqw;margin-bottom:2cqh;}
+  .stat{flex:1;background:var(--soft2);border:1px solid var(--line);border-radius:1.6cqh;padding:2.6cqh 1cqw;text-align:center;}
+  .stat .big{font-size:8cqh;font-weight:800;color:var(--teal-l);line-height:1;}
+  .stat .lab{font-size:2.2cqh;opacity:.88;margin-top:1cqh;}
+  table.t{width:100%;border-collapse:separate;border-spacing:0 .8cqh;font-size:2.5cqh;}
+  table.t th{color:var(--gold);text-align:left;padding:.5cqh 1.2cqw;font-size:2cqh;font-weight:800;}
+  table.t td{background:var(--soft2);padding:1.2cqh 1.2cqw;}
+  table.t td:first-child{border-radius:1cqh 0 0 1cqh;font-weight:700;}
+  table.t td:last-child{border-radius:0 1cqh 1cqh 0;color:var(--teal-l);font-weight:800;}
+  .big-slogan{font-size:6cqh;font-weight:800;line-height:1.34;}
+  .big-slogan .hl{color:var(--teal-l);} .big-slogan .gd{color:var(--gold);}
+  .foot-brand{position:absolute;left:6%;bottom:3.5%;font-size:1.9cqh;opacity:.5;}
+  /* nav */
+  .pg{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);font-size:13px;letter-spacing:.1em;color:#9fb3c8;}
+  .nav{position:fixed;bottom:10px;right:16px;display:flex;gap:8px;z-index:5;}
+  .nav button{border:0;cursor:pointer;background:rgba(255,255,255,.14);color:#fff;font-size:22px;width:48px;height:40px;border-radius:9px;line-height:1;}
+  .nav button:hover{background:rgba(255,255,255,.3);}
+</style>
+</head>
+<body>
+<div class="stage"><div class="deck" id="deck">
+
+  <!-- 1 封面 -->
+  <section class="slide active" style="justify-content:center;">
+    <div class="kicker">企業 AI 知識化應用 · 工具與實例</div>
+    <h1>生成式 AI <span class="hl">工具地圖</span><br>＋ 本公司實例 <span class="hl">Jarvis</span></h1>
+    <div class="lead">先認識「有哪些工具、各擅長什麼」→ 再看一個真實案例:我們自己怎麼讓 AI「真的幫你做事」。</div>
+    <div class="foot-brand">ECO×STRAT 全感生態策略 · ecoxstrat.com</div>
+  </section>
+
+  <!-- 2 總覽 -->
+  <section class="slide">
+    <div class="kicker">工具地圖 · 總覽</div>
+    <h1>依「用途」分六類 —— <span class="hl">挑解決你最痛那件事的就好</span></h1>
+    <div class="cards">
+      <div class="card"><div class="n">個人生產力</div><div class="h">💬 對話助理</div><div class="b">ChatGPT／Claude／Gemini／Copilot／Perplexity</div></div>
+      <div class="card"><div class="n">內容產出</div><div class="h">🎨 圖像生成</div><div class="b">DALL-E／Midjourney／Firefly／Ideogram</div></div>
+      <div class="card"><div class="n">知識</div><div class="h">📚 研究/知識庫</div><div class="b">NotebookLM／Perplexity</div></div>
+    </div>
+    <div class="cards" style="margin-top:1.4vh;">
+      <div class="card"><div class="n">做工具</div><div class="h">💻 Vibe Coding</div><div class="b">Cursor／GitHub Copilot／Windsurf</div></div>
+      <div class="card"><div class="n">串流程</div><div class="h">⚙️ No-code・自動化</div><div class="b">Dify·Coze／Zapier·Make／n8n</div></div>
+      <div class="card hl"><div class="n">企業級</div><div class="h">🏢 MCP／Jarvis</div><div class="b">讓 AI 從「會聊天」變「會做事」(後半詳談)</div></div>
+    </div>
+  </section>
+
+  <!-- 3 對話助理 -->
+  <section class="slide">
+    <div class="kicker">工具地圖 · 1</div>
+    <h1>💬 文字・對話・助理 <span class="hl">（最常用、最先上手）</span></h1>
+    <div class="tools">
+      <div class="tl"><span class="nm">ChatGPT<small>GPT-5.2</small></span><span class="ds">通用、創意、程式;市佔第一。<span class="st">★入門首選</span></span></div>
+      <div class="tl"><span class="nm">Claude<small>Opus 4.6</small></span><span class="ds">精準推理、商業分析、文件與程式品質、重視安全;成長最快。</span></div>
+      <div class="tl"><span class="nm">Gemini<small>3 Pro</small></span><span class="ds">多模態、即時資訊、Google 生態整合。</span></div>
+      <div class="tl"><span class="nm">Copilot</span><span class="ds">深度整合 Office(Word/Excel/PPT),生產力工具。</span></div>
+      <div class="tl"><span class="nm">Perplexity</span><span class="ds">即時搜尋、答案<b style="color:var(--gold)">附出處引用</b>;事實查證。</span></div>
+    </div>
+  </section>
+
+  <!-- 4 圖像 -->
+  <section class="slide">
+    <div class="kicker">工具地圖 · 2</div>
+    <h1>🎨 圖像生成</h1>
+    <div class="tools">
+      <div class="tl"><span class="nm">DALL-E 3</span><span class="ds">最易用、照片逼真(內建於 ChatGPT)。</span></div>
+      <div class="tl"><span class="nm">Midjourney v7</span><span class="ds">藝術品質最高;行銷主視覺、插畫。</span></div>
+      <div class="tl"><span class="nm">Adobe Firefly</span><span class="ds"><span class="st">商業版權安全</span>、可編輯;企業對外最放心。</span></div>
+      <div class="tl"><span class="nm">Ideogram V3</span><span class="ds">文字/logo 渲染最強;含字設計。</span></div>
+      <div class="tl"><span class="nm">Flux／SD</span><span class="ds">開源、可客製微調(需技術底)。</span></div>
+    </div>
+  </section>
+
+  <!-- 5 知識+程式 -->
+  <section class="slide">
+    <div class="kicker">工具地圖 · 3</div>
+    <h1>📚 知識研究　💻 Vibe Coding</h1>
+    <div class="tools one">
+      <div class="tl"><span class="nm">NotebookLM</span><span class="ds"><span class="st">把你的文件變「可問答知識庫」</span>——摘要、生成題庫、中文 Podcast。呼應「資料庫→知識庫」。</span></div>
+      <div class="tl"><span class="nm">Cursor</span><span class="ds">用「講的」就能寫程式(Vibe Coding);不會寫程式也能做小工具。</span></div>
+      <div class="tl"><span class="nm">GitHub Copilot／Windsurf</span><span class="ds">編輯器內的 AI 協作,程式碼自動補全(支援 MCP)。</span></div>
+    </div>
+  </section>
+
+  <!-- 6 no-code -->
+  <section class="slide">
+    <div class="kicker">工具地圖 · 4</div>
+    <h1>⚙️ No-code 建 AI 應用・自動化</h1>
+    <div class="tools one">
+      <div class="tl"><span class="nm">Dify／Coze<small>扣子</small></span><span class="ds">不寫程式,快速建<span class="st">聊天機器人／知識庫問答／LLM 應用</span>。</span></div>
+      <div class="tl"><span class="nm">Zapier／Make.com</span><span class="ds">把不同 App 自動串起來(觸發 → 動作),流程自動化。</span></div>
+      <div class="tl"><span class="nm">n8n</span><span class="ds">更彈性的自動化工作流(可自訂,需一點技術底)。</span></div>
+    </div>
+    <div class="lead" style="margin-top:2vh;opacity:.8">👉 重點不是追工具,是<b style="color:var(--teal-l)">先想清楚要解決哪件事,再挑對的工具</b>。</div>
+  </section>
+
+  <!-- 7 轉場 -->
+  <section class="slide" style="justify-content:center;">
+    <div class="kicker">本公司實例</div>
+    <h1>但工具再多,AI 還是<span class="hl">「只會說、不會做」</span>？<br>——這就要靠 <span class="hl">MCP ＋ Jarvis</span></h1>
+    <div class="lead">接下來介紹一個我們自己做的框架 <b>Jarvis</b>:讓 AI 真的動手幫你做事。</div>
+  </section>
+
+  <!-- 8 痛點 -->
+  <section class="slide">
+    <div class="kicker">Jarvis 實例 · 問題</div>
+    <h1>你的 AI 卡在哪？<span class="hl">聰明,卻使不上力</span></h1>
+    <div class="cards">
+      <div class="card"><div class="n">01</div><div class="h">資料是分開的</div><div class="b">檔案散在 Drive、Notion、信箱——AI 看不到,每次都要手動複製貼上。</div></div>
+      <div class="card"><div class="n">02</div><div class="h">沒有記憶</div><div class="b">換個對話框就忘光光,背景資料要一直重講。</div></div>
+      <div class="card"><div class="n">03</div><div class="h">不能動你的系統</div><div class="b">AI 說「你可以去打卡了」,但它自己不能幫你按確認。</div></div>
+    </div>
+    <div class="lead" style="margin-top:1.8vh;opacity:.8">這三點,就是為什麼你覺得 AI 很聰明,<b style="color:var(--teal-l)">但在公司裡使不上力</b>。</div>
+  </section>
+
+  <!-- 9 MCP -->
+  <section class="slide">
+    <div class="kicker">Jarvis 實例 · 關鍵一:MCP</div>
+    <h1>MCP＝AI 的<span class="hl">「USB 橋接器」</span></h1>
+    <div class="lead">MCP(Model Context Protocol)是 <b>Anthropic 制定的開放標準</b>:就像電腦的 USB 介面——任何設備都能接;它讓 AI 能<b style="color:var(--teal-l)">讀取、寫入、呼叫</b>外部系統,AI 從此有了「手」。</div>
+    <div class="tools">
+      <div class="tl"><span class="nm">📁 Google Drive</span><span class="ds">找/讀/建檔案——自動翻提案、報告。</span></div>
+      <div class="tl"><span class="nm">✉️ Gmail</span><span class="ds">搜信、建草稿、整理往來記錄。</span></div>
+      <div class="tl"><span class="nm">📅 Calendar</span><span class="ds">查行事曆、建會議、排時程。</span></div>
+      <div class="tl"><span class="nm">📝 Notion</span><span class="ds">讀寫知識頁、搜尋資料庫。</span></div>
+      <div class="tl"><span class="nm">👥 OPS 人事</span><span class="ds">打卡、請假、報銷直接送。</span></div>
+      <div class="tl"><span class="nm">🔎 RAG 知識庫</span><span class="ds">語義搜尋文件、載入歷史決策。</span></div>
+    </div>
+  </section>
+
+  <!-- 10 Jarvis 是什麼 + 四層 -->
+  <section class="slide">
+    <div class="kicker">Jarvis 實例 · 關鍵二:Jarvis</div>
+    <h1>Jarvis＝AI 的<span class="hl">「大腦 ＋ 記憶 ＋ 行動力」</span></h1>
+    <div class="lead">建在 <b>Claude</b> 之上的企業級 AI 助理框架——記住公司背景、自動拆解任務、串 MCP 執行、還能排程自動週報。</div>
+    <div class="layer gold"><span class="lv">L0</span><span class="lt">全局背景層</span><span class="ld"><b>CLAUDE.md</b>=公司知識、決策偏好　←　這就是課程說的「知識庫」!</span></div>
+    <div class="layer"><span class="lv">L1</span><span class="lt">領域層</span><span class="ld">按業務切分(客戶／補助／開發)</span></div>
+    <div class="layer"><span class="lv">L2</span><span class="lt">工作流層</span><span class="ld">多步驟流程(會議準備、週報…)</span></div>
+    <div class="layer"><span class="lv">L3</span><span class="lt">技能層(32 個)</span><span class="ld">原子能力(RAG 搜尋、文件產出…)</span></div>
+  </section>
+
+  <!-- 11 一句話觸發 -->
+  <section class="slide">
+    <div class="kicker">Jarvis 實例 · 怎麼運作</div>
+    <h1>一句話,觸發<span class="hl">完整工作流</span></h1>
+    <div class="flow">
+      <div class="fstep"><div class="fn">1 你說一句</div><div class="ft">「幫我準備<br>週一台電會議」</div></div>
+      <div class="arrow">›</div>
+      <div class="fstep"><div class="fn">2 Jarvis 分析</div><div class="ft">拆解任務<br>選擇技能</div></div>
+      <div class="arrow">›</div>
+      <div class="fstep"><div class="fn">3 MCP 行動</div><div class="ft">讀 Drive<br>查行事曆</div></div>
+      <div class="arrow">›</div>
+      <div class="fstep"><div class="fn">4 輸出</div><div class="ft">簡報草稿<br>已就緒</div></div>
+    </div>
+    <div class="egrow">
+      <div class="eg"><b>「整理這週工作」</b><br>→ 自動產週報 ＋ Gmail 草稿</div>
+      <div class="eg"><b>「我要請假明天下午」</b><br>→ OPS 系統直接送假單</div>
+      <div class="eg"><b>「查上次跟台電的提案」</b><br>→ RAG 搜尋 ＋ Drive 讀取</div>
+    </div>
+  </section>
+
+  <!-- 12 效益 -->
+  <section class="slide">
+    <div class="kicker">Jarvis 實例 · 真實效益</div>
+    <h1>用數字說話:<span class="hl">時間省了多少</span></h1>
+    <div class="stats">
+      <div class="stat"><div class="big">85%</div><div class="lab">會議準備 2–3hr → 15 分</div></div>
+      <div class="stat"><div class="big">90%</div><div class="lab">每週週報 1.5hr → 10 分</div></div>
+      <div class="stat"><div class="big">80%</div><div class="lab">補助申請 15–20hr → 3hr</div></div>
+      <div class="stat"><div class="big">88%</div><div class="lab">客戶提案 8–10hr → 1hr</div></div>
+    </div>
+    <div class="lead" style="opacity:.82">省下的不是「打字時間」,是把人從<b style="color:var(--teal-l)">搬資料、湊格式</b>裡釋放出來,去做只有人能做的<b style="color:var(--teal-l)">判斷與決策</b>。</div>
+  </section>
+
+  <!-- 13 收尾 -->
+  <section class="slide" style="justify-content:center;">
+    <div class="kicker">結語</div>
+    <div class="big-slogan">AI 不是來取代你,<br>是來讓你發揮<span class="gd">更高的價值</span>。</div>
+    <div class="lead" style="margin-top:2.4vh;">
+      <b class="hl">MCP</b>:讓 AI 連接你的真實系統　·　<b class="hl">Jarvis</b>:讓 AI 記住背景、自動執行<br>
+      <b class="gd">你的角色</b>:提出好問題、做出對的決策。
+    </div>
+    <div class="foot-brand">ECO×STRAT 全感生態策略 · ecoxstrat.com</div>
+  </section>
+
+</div></div>
+
+<div class="pg"><span id="pgn">1</span> / <span id="pgt">13</span></div>
+<div class="nav"><button class="nobtn" onclick="go(-1)">‹</button><button class="nobtn" onclick="go(1)">›</button></div>
+
+<script>
+  var s=[].slice.call(document.querySelectorAll('.slide')), i=0;
+  document.getElementById('pgt').textContent=s.length;
+  function show(n){i=Math.max(0,Math.min(s.length-1,n));s.forEach(function(el,k){el.classList.toggle('active',k===i);});document.getElementById('pgn').textContent=(i+1);}
+  function go(d){show(i+d);}
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){go(1);e.preventDefault();}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){go(-1);e.preventDefault();}
+  });
+  document.addEventListener('click',function(e){ if(e.target.closest('.nobtn'))return; go(1); });
+  show(0);
+</script>
+</body>
+</html>

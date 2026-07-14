@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>用 AI 做簡報：ChatGPT 生圖 × Claude Cowork</title>
+<style>
+  :root{--ink:#1c1f2b;--muted:#6b7185;--paper:#f6f5fb;--panel:#fff;--line:#e6e4f0;
+        --pur:#6b5bd6;--pur-b:#efeaff;--org:#e0842c;--org-b:#fcefdc;--teal:#159a8e;--teal-b:#dcf3f0;
+        --pink:#d6608a;--pink-b:#fbe3ec;--dark:#141322;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:"Noto Sans TC","Microsoft JhengHei",-apple-system,sans-serif;color:var(--ink);
+       background:var(--paper);line-height:1.75;}
+  .wrap{max-width:960px;margin:0 auto;padding:46px 22px 90px;}
+  .eyebrow{display:inline-block;font-size:13px;font-weight:800;letter-spacing:.18em;color:var(--pur);background:var(--pur-b);border-radius:999px;padding:5px 14px;}
+  h1{font-size:clamp(30px,5vw,44px);font-weight:800;line-height:1.14;margin:16px 0 0;letter-spacing:-.5px;}
+  h1 .g{background:linear-gradient(90deg,var(--pur),var(--org));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .lead{font-size:18px;color:#4a4f63;margin-top:14px;max-width:82ch;}
+  h2{font-size:24px;font-weight:800;margin:42px 0 12px;display:flex;align-items:center;gap:12px;}
+  h2 .n{display:inline-grid;place-items:center;width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--pur),var(--org));color:#fff;font-size:18px;font-weight:800;}
+  h3{font-size:18px;margin:14px 0 4px;}
+  p{margin:8px 0;color:#333747;} .muted{color:var(--muted);} b{color:var(--ink);}
+  ul,ol{margin:8px 0 8px 22px;} li{margin-bottom:6px;}
+  .cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:16px 0;}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;border-top:5px solid var(--pur);box-shadow:0 4px 16px rgba(30,20,60,.05);}
+  .card:nth-child(2){border-top-color:var(--org);} .card:nth-child(3){border-top-color:var(--teal);}
+  .card .e{font-size:30px;} .card h3{margin:8px 0 4px;} .card p{font-size:14.5px;color:#4a4f63;}
+  .mind{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0;}
+  .mbox{background:var(--pur-b);border-radius:14px;padding:20px;}
+  .mbox:nth-child(2){background:var(--org-b);}
+  .mbox .k{font-size:13px;font-weight:800;letter-spacing:.1em;color:var(--pur);} .mbox:nth-child(2) .k{color:var(--org);}
+  .mbox h3{font-size:19px;margin:4px 0 6px;} .mbox p{font-size:14.5px;color:#4a4f63;}
+  /* 六步驟流程列 */
+  .flow{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0;}
+  .fstep{flex:1;min-width:120px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;}
+  .fstep .no{font-size:12px;font-weight:800;color:var(--pur);} .fstep .t{font-size:14.5px;font-weight:700;margin-top:2px;}
+  /* 步驟詳解 */
+  .step{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 22px;margin:12px 0;border-left:6px solid var(--pur);}
+  .step .head{display:flex;align-items:center;gap:12px;} .step .sn{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:9px;background:var(--pur);color:#fff;font-weight:800;flex:none;}
+  .step h3{margin:0;font-size:19px;} .step ul{margin-top:8px;} .step li{font-size:15px;}
+  /* 圖片佔位 */
+  .imgph{border:2px dashed var(--org);border-radius:16px;background:var(--org-b);padding:22px;margin:14px 0;}
+  .imgph .top{display:flex;align-items:center;gap:12px;}
+  .imgph .cam{font-size:34px;} .imgph .t{font-weight:800;font-size:17px;color:#8a5216;}
+  .imgph .spec{font-size:13.5px;color:#8a5216;margin:6px 0 0 46px;}
+  .imgph .box{margin-top:14px;background:#fff;border:1px dashed #e0b98a;border-radius:10px;height:150px;display:flex;align-items:center;justify-content:center;color:#b98a4a;font-size:15px;}
+  .imgph .prompt{margin-top:14px;background:var(--dark);color:#e9e6f6;border-radius:10px;padding:14px 16px;font-size:14px;line-height:1.65;white-space:pre-wrap;font-family:"Noto Sans TC",monospace;}
+  .imgph .prompt .lbl{display:inline-block;background:var(--org);color:#fff;font-size:12px;font-weight:800;padding:2px 10px;border-radius:6px;margin-bottom:8px;}
+  .callout{border-left:4px solid var(--teal);background:var(--teal-b);border-radius:0 10px 10px 0;padding:13px 18px;margin:12px 0;font-size:14.5px;} .callout b{color:var(--teal);}
+  .callout.w{border-left-color:var(--org);background:var(--org-b);} .callout.w b{color:var(--org);}
+  .faq{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:15px 20px;margin:10px 0;}
+  .faq .q{font-weight:800;font-size:15.5px;} .faq .q::before{content:"Q ";color:var(--pur);}
+  .faq .a{color:#4a4f63;font-size:14.5px;margin-top:5px;} .faq .a::before{content:"A ";color:var(--org);font-weight:800;}
+  table{width:100%;border-collapse:collapse;margin:14px 0;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:14px;}
+  th,td{padding:11px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;} th{background:#f0eefb;font-size:13px;} tr:last-child td{border-bottom:0;}
+  .foot{color:var(--muted);font-size:13px;margin-top:44px;border-top:1px solid var(--line);padding-top:16px;text-align:center;}
+  @media(max-width:760px){.cards3,.mind{grid-template-columns:1fr;}}
+  .demo{width:100%;display:block;border-radius:10px;border:1px solid var(--line);box-shadow:0 6px 18px rgba(30,20,60,.12);}
+  .demorow{display:flex;gap:12px;} .demorow img{flex:1;min-width:0;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <span class="eyebrow">AI 視覺設計 · 實用教材</span>
+  <h1>用 AI 做簡報<br><span class="g">ChatGPT 生圖 × Claude Cowork</span></h1>
+  <p class="lead">新一代生圖模型,讓「用 AI 一張張生出簡報頁」變得可行。這篇教你一套六步驟工作流,把散亂的想法,變成風格一致、可直接用的簡報 —— 而且中文字不再亂碼。文末也介紹<b>另一條路 —— Claude Cowork</b>,產出「可編輯的 PPTX」,兩種各有適合場合。</p>
+
+  <!-- 1 三大進步 -->
+  <h2><span class="n">1</span>Images 2.0 有什麼不一樣?</h2>
+  <div class="cards3">
+    <div class="card"><div class="e">🈶</div><h3>中文字更準</h3><p>以前 AI 生圖最痛的就是中文變亂碼;新版準確度大幅提升,標題、標籤終於能看。</p></div>
+    <div class="card"><div class="e">🎛️</div><h3>構圖更多樣</h3><p>版面、排版變化更豐富,不再每張都長一樣,做簡報比較有設計感。</p></div>
+    <div class="card"><div class="e">🎨</div><h3>跨批次風格一致</h3><p>多張圖能維持「同一種風格」,整份簡報看起來像一套,而不是東拼西湊。</p></div>
+  </div>
+
+  <!-- 2 兩個心法 -->
+  <h2><span class="n">2</span>先建立兩個心法</h2>
+  <div class="mind">
+    <div class="mbox"><div class="k">心法一</div><h3>AI 是「能力放大器」,不是「判斷取代者」</h3><p>它幫你把產出速度放大十倍,但「要做什麼、好不好、能不能用」還是你決定。別把判斷權交出去。</p></div>
+    <div class="mbox"><div class="k">心法二</div><h3>先定「內容」,再生「視覺」</h3><p>把敘事邏輯(每頁要講什麼)和視覺邏輯(長什麼樣)分開。內容沒定就急著生圖,只會一直重做。</p></div>
+  </div>
+
+  <!-- 3 六步驟 -->
+  <h2><span class="n">3</span>六步驟工作流</h2>
+  <div class="flow">
+    <div class="fstep"><div class="no">STEP 1</div><div class="t">定任務</div></div>
+    <div class="fstep"><div class="no">STEP 2</div><div class="t">建結構</div></div>
+    <div class="fstep"><div class="no">STEP 3</div><div class="t">定視覺規則</div></div>
+    <div class="fstep"><div class="no">STEP 4</div><div class="t">生圖</div></div>
+    <div class="fstep"><div class="no">STEP 5</div><div class="t">寫講稿</div></div>
+    <div class="fstep"><div class="no">STEP 6</div><div class="t">打包輸出</div></div>
+  </div>
+
+  <div class="step"><div class="head"><span class="sn">1</span><h3>定任務</h3></div>
+    <ul><li>上傳你的資料(文件、大綱、數據)。</li><li>講清楚四件事:<b>對象是誰、目的、要幾頁、什麼風格</b>。</li><li>越明確,後面越不用重做。</li></ul></div>
+
+  <div class="step"><div class="head"><span class="sn">2</span><h3>建結構(先用文字)</h3></div>
+    <ul><li>先讓 AI 把「論點架構」和「每頁主題」用<b>文字大綱</b>排好。</li><li>這步<b>先不要生圖</b> —— 確認邏輯順了,再進視覺。</li></ul></div>
+
+  <div class="step"><div class="head"><span class="sn">3</span><h3>定視覺規則</h3></div>
+    <ul><li>訂一份「設計規範」:<b>主色、字體風格、版式</b>(例:深藍底、白字、左標題右圖)。</li><li>這份規範是「跨批次風格一致」的關鍵 —— 每次生圖都帶著它。</li></ul></div>
+
+  <div class="step" style="border-left-color:var(--org);"><div class="head"><span class="sn" style="background:var(--org);">4</span><h3>生圖(重頭戲)</h3></div>
+    <ul><li>一張張生 <b>16:9</b> 的簡報圖。</li><li>一批大約<b>最多 10 張</b>;超過就分批。</li><li><b>分批時,每批都要重述同一套視覺規則</b>,風格才不會跑掉。</li></ul>
+    <div class="imgph">
+      <div class="top"><span class="cam">🖼️</span><span class="t">這裡放:一張「封面範例圖」</span></div>
+      <div class="spec">規格:16:9、深藍漸層底、大標題(中文)、簡潔科技感。你生好後把圖貼到這格。</div>
+      <img class="demo" alt="簡報封面範例" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyMCIgaGVpZ2h0PSIxMDgwIiB2aWV3Qm94PSIwIDAgMTkyMCAxMDgwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJiZyIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMwYTFmNDQiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSI1NSUiIHN0b3AtY29sb3I9IiMwZDMzNTciLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMGI0YTRmIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJhY2NlbnQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzJkZDRiZiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMzOGJkZjgiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgoKICA8cmVjdCB3aWR0aD0iMTkyMCIgaGVpZ2h0PSIxMDgwIiBmaWxsPSJ1cmwoI2JnKSIvPgoKICA8ZyBmaWxsPSJub25lIiBzdHJva2U9IiM1ZWVhZDQiIHN0cm9rZS1vcGFjaXR5PSIwLjE2IiBzdHJva2Utd2lkdGg9IjIiPgogICAgPHBhdGggZD0iTTE5MjAgNjIwIEwxNDAwIDEwODAiLz4KICAgIDxwYXRoIGQ9Ik0xOTIwIDcyMCBMMTUyMCAxMDgwIi8+CiAgICA8cGF0aCBkPSJNMTkyMCA4MjAgTDE2NDAgMTA4MCIvPgogIDwvZz4KICA8ZyBmaWxsPSJub25lIiBzdHJva2U9IiMzOGJkZjgiIHN0cm9rZS1vcGFjaXR5PSIwLjIyIiBzdHJva2Utd2lkdGg9IjIuNSI+CiAgICA8Y2lyY2xlIGN4PSIxNzIwIiBjeT0iODgwIiByPSIxNTAiLz4KICAgIDxjaXJjbGUgY3g9IjE3MjAiIGN5PSI4ODAiIHI9IjkwIi8+CiAgICA8bGluZSB4MT0iMTcyMCIgeTE9IjczMCIgeDI9IjE3MjAiIHkyPSIxMDMwIi8+CiAgICA8bGluZSB4MT0iMTU3MCIgeTE9Ijg4MCIgeDI9IjE4NzAiIHkyPSI4ODAiLz4KICA8L2c+CiAgPGcgZmlsbD0iIzVlZWFkNCIgZmlsbC1vcGFjaXR5PSIwLjU1Ij4KICAgIDxjaXJjbGUgY3g9IjE3MjAiIGN5PSI3MzAiIHI9IjYiLz4KICAgIDxjaXJjbGUgY3g9IjE3MjAiIGN5PSIxMDMwIiByPSI2Ii8+CiAgICA8Y2lyY2xlIGN4PSIxNTcwIiBjeT0iODgwIiByPSI2Ii8+CiAgICA8Y2lyY2xlIGN4PSIxODcwIiBjeT0iODgwIiByPSI2Ii8+CiAgICA8Y2lyY2xlIGN4PSIxODEwIiBjeT0iOTcwIiByPSI1Ii8+CiAgPC9nPgoKICA8cmVjdCB4PSIxNjAiIHk9IjQzMCIgd2lkdGg9IjEyMCIgaGVpZ2h0PSI4IiByeD0iNCIgZmlsbD0idXJsKCNhY2NlbnQpIi8+CgogIDx0ZXh0IHg9IjE2MiIgeT0iNDAwIiBmb250LWZhbWlseT0iTm90byBTYW5zIENKSyBUQywgc2Fucy1zZXJpZiIKICAgICAgICBmb250LXNpemU9IjM0IiBsZXR0ZXItc3BhY2luZz0iMTAiIGZpbGw9IiM3ZGQzZmMiIGZvbnQtd2VpZ2h0PSI0MDAiPkVOVEVSUFJJU0UgIEFJPC90ZXh0PgoKICA8dGV4dCB4PSIxNTgiIHk9IjU2MCIgZm9udC1mYW1pbHk9Ik5vdG8gU2FucyBDSksgVEMsIHNhbnMtc2VyaWYiCiAgICAgICAgZm9udC1zaXplPSIxMjAiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiNmZmZmZmYiIGxldHRlci1zcGFjaW5nPSI0Ij7kvIHmpa0gQUk8L3RleHQ+CiAgPHRleHQgeD0iMTU4IiB5PSI3MDAiIGZvbnQtZmFtaWx5PSJOb3RvIFNhbnMgQ0pLIFRDLCBzYW5zLXNlcmlmIgogICAgICAgIGZvbnQtc2l6ZT0iMTIwIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjZmZmZmZmIiBsZXR0ZXItc3BhY2luZz0iNCI+55+l6K2Y5YyW5oeJ55SoPC90ZXh0PgoKICA8dGV4dCB4PSIxNjIiIHk9Ijc3NSIgZm9udC1mYW1pbHk9Ik5vdG8gU2FucyBDSksgVEMsIHNhbnMtc2VyaWYiCiAgICAgICAgZm9udC1zaXplPSIzNiIgZmlsbD0iI2NiZDVlMSIgZm9udC13ZWlnaHQ9IjQwMCIgbGV0dGVyLXNwYWNpbmc9IjQiPuW+nuizh+aWmeWIsOa0nuWvn++8jOaJk+mAoOS8gealreefpeitmOaZuuiDvTwvdGV4dD4KPC9zdmc+Cg==">
+      <div class="prompt"><span class="lbl">生圖 prompt(貼給 ChatGPT)</span>幫我生一張 16:9 的簡報封面圖,主題「企業 AI 知識化應用」。風格:深藍到深青的漸層底、白色大標題、右下角簡潔幾何線條、專業科技感、留白乾淨。標題文字要清晰正確。</div>
+    </div>
+    <div class="callout w"><b>省時關鍵:</b>只有小地方要改(換個字、挪個位),用<b>局部修改工具</b>,不要整張重生 —— 重生很花時間,也會讓風格漂掉。</div>
+  </div>
+
+  <div class="step"><div class="head"><span class="sn">5</span><h3>寫講稿</h3></div>
+    <ul><li>每一頁配一段<b>講稿/口白</b>,上台時照著講。</li><li>可以讓 AI 依每頁重點,一次生出全部講稿。</li></ul></div>
+
+  <div class="step"><div class="head"><span class="sn">6</span><h3>打包輸出</h3></div>
+    <ul><li>把所有圖<b>匯出成一份 PPTX 或 PDF</b>,就能直接投影或分享。</li></ul></div>
+
+  <!-- 中文字/風格示範圖 -->
+  <h2><span class="n">4</span>兩個值得放的示範圖</h2>
+  <div class="imgph">
+    <div class="top"><span class="cam">🈶</span><span class="t">示範一:中文字準確度</span></div>
+    <div class="spec">用途:展示「中文標題不再亂碼」。生一張含中文大標題的圖卡。</div>
+    <img class="demo" alt="中文字準確度示範" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyMCIgaGVpZ2h0PSIxMDgwIiB2aWV3Qm94PSIwIDAgMTkyMCAxMDgwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxyZWN0IHdpZHRoPSIxOTIwIiBoZWlnaHQ9IjEwODAiIGZpbGw9IiNGNEVFRTEiLz4KCiAgPHJlY3QgeD0iMTYwIiB5PSIxMjAiIHdpZHRoPSIxNjAwIiBoZWlnaHQ9IjIiIGZpbGw9IiNDOUJCQTMiLz4KICA8cmVjdCB4PSIxNjAiIHk9Ijk1OCIgd2lkdGg9IjE2MDAiIGhlaWdodD0iMiIgZmlsbD0iI0M5QkJBMyIvPgoKICA8dGV4dCB4PSI5NjAiIHk9IjQwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9Ik5vdG8gU2FucyBDSksgVEMsIHNhbnMtc2VyaWYiCiAgICAgICAgZm9udC1zaXplPSIzMCIgbGV0dGVyLXNwYWNpbmc9IjE0IiBmaWxsPSIjOUM3QTU0IiBmb250LXdlaWdodD0iNDAwIj5LTk9XTEVER0U8L3RleHQ+CgogIDx0ZXh0IHg9Ijk2MCIgeT0iNTgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iTm90byBTYW5zIENKSyBUQywgc2Fucy1zZXJpZiIKICAgICAgICBmb250LXNpemU9IjEwNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzNCMkExRSIgbGV0dGVyLXNwYWNpbmc9IjIiPuefpeitmO+8jOaYr+S8gealreacgOmHjeimgeeahOizh+eUojwvdGV4dD4KCiAgPHJlY3QgeD0iOTAwIiB5PSI2NTAiIHdpZHRoPSIxMjAiIGhlaWdodD0iNSIgcng9IjIuNSIgZmlsbD0iI0IwODg1NiIvPgoKICA8dGV4dCB4PSI5NjAiIHk9Ijc0MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9Ik5vdG8gU2FucyBDSksgVEMsIHNhbnMtc2VyaWYiCiAgICAgICAgZm9udC1zaXplPSIzNiIgZm9udC13ZWlnaHQ9IjQwMCIgZmlsbD0iIzZCNTg0NCIgbGV0dGVyLXNwYWNpbmc9IjMiPuiuk+avj+S4gOasoee2k+mpl++8jOmDveayiea+seeCuue1hOe5lOmVt+acn+e0r+epjeeahOertueIreWKmzwvdGV4dD4KPC9zdmc+Cg==">
+    <div class="prompt"><span class="lbl">生圖 prompt</span>生一張 16:9 圖卡,正中央是清晰正確的中文標題「知識,是企業最重要的資產」,底下一行小字副標,米白底、深咖啡字、極簡風。中文字務必正確清楚。</div>
+  </div>
+  <div class="imgph">
+    <div class="top"><span class="cam">🎨</span><span class="t">示範二:同一風格的 3 張內頁</span></div>
+    <div class="spec">用途:展示「跨批次風格一致」。用同一套規則生的兩張內頁,並排放。</div>
+    <div class="demorow"><img class="demo" alt="內頁·痛點" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyMCIgaGVpZ2h0PSIxMDgwIiB2aWV3Qm94PSIwIDAgMTkyMCAxMDgwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxyZWN0IHdpZHRoPSIxOTIwIiBoZWlnaHQ9IjEwODAiIGZpbGw9IiNGNEVFRTEiLz4KCiAgPHRleHQgeD0iOTYwIiB5PSIyNDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJOb3RvIFNhbnMgQ0pLIFRDLCBzYW5zLXNlcmlmIgogICAgICAgIGZvbnQtc2l6ZT0iMjgiIGxldHRlci1zcGFjaW5nPSIxMiIgZmlsbD0iIzlDN0E1NCIgZm9udC13ZWlnaHQ9IjQwMCI+UEFJTiBQT0lOVFMgwrcg55eb6buePC90ZXh0PgogIDx0ZXh0IHg9Ijk2MCIgeT0iMzUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iTm90byBTYW5zIENKSyBUQywgc2Fucy1zZXJpZiIKICAgICAgICBmb250LXNpemU9Ijc2IiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjM0IyQTFFIiBsZXR0ZXItc3BhY2luZz0iMyI+5LyB5qWt55+l6K2Y55qE5LiJ5aSn55eb6buePC90ZXh0PgogIDxyZWN0IHg9IjkwMCIgeT0iMzkyIiB3aWR0aD0iMTIwIiBoZWlnaHQ9IjUiIHJ4PSIyLjUiIGZpbGw9IiNCMDg4NTYiLz4KCiAgPHJlY3QgeD0iMTYwIiB5PSI0NzAiIHdpZHRoPSI1MDAiIGhlaWdodD0iNDcwIiByeD0iMjQiIGZpbGw9IiNGQkY3RUUiIHN0cm9rZT0iI0UwRDNCQyIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPGNpcmNsZSBjeD0iNDEwIiBjeT0iNTc1IiByPSI0NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjQjA4ODU2IiBzdHJva2Utd2lkdGg9IjMiLz4KICA8ZyBmaWxsPSIjQjA4ODU2Ij4KICAgIDxjaXJjbGUgY3g9IjM5MiIgY3k9IjU2MSIgcj0iNS41Ii8+PGNpcmNsZSBjeD0iNDI0IiBjeT0iNTU3IiByPSI1LjUiLz4KICAgIDxjaXJjbGUgY3g9IjQxMCIgY3k9IjU3NiIgcj0iNS41Ii8+PGNpcmNsZSBjeD0iMzkwIiBjeT0iNTkyIiByPSI1LjUiLz4KICAgIDxjaXJjbGUgY3g9IjQyOCIgY3k9IjU5MCIgcj0iNS41Ii8+CiAgPC9nPgogIDx0ZXh0IHg9IjQxMCIgeT0iNzAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iTm90byBTYW5zIENKSyBUQywgc2Fucy1zZXJpZiIKICAgICAgICBmb250LXNpemU9IjQyIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjM0IyQTFFIj7nn6XorZjmlaPokL3lkITomZU8L3RleHQ+CiAgPHRleHQgeD0iNDEwIiB5PSI3NjgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJOb3RvIFNhbnMgQ0pLIFRDLCBzYW5zLXNlcmlmIgogICAgICAgIGZvbnQtc2l6ZT0iMjciIGZpbGw9IiM2QjU4NDQiPuizh+aWmeWIhuaVo+WcqOS/oeeuseOAgembsuerr+iIhzwvdGV4dD4KICA8dGV4dCB4PSI0MTAiIHk9IjgwOCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9Ik5vdG8gU2FucyBDSksgVEMsIHNhbnMtc2VyaWYiCiAgICAgICAgZm9udC1zaXplPSIyNyIgZmlsbD0iIzZCNTg0NCI+5YCL5Lq66Zu76IWm77yM6KaB55So5pmC5om+5LiN5YiwPC90ZXh0PgoKICA8cmVjdCB4PSI3MTAiIHk9IjQ3MCIgd2lkdGg9IjUwMCIgaGVpZ2h0PSI0NzAiIHJ4PSIyNCIgZmlsbD0iI0ZCRjdFRSIgc3Ryb2tlPSIjRTBEM0JDIiBzdHJva2Utd2lkdGg9IjIiLz4KICA8Y2lyY2xlIGN4PSI5NjAiIGN5PSI1NzUiIHI9IjQ2IiBmaWxsPSJub25lIiBzdHJva2U9IiNCMDg4NTYiIHN0cm9rZS13aWR0aD0iMyIvPgogIDxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0IwODg1NiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPHBhdGggZD0iTTk0MiA1NTMgTDkzMCA1NTMgTDkzMCA1OTcgTDk0MiA1OTciLz4KICAgIDxsaW5lIHgxPSI5NDgiIHkxPSI1NzUiIHgyPSI5ODQiIHkyPSI1NzUiLz4KICAgIDxwYXRoIGQ9Ik05NzQgNTY2IEw5ODQgNTc1IEw5NzQgNTg0Ii8+CiAgPC9nPgogIDx0ZXh0IHg9Ijk2MCIgeT0iNzAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iTm90byBTYW5zIENKSyBUQywgc2Fucy1zZXJpZiIKICAgICAgICBmb250LXNpemU9IjQyIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjM0IyQTFFIj7kurrotbDvvIznn6XorZjlsLHnqbrkuoY8L3RleHQ+CiAgPHRleHQgeD0iOTYwIiB5PSI3NjgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJOb3RvIFNhbnMgQ0pLIFRDLCBzYW5zLXNlcmlmIgogICAgICAgIGZvbnQtc2l6ZT0iMjciIGZpbGw9IiM2QjU4NDQiPuizh+a3seWQjOS7gembouiBt++8jOe2k+mpl+iIhzwvdGV4dD4KICA8dGV4dCB4PSI5NjAiIHk9IjgwOCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9Ik5vdG8gU2FucyBDSksgVEMsIHNhbnMtc2VyaWYiCiAgICAgICAgZm9udC1zaXplPSIyNyIgZmlsbD0iIzZCNTg0NCI+a25vdy1ob3cg6Lef6JGX5LiA6LW35rWB5aSxPC90ZXh0PgoKICA8cmVjdCB4PSIxMjYwIiB5PSI0NzAiIHdpZHRoPSI1MDAiIGhlaWdodD0iNDcwIiByeD0iMjQiIGZpbGw9IiNGQkY3RUUiIHN0cm9rZT0iI0UwRDNCQyIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPGNpcmNsZSBjeD0iMTUxMCIgY3k9IjU3NSIgcj0iNDYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0IwODg1NiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjQjA4ODU2IiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8cGF0aCBkPSJNMTUzMCA1NjYgQSAyMiAyMiAwIDEgMCAxNTMyIDU4NSIvPgogICAgPHBhdGggZD0iTTE1MjIgNTQ4IEwxNTMyIDU2NiBMMTUxMiA1NzAiLz4KICA8L2c+CiAgPHRleHQgeD0iMTUxMCIgeT0iNzAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iTm90byBTYW5zIENKSyBUQywgc2Fucy1zZXJpZiIKICAgICAgICBmb250LXNpemU9IjQyIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjM0IyQTFFIj7kuIDlho3ph43opIfpgKDovKrlrZA8L3RleHQ+CiAgPHRleHQgeD0iMTUxMCIgeT0iNzY4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iTm90byBTYW5zIENKSyBUQywgc2Fucy1zZXJpZiIKICAgICAgICBmb250LXNpemU9IjI3IiBmaWxsPSIjNkI1ODQ0Ij7mr4/mrKHpg73lvp7pm7bplovlp4vvvIw8L3RleHQ+CiAgPHRleHQgeD0iMTUxMCIgeT0iODA4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iTm90byBTYW5zIENKSyBUQywgc2Fucy1zZXJpZiIKICAgICAgICBmb250LXNpemU9IjI3IiBmaWxsPSIjNkI1ODQ0Ij7mlYjnjofkvY7okL3lj4jlk4Hos6rkuI3kuIA8L3RleHQ+Cjwvc3ZnPgo="><img class="demo" alt="內頁·解法" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyMCIgaGVpZ2h0PSIxMDgwIiB2aWV3Qm94PSIwIDAgMTkyMCAxMDgwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxyZWN0IHdpZHRoPSIxOTIwIiBoZWlnaHQ9IjEwODAiIGZpbGw9IiNGNEVFRTEiLz4KCiAgPHRleHQgeD0iOTYwIiB5PSIyNDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJOb3RvIFNhbnMgQ0pLIFRDLCBzYW5zLXNlcmlmIgogICAgICAgIGZvbnQtc2l6ZT0iMjgiIGxldHRlci1zcGFjaW5nPSIxMiIgZmlsbD0iIzlDN0E1NCIgZm9udC13ZWlnaHQ9IjQwMCI+U09MVVRJT05TIMK3IOino+azlTwvdGV4dD4KICA8dGV4dCB4PSI5NjAiIHk9IjM1MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9Ik5vdG8gU2FucyBDSksgVEMsIHNhbnMtc2VyaWYiCiAgICAgICAgZm9udC1zaXplPSI3NiIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzNCMkExRSIgbGV0dGVyLXNwYWNpbmc9IjMiPuefpeitmOWMlueahOS4ieWAi+ino+azlTwvdGV4dD4KICA8cmVjdCB4PSI5MDAiIHk9IjM5MiIgd2lkdGg9IjEyMCIgaGVpZ2h0PSI1IiByeD0iMi41IiBmaWxsPSIjQjA4ODU2Ii8+CgogIDxyZWN0IHg9IjE2MCIgeT0iNDcwIiB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQ3MCIgcng9IjI0IiBmaWxsPSIjRkJGN0VFIiBzdHJva2U9IiNFMEQzQkMiIHN0cm9rZS13aWR0aD0iMiIvPgogIDxjaXJjbGUgY3g9IjQxMCIgY3k9IjU3NSIgcj0iNDYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0IwODg1NiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjQjA4ODU2IiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8ZWxsaXBzZSBjeD0iNDEwIiBjeT0iNTU4IiByeD0iMjQiIHJ5PSI4Ii8+CiAgICA8cGF0aCBkPSJNMzg2IDU1OCBMMzg2IDU5MiBBIDI0IDggMCAwIDAgNDM0IDU5MiBMNDM0IDU1OCIvPgogICAgPHBhdGggZD0iTTM4NiA1NzUgQSAyNCA4IDAgMCAwIDQzNCA1NzUiLz4KICA8L2c+CiAgPHRleHQgeD0iNDEwIiB5PSI3MDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJOb3RvIFNhbnMgQ0pLIFRDLCBzYW5zLXNlcmlmIgogICAgICAgIGZvbnQtc2l6ZT0iNDIiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMzQjJBMUUiPuefpeitmOmbhuS4reeuoeeQhjwvdGV4dD4KICA8dGV4dCB4PSI0MTAiIHk9Ijc2OCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9Ik5vdG8gU2FucyBDSksgVEMsIHNhbnMtc2VyaWYiCiAgICAgICAgZm9udC1zaXplPSIyNyIgZmlsbD0iIzZCNTg0NCI+5bu656uL5Zau5LiA55+l6K2Y5bqr77yMPC90ZXh0PgogIDx0ZXh0IHg9IjQxMCIgeT0iODA4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iTm90byBTYW5zIENKSyBUQywgc2Fucy1zZXJpZiIKICAgICAgICBmb250LXNpemU9IjI3IiBmaWxsPSIjNkI1ODQ0Ij7os4fmlpnkuIDmrKHliLDkvY3jgIHpmqjmn6XpmqjnlKg8L3RleHQ+CgogIDxyZWN0IHg9IjcxMCIgeT0iNDcwIiB3aWR0aD0iNTAwIiBoZWlnaHQ9IjQ3MCIgcng9IjI0IiBmaWxsPSIjRkJGN0VFIiBzdHJva2U9IiNFMEQzQkMiIHN0cm9rZS13aWR0aD0iMiIvPgogIDxjaXJjbGUgY3g9Ijk2MCIgY3k9IjU3NSIgcj0iNDYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0IwODg1NiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjQjA4ODU2IiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8Y2lyY2xlIGN4PSI5NTMiIGN5PSI1NjgiIHI9IjE2Ii8+CiAgICA8bGluZSB4MT0iOTY1IiB5MT0iNTgwIiB4Mj0iOTgwIiB5Mj0iNTk1Ii8+CiAgPC9nPgogIDx0ZXh0IHg9Ijk2MCIgeT0iNzAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iTm90byBTYW5zIENKSyBUQywgc2Fucy1zZXJpZiIKICAgICAgICBmb250LXNpemU9IjQyIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjM0IyQTFFIj5BSSDoqp7mhI/mqqLntKI8L3RleHQ+CiAgPHRleHQgeD0iOTYwIiB5PSI3NjgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJOb3RvIFNhbnMgQ0pLIFRDLCBzYW5zLXNlcmlmIgogICAgICAgIGZvbnQtc2l6ZT0iMjciIGZpbGw9IiM2QjU4NDQiPueUqOiHqueEtuiqnuiogOWVj+etlO+8jDwvdGV4dD4KICA8dGV4dCB4PSI5NjAiIHk9IjgwOCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9Ik5vdG8gU2FucyBDSksgVEMsIHNhbnMtc2VyaWYiCiAgICAgICAgZm9udC1zaXplPSIyNyIgZmlsbD0iIzZCNTg0NCI+56eS57Sa5om+5Yiw562U5qGI6IiH5Ye66JmVPC90ZXh0PgoKICA8cmVjdCB4PSIxMjYwIiB5PSI0NzAiIHdpZHRoPSI1MDAiIGhlaWdodD0iNDcwIiByeD0iMjQiIGZpbGw9IiNGQkY3RUUiIHN0cm9rZT0iI0UwRDNCQyIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPGNpcmNsZSBjeD0iMTUxMCIgY3k9IjU3NSIgcj0iNDYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0IwODg1NiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjQjA4ODU2IiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8cG9seWxpbmUgcG9pbnRzPSIxNDg4LDU5MiAxNTAyLDU3OCAxNTE0LDU4NiAxNTMyLDU2MCIvPgogICAgPHBhdGggZD0iTTE1MjEgNTU4IEwxNTMzIDU1NyBMMTUzMyA1NjkiLz4KICA8L2c+CiAgPHRleHQgeD0iMTUxMCIgeT0iNzAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iTm90byBTYW5zIENKSyBUQywgc2Fucy1zZXJpZiIKICAgICAgICBmb250LXNpemU9IjQyIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSIjM0IyQTFFIj7mjIHnuozntK/nqY3lop7lgLw8L3RleHQ+CiAgPHRleHQgeD0iMTUxMCIgeT0iNzY4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iTm90byBTYW5zIENKSyBUQywgc2Fucy1zZXJpZiIKICAgICAgICBmb250LXNpemU9IjI3IiBmaWxsPSIjNkI1ODQ0Ij7lsI3oqbHoiIfmlofku7boh6rli5XmsonmvrHvvIw8L3RleHQ+CiAgPHRleHQgeD0iMTUxMCIgeT0iODA4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iTm90byBTYW5zIENKSyBUQywgc2Fucy1zZXJpZiIKICAgICAgICBmb250LXNpemU9IjI3IiBmaWxsPSIjNkI1ODQ0Ij7nn6XorZjotornlKjotorosZDlr4w8L3RleHQ+Cjwvc3ZnPgo="></div>
+    <div class="prompt"><span class="lbl">生圖 prompt(生完第一張後,同串對話接著說)</span>用「一模一樣的風格」再生兩張內頁:主題分別是「痛點」和「解法」,每頁一個大標題＋三個帶圖示的重點卡,配色版式都跟上一張一致。</div>
+  </div>
+
+  <!-- 5 技巧 -->
+  <h2><span class="n">5</span>實用技巧 & 除錯</h2>
+  <ul>
+    <li><b>用修改、別重生:</b>小錯用局部編輯工具改,省時又保風格。</li>
+    <li><b>用會「想清楚」的模式:</b>開有「延伸思考 / Extended Thinking」的模型,結構和版面更穩。</li>
+    <li><b>管理 10 張上限:</b>超過就分批,每批開頭都重貼視覺規則。</li>
+    <li><b>要放 Logo / 產品照:</b>直接上傳,請它整合進版面,別讓它「憑空畫」你的商標。</li>
+    <li><b>prompt 要精準,不是要長:</b>講清楚「風格、版式、文字內容」比堆一堆形容詞有用。</li>
+  </ul>
+
+  <!-- 6 FAQ -->
+  <h2><span class="n">6</span>常見問題 FAQ</h2>
+  <div class="faq"><div class="q">一次只能生 10 張,簡報更多頁怎麼辦?</div><div class="a">分批生。每批開頭都重述同一套視覺規則,風格就能接得起來。</div></div>
+  <div class="faq"><div class="q">生錯了要全部重來嗎?</div><div class="a">不用。小地方用局部修改工具改就好,整張重生最花時間、也最容易讓風格跑掉。</div></div>
+  <div class="faq"><div class="q">生出來的簡報能像 PowerPoint 一樣再編輯文字嗎?</div><div class="a">要注意:生出來的是「圖片」,上面的文字不能像 PPT 那樣直接改。要改字通常得重生那張,或改用真正的簡報工具做文字版。</div></div>
+  <div class="faq"><div class="q">prompt 是不是寫越長越好?</div><div class="a">不是。精準 &gt; 冗長。把「風格、版式、要放的文字」講清楚,比塞一堆華麗形容詞有效。</div></div>
+
+  <!-- 圖片清單 -->
+  <h2><span class="n">📸</span>你要產的圖(整理清單)</h2>
+  <p class="muted">下面是這份教材裡「留白等你放圖」的地方。照著 prompt 生好、貼回對應位置即可。</p>
+  <table>
+    <thead><tr><th>#</th><th>圖片用途</th><th>規格</th><th>放在哪</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>簡報封面範例</td><td>16:9,深藍漸層+中文大標</td><td>STEP 4 生圖</td></tr>
+      <tr><td>2</td><td>中文字準確度示範</td><td>16:9,中文大標圖卡</td><td>示範一</td></tr>
+      <tr><td>3</td><td>同風格內頁(痛點/解法)</td><td>16:9 ×2,同一套配色版式</td><td>示範二</td></tr>
+    </tbody>
+  </table>
+  <div class="callout">每張的完整生圖 prompt,就在上面各佔位框的深色區塊裡,直接複製貼進 ChatGPT 就能生。</div>
+
+  <!-- 7 另一條路:Cowork -->
+  <h2><span class="n">7</span>另一條路:Claude Cowork(要「可編輯的 PPT」就用它)</h2>
+  <div class="callout w"><b>一句話差別:</b>ChatGPT Images 2.0 生的是「<b>圖片式</b>」簡報(漂亮,但字不能再改);Claude Cowork 生的是「<b>真正可編輯的 .pptx</b>」—— 能像 PowerPoint 一樣改字、改版面。</div>
+
+  <h3>它是什麼</h3>
+  <p>Claude <b>桌面版</b>的「本機代理」:直接讀你電腦資料夾裡的素材,幫你產出一份真正的 PowerPoint 檔。需要 <b>Claude 桌面 App ＋ 付費方案(Pro／Max／Team)</b>,Mac、Windows 都能用。</p>
+
+  <h3>六步驟</h3>
+  <div class="flow">
+    <div class="fstep"><div class="no">STEP 1</div><div class="t">裝桌面 App</div></div>
+    <div class="fstep"><div class="no">STEP 2</div><div class="t">建素材資料夾</div></div>
+    <div class="fstep"><div class="no">STEP 3</div><div class="t">授權讀取</div></div>
+    <div class="fstep"><div class="no">STEP 4</div><div class="t">下詳細指令</div></div>
+    <div class="fstep"><div class="no">STEP 5</div><div class="t">背景生成</div></div>
+    <div class="fstep"><div class="no">STEP 6</div><div class="t">取回 .pptx</div></div>
+  </div>
+  <p class="muted">約 30 頁需 <b>25–35 分鐘</b>背景處理(過程中電腦別休眠);完成後取回檔案,再請它微調即可。</p>
+
+  <h3>強項 vs 限制</h3>
+  <div class="cards3" style="grid-template-columns:1fr 1fr;">
+    <div class="card" style="border-top-color:var(--teal);"><h3>✅ 強項</h3><p style="color:#333747;">‧ 產出「真 .pptx」,可編輯<br>‧ 能批次(100+ 頁、多份同時)<br>‧ 大量產出也維持風格一致<br>‧ 直接管理資料夾裡的檔案</p></div>
+    <div class="card" style="border-top-color:var(--org);"><h3>⚠️ 限制</h3><p style="color:#333747;">‧ 只有桌面版(無網頁版)<br>‧ 需付費方案<br>‧ 要跑一段時間(電腦不能睡)<br>‧ 要授權讀你的資料夾</p></div>
+  </div>
+
+  <h3>進階技巧</h3>
+  <ul>
+    <li><b>建「風格指令」文字檔:</b>把公司 CI(配色、字體、logo 規範)寫成一份檔,讓它照著做,整份風格統一。</li>
+    <li><b>串接連接器:</b>接 Notion / Google Drive、用 Chrome 擴充做網路研究,取材更完整。</li>
+    <li><b>讓它先問再做:</b>用「先問清楚需求再動工」的方式,避免整份做錯方向。</li>
+  </ul>
+
+  <h3>兩條路線比較</h3>
+  <table>
+    <thead><tr><th>面向</th><th>ChatGPT Images 2.0</th><th>Claude Cowork</th></tr></thead>
+    <tbody>
+      <tr><td><b>產出形式</b></td><td>圖片式簡報(字不能再編)</td><td>可編輯 .pptx(字/版面可改)</td></tr>
+      <tr><td><b>費用</b></td><td>免費版可試(有額度)</td><td>需付費 ＋ 桌面版</td></tr>
+      <tr><td><b>適合量</b></td><td>一批約 10 張</td><td>批次 100+ 頁、多份同時</td></tr>
+      <tr><td><b>產製時間</b></td><td>幾秒~數分鐘/張</td><td>約 30 頁 25–35 分(背景跑)</td></tr>
+      <tr><td><b>最適合</b></td><td>有設計感的視覺、社群圖、封面</td><td>要交「傳統可編輯 PPT」的正式提案、大量簡報</td></tr>
+      <tr><td><b>在哪用</b></td><td>網頁 / App</td><td>桌面 App(需授權讀資料夾)</td></tr>
+    </tbody>
+  </table>
+  <div class="callout"><b>怎麼選:</b>要<b>好看的視覺/社群圖/封面</b> → 用 Images 2.0;要<b>交出去、能繼續編輯的正式 PPT</b> → 用 Cowork。兩個一起用也行:Cowork 排骨架、Images 生封面與重點視覺。</div>
+
+  <div class="foot">ECOxSTRAT 全感生態策略 · 企業 AI 知識化應用<br>
+    <span style="font-size:12.5px;color:#9098aa;">參考來源:數位時代 bnext.com.tw;本教材為 ECOxSTRAT 原創改編,內容與圖表皆自製。功能與限制以 OpenAI／Anthropic 官方為準。</span>
+  </div>
+</div>
+</body>
+</html>

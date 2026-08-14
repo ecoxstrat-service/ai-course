@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>四天課程流程表 · 企業 AI 知識化應用</title>
+<style>
+  :root{--navy:#10243E;--navy2:#14385B;--teal:#00A6A6;--teal-light:#2FC5BB;--gold:#D2A84A;--gold-hi:#FFE08A;
+        --green:#2F7D68;--red:#C0492F;--ink:#172033;--ink-soft:#415066;--ink-faint:#7B8796;
+        --line:#DDE4EC;--cream:#F7F8FA;--paper:#fff;--teal-bg:#E5F7F6;--gold-bg:#FFF3D1;--green-bg:#E7F2EE;--red-bg:#FBEAE5;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif;background:var(--cream);color:var(--ink);line-height:1.5;}
+  .wrap{max-width:1180px;margin:0 auto;padding:30px 20px 80px;}
+  .head{background:linear-gradient(135deg,var(--navy),var(--navy2) 60%,var(--teal));color:#fff;border-radius:14px;padding:26px 30px;box-shadow:0 12px 30px rgba(16,36,62,.22);}
+  .head h1{font-size:30px;font-weight:800;letter-spacing:-.3px;}
+  .head .sub{font-size:16px;opacity:.92;margin-top:6px;font-weight:300;}
+  .head .meta{font-size:13.5px;opacity:.82;margin-top:10px;}
+
+  .goal{background:var(--gold-bg);border:1px solid #ecd9a4;border-left:7px solid var(--gold);border-radius:12px;padding:16px 20px;margin-top:18px;}
+  .goal h2{font-size:19px;color:#8a6414;font-weight:800;margin-bottom:6px;}
+  .goal p{font-size:15px;color:#5f4a16;} .goal b{color:var(--green);}
+  .goal .flow{font-size:14.5px;color:#7a5a12;margin-top:8px;font-weight:700;}
+
+  .legend{display:flex;flex-wrap:wrap;gap:8px;margin:16px 2px;font-size:13.5px;align-items:center;}
+  .legend .t{font-weight:800;color:var(--ink-faint);}
+  .chip{font-size:13px;font-weight:800;border-radius:6px;padding:3px 10px;white-space:nowrap;}
+  .k-talk{background:var(--teal-bg);color:#0a7d7d;} .k-do{background:var(--green-bg);color:var(--green);}
+  .k-share{background:var(--gold-bg);color:#8a6414;} .k-open{background:#E3E9F1;color:var(--navy);}
+  .k-work{background:var(--gold-bg);color:#8a6414;} .k-rest{background:#eef1f5;color:#8894a3;}
+
+  .day{margin-top:26px;border-radius:14px;overflow:hidden;border:1px solid var(--line);box-shadow:0 6px 20px rgba(16,36,62,.08);}
+  .dbar{padding:13px 22px;color:#fff;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;}
+  .d1 .dbar{background:linear-gradient(120deg,var(--navy),var(--navy2));}
+  .d2 .dbar{background:linear-gradient(120deg,#0f6f74,var(--teal));}
+  .d3 .dbar{background:linear-gradient(120deg,#b8902f,var(--gold));}
+  .d4 .dbar{background:linear-gradient(120deg,#9c3a24,var(--red));}
+  .dbar .n{font-size:19px;font-weight:800;letter-spacing:.03em;} .dbar .t{font-size:15px;opacity:.95;} .dbar .u{font-size:13px;opacity:.85;margin-left:auto;}
+
+  table{width:100%;border-collapse:collapse;background:var(--paper);font-size:14.5px;}
+  th{background:#eef1f6;color:var(--navy);font-weight:800;font-size:13.5px;text-align:left;padding:9px 12px;border-bottom:2px solid var(--line);}
+  td{padding:9px 12px;border-bottom:1px solid #eef2f6;vertical-align:top;}
+  tr:last-child td{border-bottom:0;}
+  td.time{white-space:nowrap;font-weight:800;color:var(--ink-soft);font-size:13.5px;width:120px;}
+  td.topic b{color:var(--navy);} td.topic .d{font-size:13px;color:var(--ink-faint);margin-top:2px;}
+  td.type{width:96px;white-space:nowrap;} td.mat{width:330px;}
+  tr.rest td{background:#f3f5f8;color:var(--ink-faint);font-size:13px;padding:5px 12px;font-weight:700;}
+  tr.work td{background:var(--gold-bg);} tr.work td.topic b{color:#8a6414;}
+  tr.hi td{background:var(--teal-bg);}
+
+  a.f{display:inline-flex;align-items:center;gap:4px;text-decoration:none;background:#fff;border:1.4px solid var(--teal);color:#0a7d7d;
+      font-size:12.5px;font-weight:700;padding:4px 9px;border-radius:7px;margin:2px 4px 2px 0;transition:.1s;}
+  a.f:hover{background:var(--teal);color:#fff;}
+  a.f.p{border-color:var(--gold);color:#8a6414;background:#fffdf6;} a.f.p:hover{background:var(--gold);color:#fff;}
+  a.f.c{border-color:#c3cddb;color:var(--ink-soft);background:#fbfcfe;} a.f.c:hover{background:var(--navy);color:#fff;border-color:var(--navy);}
+  a.f.n{border-color:var(--navy);color:var(--navy);} a.f.n:hover{background:var(--navy);color:#fff;}
+  .none{font-size:12.5px;color:#aab3c0;font-style:italic;}
+
+  .note{background:#fffceb;border:1px solid #f0e4b0;border-radius:10px;padding:14px 18px;margin-top:22px;font-size:14px;color:#6b5a1a;}
+  .note b{color:#8a6414;}
+  .foot{color:var(--ink-faint);font-size:12.5px;margin-top:26px;text-align:center;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="head">
+    <h1>四天課程流程表</h1>
+    <div class="sub">企業 AI 知識化應用 · 講完就練 · 每天為「成果發表」鋪路</div>
+    <div class="meta">每日 08:30 開始 · 上午上到 11:40 · 午休 11:40–13:00 · 下午 13:00–17:00 · 每約 1.5 小時休息 15–20 分 · 第 4 天下午成果發表 · 講師 Amigo 藍幼玟 · ECOxSTRAT</div>
+  </div>
+
+  <div class="goal">
+    <h2>🎯 全課成果：「我的一個 AI 應用」</h2>
+    <p>每位學員（可分組）挑<b>一個自己工作的真實痛點</b>,用四天學到的工具做出<b>一個小成品</b>,第 4 天下午發表:<b>痛點 → 用了什麼工具 → 怎麼做 → 成果 → 預期效益</b>。</p>
+    <div class="flow">第 1 天早上先說明 → 每天工具是拼圖 → 中間 3 個「成果工作時間」組裝 → 第 4 天完成並發表。</div>
+  </div>
+
+  <div class="legend">
+    <span class="t">型態:</span>
+    <span class="chip k-open">開場</span><span class="chip k-talk">🗣 講</span><span class="chip k-do">✍️ 練</span>
+    <span class="chip k-work">🎯 成果工作</span><span class="chip k-share">🎤 發表</span><span class="chip k-rest">休息</span>
+    <span class="t" style="margin-left:10px">檔案:</span>
+    <a class="f n" href="#">正課簡報</a><a class="f" href="#">實作教材</a><a class="f p" href="#">PPTX</a><a class="f c" href="#">案例/佐證</a>
+  </div>
+
+  <!-- ============ DAY 1 ============ -->
+  <div class="day d1">
+    <div class="dbar"><span class="n">DAY 1</span><span class="t">主管場 · 決策層:先梳理流程,再導入 AI</span><span class="u">單元一 戰略 → AI 應用管理機制 → 單元二 土壤 ·【前測】</span></div>
+    <table>
+      <tr><th>時間</th><th>主題／內容</th><th>型態</th><th>講義／檔案</th></tr>
+      <tr class="hi"><td class="time">08:30–08:50</td><td class="topic"><b>報到 · 前測 · 開場地圖</b><div class="d">前測（公司/姓名/職稱）＋ 六大領域全貌</div></td><td class="type"><span class="chip k-open">開場</span></td><td class="mat"><a class="f" href="ECOxSTRAT_2026_AI六大核心領域_20260712_V1.0.html" target="_blank">六大核心領域</a><a class="f c" href="ECOxSTRAT_課程影片清單_單元1-4_20260705_V1.0.html" target="_blank">影片清單</a></td></tr>
+      <tr class="work"><td class="time">08:50–09:20</td><td class="topic"><b>🎯 成果發表說明</b><div class="d">四天要交什麼、今天就選定你的痛點、開始蒐集素材</div></td><td class="type"><span class="chip k-work">成果</span></td><td class="mat"><span class="none">口頭說明 ＋ 成果範例</span></td></tr>
+      <tr><td class="time">09:20–10:00</td><td class="topic"><b>單元一:AI 轉型戰略（上）</b><div class="d">流程優先於採購、數位化三階段、AI 四波</div></td><td class="type"><span class="chip k-talk">🗣 講</span></td><td class="mat"><a class="f n" href="ECOxSTRAT_課程簡報_單元01_AI轉型戰略_20260704_V1.0.html" target="_blank">單元01</a></td></tr>
+      <tr class="rest"><td class="time">10:00–10:20</td><td colspan="3">☕ 休息 15–20 分</td></tr>
+      <tr><td class="time">10:20–11:40</td><td class="topic"><b>單元一（下）:為什麼導入失敗</b><div class="d">資料庫≠知識庫、負責任 AI 與資料治理</div></td><td class="type"><span class="chip k-talk">🗣 講</span></td><td class="mat"><a class="f n" href="ECOxSTRAT_課程簡報_單元01_AI轉型戰略_20260704_V1.0.html" target="_blank">單元01</a><a class="f c" href="ECOxSTRAT_台灣轉型數據與在地案例_PwC2023_簡報版_20260707_V1.0.html" target="_blank">PwC 數據</a><a class="f c" href="ECOxSTRAT_補充主題_AI治理與Agent自動化_簡報版_20260714_V1.0.html" target="_blank">AI 治理</a></td></tr>
+      <tr class="rest"><td class="time">11:40–13:00</td><td colspan="3">🍱 午休</td></tr>
+      <tr class="hi"><td class="time">13:00–14:20</td><td class="topic"><b>正課:AI 應用管理機制與營運能力</b><div class="d">單元一講完接續,給主管「決策層」視角:管理機制·KPI·人·營運能力＋案例（中油/矽品）</div></td><td class="type"><span class="chip k-talk">🗣 講</span></td><td class="mat"><a class="f n" href="AI應用管理機制與營運能力建構.pptx">AI應用管理機制與營運能力建構.pptx</a></td></tr>
+      <tr class="rest"><td class="time">14:20–14:40</td><td colspan="3">☕ 休息</td></tr>
+      <tr><td class="time">14:40–16:00</td><td class="topic"><b>單元二:AI 數位土壤（上）</b><div class="d">AI-Ready 環境、文件結構化整骨</div></td><td class="type"><span class="chip k-talk">🗣 講</span></td><td class="mat"><a class="f n" href="ECOxSTRAT_課程簡報_單元02_數位土壤_20260704_V0.1.html" target="_blank">單元02</a></td></tr>
+      <tr class="rest"><td class="time">16:00–16:15</td><td colspan="3">☕ 休息</td></tr>
+      <tr><td class="time">16:15–17:00</td><td class="topic"><b>單元二（下）＋ 基建診斷自評</b><div class="d">命名/權限/資料盤點、現場填檢核表</div></td><td class="type"><span class="chip k-talk">🗣 講</span> <span class="chip k-do">✍️ 練</span></td><td class="mat"><a class="f n" href="ECOxSTRAT_課程簡報_單元02_數位土壤_20260704_V0.1.html" target="_blank">單元02</a></td></tr>
+    </table>
+  </div>
+
+  <!-- ============ DAY 2 ============ -->
+  <div class="day d2">
+    <div class="dbar"><span class="n">DAY 2</span><span class="t">主管場 · 決策層:流程與場景（示範為主 ＋ 留短時間自試）</span><span class="u">單元三 I/P/O ＋ 單元四 場景 ＋ DocBridge 示範</span></div>
+    <table>
+      <tr><th>時間</th><th>主題／內容</th><th>型態</th><th>講義／檔案</th></tr>
+      <tr><td class="time">08:30–10:00</td><td class="topic"><b>單元三:I／P／O 拆解法</b><div class="d">把隱性經驗拆成 Input/Process/Output ＋ 商務脈絡指令</div></td><td class="type"><span class="chip k-talk">🗣 講</span></td><td class="mat"><a class="f n" href="ECOxSTRAT_課程簡報_單元03_隱性經驗轉流程_20260704_V0.1.html" target="_blank">單元03</a></td></tr>
+      <tr class="rest"><td class="time">10:00–10:20</td><td colspan="3">☕ 休息</td></tr>
+      <tr><td class="time">10:20–11:40</td><td class="topic"><b>I/P/O 示範拆解 ＋ 各自試拆一個</b><div class="d">講師帶做一個範例,再留時間各自試拆一項業務、用提示詞手冊寫指令</div></td><td class="type"><span class="chip k-talk">🗣 示範</span> <span class="chip k-do">✍️ 自試</span></td><td class="mat"><a class="f n" href="ECOxSTRAT_課程簡報_單元03_隱性經驗轉流程_20260704_V0.1.html" target="_blank">單元03</a><a class="f" href="ECOxSTRAT_職場AI提示詞手冊_10大情境_20260712_V1.0.html" target="_blank">提示詞手冊</a></td></tr>
+      <tr class="rest"><td class="time">11:40–13:00</td><td colspan="3">🍱 午休</td></tr>
+      <tr><td class="time">13:00–14:30</td><td class="topic"><b>單元四:場景落地（三大應用）</b><div class="d">視覺/空間/語音辨識、知識共享閉環</div></td><td class="type"><span class="chip k-talk">🗣 講</span></td><td class="mat"><a class="f n" href="ECOxSTRAT_課程簡報_單元04_場景落地_20260704_V0.1.html" target="_blank">單元04</a><a class="f c" href="ECOxSTRAT_直播代購電商_SnapBridge導入說明_去識別化_20260707_V1.0.html" target="_blank">SnapBridge 案例</a></td></tr>
+      <tr class="rest"><td class="time">14:30–14:50</td><td colspan="3">☕ 休息</td></tr>
+      <tr><td class="time">14:50–16:20</td><td class="topic"><b>DocBridge 示範 ＋ 各自試讀一張單</b><div class="d">先試再買概念、講師示範讀文件,再留時間各自照抄提示詞試讀一張</div></td><td class="type"><span class="chip k-talk">🗣 示範</span> <span class="chip k-do">✍️ 自試</span></td><td class="mat"><a class="f" href="ECOxSTRAT_DocBridge_AI讀文件免手key_簡報版_20260813_V1.0.html" target="_blank">DocBridge</a></td></tr>
+      <tr class="rest"><td class="time">16:20–16:35</td><td colspan="3">☕ 休息</td></tr>
+      <tr class="work"><td class="time">16:35–17:00</td><td class="topic"><b>🎯 成果工作時間 ①</b><div class="d">把今天的流程拆解／讀文件,套到你的痛點上</div></td><td class="type"><span class="chip k-work">成果</span></td><td class="mat"><span class="none">自己的成果專案</span></td></tr>
+    </table>
+  </div>
+
+  <!-- ============ DAY 3 ============ -->
+  <div class="day d3">
+    <div class="dbar"><span class="n">DAY 3</span><span class="t">實戰工具日:知識庫 · 行銷 · 生成（實作最多）</span><span class="u">NotebookLM／AI助手／SEO／行銷／做簡報</span></div>
+    <table>
+      <tr><th>時間</th><th>主題／內容</th><th>型態</th><th>講義／檔案</th></tr>
+      <tr><td class="time">08:30–10:00</td><td class="topic"><b>✍️ 實作教學:NotebookLM 建知識庫</b><div class="d">丟資料→引用問答→生懶人包/Podcast</div></td><td class="type"><span class="chip k-talk">🗣 講</span> <span class="chip k-do">✍️ 練</span></td><td class="mat"><a class="f" href="ECOxSTRAT_實作教學_NotebookLM完整教學_簡報版_20260710_V1.0.html" target="_blank">NotebookLM</a></td></tr>
+      <tr class="rest"><td class="time">10:00–10:20</td><td colspan="3">☕ 休息</td></tr>
+      <tr><td class="time">10:20–11:40</td><td class="topic"><b>✍️ 實作教學:打造你的專屬 AI 助手 ＋ 分享</b><div class="d">設角色→餵知識→測試四問;知識庫骨架</div></td><td class="type"><span class="chip k-do">✍️ 練</span> <span class="chip k-share">🎤 分享</span></td><td class="mat"><a class="f" href="ECOxSTRAT_實作教學_打造你的專屬AI助手_簡報版_20260710_V1.0.html" target="_blank">AI 助手</a></td></tr>
+      <tr class="rest"><td class="time">11:40–13:00</td><td colspan="3">🍱 午休</td></tr>
+      <tr><td class="time">13:00–14:30</td><td class="topic"><b>✍️ 行銷實戰:官網自診斷（SEO×GEO）＋ 數位化到 AI 行銷</b><div class="d">體檢自己的網站;搭中衛行銷簡報講行銷主軸</div></td><td class="type"><span class="chip k-talk">🗣 講</span> <span class="chip k-do">✍️ 練</span></td><td class="mat"><a class="f" href="ECOxSTRAT_官網健診自己來_SEO與GEO_簡報版_20260719_V1.0.html" target="_blank">SEO/GEO</a><a class="f" href="ECOxSTRAT_數位化到AI行銷_中衛_簡報版_20260814_V1.0.html" target="_blank">數位化到AI行銷</a></td></tr>
+      <tr class="rest"><td class="time">14:30–14:50</td><td colspan="3">☕ 休息</td></tr>
+      <tr><td class="time">14:50–16:20</td><td class="topic"><b>✍️ 行銷快手:AI 社群圖片 ＋ 做簡報</b><div class="d">生社群圖片、AI 產投影片、去 AI 味潤稿</div></td><td class="type"><span class="chip k-do">✍️ 練</span></td><td class="mat"><a class="f p" href="AI社群圖片實戰工作坊.pptx">社群圖片實戰.pptx</a><a class="f p" href="ai產生投影片.pptx">ai產生投影片.pptx</a><a class="f" href="ECOxSTRAT_用ChatGPT做簡報_Images2.0_20260712_V1.0.html" target="_blank">用AI做簡報</a><a class="f" href="ECOxSTRAT_AI寫作去味指南_讓AI寫得像人_20260712_V1.0.html" target="_blank">寫作去味</a></td></tr>
+      <tr class="rest"><td class="time">16:20–16:35</td><td colspan="3">☕ 休息</td></tr>
+      <tr class="work"><td class="time">16:35–17:00</td><td class="topic"><b>🎯 成果工作時間 ②</b><div class="d">選 1–2 個工具,做出你的成果雛形</div></td><td class="type"><span class="chip k-work">成果</span></td><td class="mat"><span class="none">自己的成果專案</span></td></tr>
+    </table>
+  </div>
+
+  <!-- ============ DAY 4 ============ -->
+  <div class="day d4">
+    <div class="dbar"><span class="n">DAY 4</span><span class="t">上午輕鬆組裝 · 下午成果發表</span><span class="u">單元六 專題 ＋ 單元七 發表 ·【後測】· 15:30 結束</span></div>
+    <table>
+      <tr><th>時間</th><th>主題／內容</th><th>型態</th><th>講義／檔案</th></tr>
+      <tr><td class="time">08:30–10:00</td><td class="topic"><b>（輕鬆）實作教學:用 AI 做網站/系統</b><div class="d">選看:把成果再加值,不寫程式做小網站</div></td><td class="type"><span class="chip k-talk">🗣 講</span> <span class="chip k-do">✍️ 練</span></td><td class="mat"><a class="f" href="ECOxSTRAT_實作教學_用AI做出你的網站或系統_簡報版_20260710_V1.0.html" target="_blank">用AI做網站</a><a class="f" href="ECOxSTRAT_ChatGPT三模式_Chat_Work_Codex_20260712_V1.0.html" target="_blank">ChatGPT三模式</a></td></tr>
+      <tr class="rest"><td class="time">10:00–10:20</td><td colspan="3">☕ 休息</td></tr>
+      <tr class="work"><td class="time">10:20–11:40</td><td class="topic"><b>🎯 成果工作時間 ③:完成 ＋ 彩排</b><div class="d">把成果做完、準備 3–5 分鐘發表</div></td><td class="type"><span class="chip k-work">成果</span></td><td class="mat"><span class="none">自己的成果專案</span></td></tr>
+      <tr class="rest"><td class="time">11:40–13:00</td><td colspan="3">🍱 午休</td></tr>
+      <tr class="hi"><td class="time">13:00–14:15</td><td class="topic"><b>🎤 成果發表（上）</b><div class="d">各組上台:痛點→工具→做法→成果→效益;同儕回饋</div></td><td class="type"><span class="chip k-share">🎤 發表</span></td><td class="mat"><span class="none">學員成果</span></td></tr>
+      <tr class="rest"><td class="time">14:15–14:30</td><td colspan="3">☕ 休息</td></tr>
+      <tr class="hi"><td class="time">14:30–15:10</td><td class="topic"><b>🎤 成果發表（下）＋ 講師點評</b></td><td class="type"><span class="chip k-share">🎤 發表</span></td><td class="mat"><span class="none">學員成果</span></td></tr>
+      <tr><td class="time">15:10–15:30</td><td class="topic"><b>落地行動計畫 ＋ 後測 ＋ 結業（15:30 結束）</b></td><td class="type"><span class="chip k-open">收尾</span></td><td class="mat"><span class="none">後測問卷</span></td></tr>
+    </table>
+  </div>
+
+  <div class="note">📌 <b>補充素材（有空檔/學員有興趣時穿插）:</b>
+    <a class="f" href="ECOxSTRAT_實作題目選單_免費與付費生成式AI練習_簡報版_20260710_V1.0.html" target="_blank">實作題目選單</a>
+    <a class="f c" href="ECOxSTRAT_AI工具地圖與Jarvis實例_簡報版_20260707_V1.0.html" target="_blank">AI工具地圖·Jarvis</a>
+    <a class="f c" href="ECOxSTRAT_案例_LINE群組自動歸檔Bot_簡報版_20260712_V1.0.html" target="_blank">LINE Bot 案例</a>
+    <br><b>時間原則:</b>每日 08:30 開始、上午上到 11:40、午休 11:40–13:00、下午 13:00–17:00、每約 1.5 小時休息 15–20 分。可依現場微調。
+  </div>
+
+  <div class="foot">ECOxSTRAT 全感生態策略 · 企業 AI 知識化應用 · 四天課程流程表 · 內部教學用</div>
+</div>
+</body>
+</html>

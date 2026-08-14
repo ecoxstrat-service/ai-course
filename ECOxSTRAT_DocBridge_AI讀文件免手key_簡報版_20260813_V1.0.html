@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 幫你讀文件 · 免手 key（先試再買）</title>
+<style>
+  :root{
+    --navy:#10243E; --teal:#00A6A6; --teal-light:#2FC5BB; --green-ops:#2F7D68;
+    --gold:#D2A84A; --gold-hi:#FFE08A; --red:#C0492F;
+    --cream:#F7F8FA; --cream-deep:#E9EEF3; --paper:#FFFFFF; --soft:#F1F4F7;
+    --ink:#172033; --ink-soft:#415066; --ink-faint:#7B8796; --line:#DDE4EC;
+    --teal-bg:#E5F7F6; --gold-bg:#FFF3D1; --green-bg:#E7F2EE; --red-bg:#FBEAE5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{width:100%;height:100%;overflow:hidden;}
+  body{font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif;background:#111827;color:var(--ink);}
+  .deck{width:100vw;height:100vh;display:grid;place-items:center;overflow:hidden;}
+  .slide{width:1280px;height:720px;position:relative;overflow:hidden;background:var(--cream);
+    border-radius:6px;box-shadow:0 10px 40px rgba(16,36,62,.22);display:none;
+    transform:scale(var(--slide-scale,1));transform-origin:center center;}
+  .slide.is-active{display:block;}
+  .slide::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(90deg,rgba(16,36,62,.045) 1px,transparent 1px),
+               linear-gradient(0deg,rgba(16,36,62,.035) 1px,transparent 1px);
+    background-size:48px 48px;opacity:.45;}
+  .in{position:absolute;inset:0;padding:40px 66px 62px;display:flex;flex-direction:column;}
+  .wm{position:absolute;left:68px;bottom:22px;font-size:13.5px;color:var(--ink-faint);letter-spacing:.04em;max-width:920px;}
+  .pg{position:absolute;right:68px;bottom:22px;font-size:13.5px;color:var(--ink-faint);}
+  .tag{display:inline-block;background:var(--teal);color:#fff;font-size:16px;font-weight:600;
+    letter-spacing:1.5px;padding:7px 16px;border-radius:5px;margin-bottom:14px;align-self:flex-start;}
+  .tag.gold{background:var(--gold);} .tag.green{background:var(--green-ops);} .tag.navy{background:var(--navy);} .tag.red{background:var(--red);}
+  h1{color:var(--navy);font-size:41px;font-weight:700;letter-spacing:-.4px;line-height:1.18;margin-bottom:8px;}
+  h1,.lead,.card p,.card li,.callout{text-wrap:pretty;}
+  .lead{color:var(--ink-soft);font-size:22px;line-height:1.55;max-width:1140px;margin-top:8px;}
+  .lead strong{color:var(--navy);}
+  .eyebrow{font-size:16px;letter-spacing:.22em;color:var(--teal);font-weight:600;text-transform:uppercase;margin-bottom:16px;}
+  .cover{background:linear-gradient(135deg,var(--navy) 0%,#14385B 52%,var(--teal) 100%);}
+  .cover::before{background:linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px),
+               linear-gradient(0deg,rgba(255,255,255,.04) 1px,transparent 1px),
+               linear-gradient(135deg,transparent 0 64%,rgba(255,224,138,.18) 64% 72%,transparent 72%);
+    background-size:54px 54px,54px 54px,100% 100%;opacity:1;}
+  .cover .in{justify-content:center;color:#fff;}
+  .cover .eyebrow{color:rgba(255,255,255,.82);}
+  .cover .unit-no{font-size:23px;font-weight:700;letter-spacing:.3em;color:var(--gold-hi);margin-bottom:14px;}
+  .cover h1{color:#fff;font-size:58px;line-height:1.16;letter-spacing:-.5px;}
+  .cover .gold{color:var(--gold-hi);}
+  .cover .sub{font-size:23px;color:rgba(255,255,255,.94);font-weight:300;margin-top:20px;max-width:1010px;line-height:1.6;}
+  .cover .meta{margin-top:34px;display:flex;gap:36px;font-size:16.5px;color:rgba(255,255,255,.9);flex-wrap:wrap;}
+  .cover .meta span{opacity:.6;margin-right:6px;}
+  .cover .wm,.cover .pg{color:rgba(255,255,255,.6);}
+  .grid{display:grid;gap:16px;margin-top:auto;margin-bottom:auto;}
+  .g2{grid-template-columns:1fr 1fr;} .g3{grid-template-columns:repeat(3,1fr);} .g4{grid-template-columns:repeat(4,1fr);} .g5{grid-template-columns:repeat(5,1fr);gap:12px;}
+  .card{background:var(--paper);border-radius:10px;padding:22px 24px;box-shadow:0 6px 20px rgba(16,36,62,.07);border:1px solid var(--line);}
+  .card h3{color:var(--navy);font-size:23.5px;font-weight:700;margin-bottom:7px;line-height:1.3;}
+  .card p{color:var(--ink-soft);font-size:19px;line-height:1.5;}
+  .card .num{font-size:16px;font-weight:700;color:var(--teal);letter-spacing:1px;margin-bottom:6px;}
+  .card ul{margin:8px 0 0 2px;list-style:none;} .card li{color:var(--ink-soft);font-size:17.5px;line-height:1.48;margin-bottom:5px;padding-left:18px;position:relative;}
+  .card li::before{content:"›";position:absolute;left:2px;color:var(--teal);font-weight:700;}
+  .card.hl{border:2px solid var(--teal);background:#fbfdfd;}
+  .card.gold li::before{color:var(--gold);} .card.green li::before{color:var(--green-ops);} .card.red li::before{color:var(--red);} .card.navy li::before{color:var(--navy);}
+  .card .cap{color:var(--green-ops);font-size:16.5px;background:var(--green-bg);border-radius:8px;padding:8px 12px;margin-top:10px;line-height:1.4;}
+  .card .cap.gold{color:#8a6414;background:#faf4e6;} .card .cap.red{color:var(--red);background:var(--red-bg);}
+  .card.sm{padding:16px 19px;} .card.sm h3{font-size:21px;} .card.sm p{font-size:17px;} .card.sm li{font-size:16.5px;margin-bottom:5px;}
+  .card .big{font-size:40px;font-weight:800;color:var(--teal);line-height:1;margin-bottom:5px;} .card.gold .big{color:var(--gold);} .card.red .big{color:var(--red);} .card.navy .big{color:var(--navy);}
+  .vs{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:auto 0;position:relative;}
+  .vs .side{border-radius:12px;padding:24px 28px;}
+  .vs .side.a{background:var(--cream-deep);border:1px solid var(--line);} .vs .side.b{background:var(--navy);color:#fff;}
+  .vs .side.red{background:var(--red-bg);border:1px solid #eecdc5;} .vs .side.green{background:var(--green-bg);border:1px solid #cfe6dc;}
+  .vs .side h3{font-size:25px;font-weight:700;margin-bottom:11px;}
+  .vs .side.a h3{color:var(--ink-soft);} .vs .side.b h3{color:var(--gold-hi);} .vs .side.red h3{color:var(--red);} .vs .side.green h3{color:var(--green-ops);}
+  .vs .side p{font-size:19.5px;line-height:1.55;} .vs .side.a p,.vs .side.red p,.vs .side.green p{color:var(--ink-soft);} .vs .side.b p{color:rgba(255,255,255,.92);}
+  .vs .side ul{list-style:none;margin-top:9px;} .vs .side li{font-size:18px;line-height:1.5;padding-left:22px;position:relative;margin-bottom:6px;}
+  .vs .side.a li::before,.vs .side.green li::before{content:"✓";position:absolute;left:2px;color:var(--green-ops);font-weight:700;}
+  .vs .side.red li::before{content:"✗";position:absolute;left:2px;color:var(--red);font-weight:700;}
+  .vs .side.b li{color:rgba(255,255,255,.92);} .vs .side.b li::before{content:"✓";position:absolute;left:2px;color:var(--teal-light);font-weight:700;}
+  .vs .vs-badge{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:54px;height:54px;border-radius:50%;background:var(--gold);color:#fff;font-weight:800;font-size:17px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.2);z-index:2;}
+  .flow{display:flex;align-items:stretch;gap:12px;margin:auto 0;}
+  .fstep{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:22px 15px;text-align:center;box-shadow:0 6px 20px rgba(16,36,62,.06);}
+  .fstep .n{width:48px;height:48px;border-radius:50%;background:var(--teal);color:#fff;font-weight:700;font-size:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;}
+  .fstep.gold .n{background:var(--gold);} .fstep.red .n{background:var(--red);} .fstep.green .n{background:var(--green-ops);} .fstep.navy .n{background:var(--navy);}
+  .fstep h4{color:var(--navy);font-size:21px;font-weight:700;margin-bottom:6px;} .fstep p{color:var(--ink-soft);font-size:16.5px;line-height:1.45;}
+  .fstep .e{font-size:30px;} .fstep .n.e{font-size:24px;}
+  .tbl{width:100%;border-collapse:collapse;margin:auto 0;font-size:18px;}
+  .tbl th{background:var(--navy);color:#fff;font-weight:700;text-align:left;padding:11px 14px;font-size:16.5px;}
+  .tbl td{border:1px solid var(--line);background:#fff;color:var(--ink-soft);padding:11px 14px;line-height:1.45;vertical-align:top;}
+  .tbl tr:nth-child(even) td{background:#fbfcfe;} .tbl td b{color:var(--navy);}
+  .tbl.sm{font-size:17px;} .tbl.sm th{font-size:15.5px;padding:9px 12px;} .tbl.sm td{padding:9px 12px;}
+  .callout{background:var(--soft);border-left:6px solid var(--teal);border-radius:0 10px 10px 0;padding:16px 22px;margin-top:14px;font-size:20px;color:var(--ink-soft);line-height:1.5;}
+  .callout strong{color:var(--navy);}
+  .callout.gold{border-left-color:var(--gold);background:#faf4e6;} .callout.gold strong{color:#8a6414;}
+  .callout.green{border-left-color:var(--green-ops);background:var(--green-bg);} .callout.green strong{color:var(--green-ops);}
+  .callout.red{border-left-color:var(--red);background:var(--red-bg);} .callout.red strong{color:var(--red);}
+  .callout.sm{font-size:18px;padding:13px 18px;}
+  .sell{background:var(--teal-bg);border-left:6px solid var(--teal);border-radius:0 10px 10px 0;padding:18px 24px;margin-top:14px;font-size:20px;color:var(--ink-soft);line-height:1.5;} .sell b{color:#0a6d6d;}
+  .chk{list-style:none;margin:auto 0;} .chk li{font-size:22px;line-height:1.4;margin-bottom:13px;padding-left:34px;position:relative;color:var(--ink-soft);font-weight:600;} .chk li::before{content:"✓";position:absolute;left:2px;top:2px;color:#fff;background:var(--teal);width:26px;height:26px;border-radius:50%;font-size:16px;display:flex;align-items:center;justify-content:center;} .chk b{color:var(--navy);}
+  /* prompt + howto + label */
+  .docbody{margin:auto 0;width:100%;}
+  .howto{display:flex;gap:12px;margin-bottom:14px;}
+  .hs{flex:1;display:flex;align-items:center;gap:11px;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:13px 15px;font-size:18px;font-weight:600;color:var(--ink-soft);line-height:1.24;box-shadow:0 4px 14px rgba(16,36,62,.05);}
+  .hs .i{flex:none;background:var(--teal);color:#fff;width:34px;height:34px;border-radius:50%;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+  .plabel{display:inline-flex;align-items:center;gap:8px;margin-bottom:10px;background:var(--gold-bg);color:#8a6414;font-weight:700;font-size:18px;padding:8px 16px;border-radius:8px;align-self:flex-start;}
+  .prompt{background:var(--navy);color:#e8eef5;border-radius:10px;padding:22px 28px;font-size:20.5px;line-height:1.6;white-space:pre-wrap;box-shadow:0 8px 24px rgba(16,36,62,.18);}
+  .prompt.mid{margin:auto 0;}
+  .prompt .t{color:var(--gold-hi);font-weight:700;}
+  .pcap{font-size:18px;color:var(--ink-soft);margin-top:12px;font-weight:600;} .pcap b{color:var(--navy);}
+  .keybar{background:var(--navy);color:#fff;border-radius:12px;padding:22px 28px;margin:22px 0 0;font-size:27px;font-weight:800;line-height:1.35;box-shadow:0 12px 26px rgba(16,36,62,.22);} .keybar .hl{color:var(--gold-hi);}
+  .ladder{display:flex;gap:12px;margin:auto 0;align-items:stretch;}
+  .lad{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:20px 12px;text-align:center;border-top:5px solid var(--green-ops);box-shadow:0 6px 18px rgba(16,36,62,.06);}
+  .lad:nth-child(2){border-top-color:var(--teal);} .lad:nth-child(3){border-top-color:var(--gold);} .lad:nth-child(4){border-top-color:#3b6fd6;} .lad:nth-child(5){border-top-color:var(--navy);}
+  .lad .n{font-size:16px;font-weight:800;color:var(--ink-faint);} .lad .h{font-size:22px;font-weight:800;color:var(--navy);margin:3px 0;} .lad .d{font-size:15.5px;color:var(--ink-soft);line-height:1.35;min-height:44px;}
+  .lad .pay{display:inline-block;font-size:15px;font-weight:800;margin-top:8px;padding:4px 12px;border-radius:999px;background:var(--green-bg);color:var(--green-ops);}
+  .lad:nth-child(4) .pay,.lad:nth-child(5) .pay{background:var(--gold-bg);color:#8a6414;}
+  .nav-btn{position:fixed;top:50%;width:48px;height:64px;border:0;border-radius:999px;transform:translateY(-50%);display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.92);color:var(--navy);font-size:34px;line-height:1;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.22);transition:background .18s;}
+  .nav-btn:hover{background:#fff;} .nav-btn:disabled{opacity:.32;cursor:default;}
+  .nav-prev{left:18px;} .nav-next{right:18px;}
+  .slide-status{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);min-width:82px;padding:7px 13px;border-radius:999px;text-align:center;background:rgba(255,255,255,.9);color:var(--navy);font-size:13px;font-weight:700;letter-spacing:.08em;box-shadow:0 8px 24px rgba(0,0,0,.18);}
+  .dots{position:fixed;right:14px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:25;max-height:90vh;flex-wrap:wrap;}
+  .dots button{width:11px;height:11px;border-radius:50%;border:0;padding:0;cursor:pointer;background:rgba(255,255,255,.5);box-shadow:0 1px 4px rgba(0,0,0,.28);transition:background .18s,transform .18s;}
+  .dots button:hover{background:var(--teal-light);transform:scale(1.25);} .dots button.on{background:var(--gold);transform:scale(1.4);}
+  .menu-btn{position:fixed;top:16px;right:16px;z-index:28;border:0;cursor:pointer;letter-spacing:.06em;background:rgba(255,255,255,.92);color:var(--navy);font-size:14px;font-weight:700;padding:9px 15px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.2);}
+  .menu-btn:hover{background:#fff;}
+  .outline{position:fixed;inset:0;z-index:30;background:rgba(16,36,62,.55);backdrop-filter:blur(3px);display:none;}
+  .outline.open{display:block;}
+  .outline-panel{position:absolute;right:0;top:0;height:100%;width:430px;max-width:88vw;background:#fff;box-shadow:-12px 0 40px rgba(0,0,0,.3);overflow-y:auto;padding:26px 24px 44px;}
+  .outline-panel h2{color:var(--navy);font-size:20px;font-weight:700;margin-bottom:4px;}
+  .outline-panel .osub{color:var(--ink-faint);font-size:12.5px;margin-bottom:18px;line-height:1.6;}
+  .outline-item{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;border:0;background:transparent;cursor:pointer;padding:9px 12px;border-radius:8px;}
+  .outline-item:hover{background:var(--soft);} .outline-item.on{background:var(--teal-bg);}
+  .outline-item .oi-n{flex:none;width:26px;height:26px;border-radius:6px;background:var(--cream-deep);color:var(--ink-soft);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+  .outline-item.on .oi-n{background:var(--teal);color:#fff;}
+  .outline-item .oi-t{color:var(--ink);font-size:14.5px;line-height:1.4;font-weight:500;}
+  .outline-close{position:absolute;top:14px;right:16px;border:0;background:transparent;font-size:26px;color:var(--ink-faint);cursor:pointer;line-height:1;}
+  @media print{@page{size:1280px 720px;margin:0;}
+    .deck{display:flex;flex-direction:column;gap:0;padding:0;width:auto;height:auto;overflow:visible;}
+    .slide{display:block!important;border-radius:0;box-shadow:none;break-after:page;page-break-after:always;margin:0;transform:none!important;}
+    .slide-nav,.dots,.menu-btn,.outline{display:none!important;}}
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- 1 封面 -->
+  <section class="slide cover is-active" data-title="封面">
+    <div class="in">
+      <div class="eyebrow">學員實作 · AI 應用</div>
+      <div class="unit-no">先試再買</div>
+      <h1>AI 幫你<span class="gold">讀文件</span> · 免手 key</h1>
+      <div class="sub">拍照、掃描 → AI 讀出欄位 → 直接進系統。<br>先用免費 AI 試自己的痛點,<strong style="color:#fff">能解決、又值得,再花錢導入產品。</strong></div>
+      <div class="meta"><div><span>單位</span>ECO×STRAT 全感生態策略</div><div><span>主軸</span>從免費試,到值得才導入</div></div>
+      <div class="wm">ECO×STRAT ｜ AI 幫你讀文件</div>
+    </div>
+  </section>
+
+  <!-- 2 碎片痛點 -->
+  <section class="slide" data-title="碎片痛點">
+    <div class="in">
+      <div class="tag">每家公司都有的小事</div>
+      <h1>那些<span style="color:var(--teal)">手動 key 資料</span>的碎片時間</h1>
+      <div class="grid g3">
+        <div class="card"><div class="num">小</div><h3>一張單、幾個欄位</h3><p>但每天都有、積少成多,加起來很可觀。</p></div>
+        <div class="card gold"><div class="num">重複</div><h3>同樣的抄寫</h3><p>一直做、換人做,最耗人、最容易出錯。</p></div>
+        <div class="card"><div class="num">跨部門</div><h3>一路傳下去</h3><p>業務拍照 → 助理 key → 會計對帳,人人碰一手。</p></div>
+      </div>
+      <div class="callout">這種「<strong>小、重複、跨部門</strong>」的碎片痛點,最適合先用 AI 試試看能不能解決。</div>
+      <div class="wm">ECO×STRAT ｜ 碎片痛點</div>
+    </div>
+  </section>
+
+  <!-- 3 產業案例牆 -->
+  <section class="slide" data-title="各行業文件痛點">
+    <div class="in">
+      <div class="tag gold">對號入座</div>
+      <h1>各行各業的<span style="color:var(--teal)">文件碎片痛點</span></h1>
+      <table class="tbl sm">
+        <tr><th style="width:16%">產業</th><th style="width:34%">每天在手 key 什麼</th><th style="width:16%">產業</th><th style="width:34%">每天在手 key 什麼</th></tr>
+        <tr><td><b>製造</b></td><td>送貨單、檢驗報告、機台銘牌</td><td><b>會計/記帳</b></td><td>一疊發票收據 → 記帳報稅</td></tr>
+        <tr><td><b>零售/電商</b></td><td>供應商發票、進貨單、對帳</td><td><b>保險/理賠</b></td><td>理賠單據、醫療收據、證件</td></tr>
+        <tr><td><b>餐飲</b></td><td>叫貨單、發票、外送單</td><td><b>物流/營建</b></td><td>託運簽收單、估價、材料簽收</td></tr>
+        <tr><td><b>貿易</b></td><td>報關文件、提單、裝箱單</td><td><b>人資/業務</b></td><td>名片、證件、報帳單據</td></tr>
+      </table>
+      <div class="callout sm">共通點:都是<strong>拍照就能拿到</strong>的紙本,卻要人一個字一個字 key 進系統。</div>
+      <div class="wm">ECO×STRAT ｜ 產業對照</div>
+    </div>
+  </section>
+
+  <!-- 4 這不是聊天 -->
+  <section class="slide" data-title="AI看得懂文件">
+    <div class="in">
+      <div class="tag navy">這不是「聊天」</div>
+      <h1>AI 不只會對話,<span style="color:var(--teal)">看得懂文件</span></h1>
+      <div class="flow">
+        <div class="fstep"><div class="n e">📸</div><h4>拍照 / 掃描</h4><p>一張發票、送貨單</p></div>
+        <div class="fstep"><div class="n e">🔎</div><h4>AI 讀欄位</h4><p>品項·數量·金額·日期</p></div>
+        <div class="fstep gold"><div class="n e">📊</div><h4>進系統</h4><p>變表格 / 拋進系統</p></div>
+      </div>
+      <div class="callout">關鍵差別:你不是在「<strong>問 AI 問題</strong>」,而是讓 AI 幫你「<strong>讀資料、填好表格</strong>」。</div>
+      <div class="wm">ECO×STRAT ｜ 讀文件三步</div>
+    </div>
+  </section>
+
+  <!-- 5 知識1 OCR vs AI -->
+  <section class="slide" data-title="OCR vs AI視覺辨識">
+    <div class="in">
+      <div class="tag green">知識補給 · 原理 ①</div>
+      <h1>傳統 OCR vs <span style="color:var(--teal)">AI 視覺辨識</span></h1>
+      <div class="vs">
+        <div class="side red"><h3>傳統 OCR</h3><p>把圖上的「字」認出來而已。</p><ul><li>版面一亂、表格一複雜就對不上欄位</li><li>手寫、傾斜、蓋章幾乎不行</li><li>認得「字」,但不懂「這是什麼欄位」</li></ul></div>
+        <div class="side green"><h3>AI 視覺辨識</h3><p>看懂「版面與欄位的關係」。</p><ul><li>知道哪個數字是金額、哪個是日期</li><li>手寫、傾斜、蓋章也能推斷</li><li>能照你要的欄位,直接抽成表格</li></ul></div>
+      </div>
+      <div class="callout gold">一句話差別:<strong>OCR 認「字」,AI 懂「這張是什麼、每個欄位是什麼意思」。</strong></div>
+      <div class="wm">ECO×STRAT ｜ OCR vs AI 視覺辨識</div>
+    </div>
+  </section>
+
+  <!-- 6 知識2 AI怎麼看懂 -->
+  <section class="slide" data-title="AI怎麼看懂文件">
+    <div class="in">
+      <div class="tag green">知識補給 · 原理 ②</div>
+      <h1>AI 怎麼「<span style="color:var(--teal)">看懂</span>」一張文件?</h1>
+      <div class="flow">
+        <div class="fstep"><div class="n">1</div><h4>讀整張圖</h4><p>看版面、框線、文字位置,建立這張的「長相」</p></div>
+        <div class="fstep"><div class="n">2</div><h4>定位欄位</h4><p>判斷哪裡是廠商、哪裡是金額、哪裡是日期</p></div>
+        <div class="fstep gold"><div class="n">3</div><h4>抽成結構化</h4><p>把值填進對應欄位,變成一列表格資料</p></div>
+      </div>
+      <div class="callout">本質:把「<strong>非結構化</strong>」的紙本(佔企業資料約 80%),變成「<strong>結構化</strong>」的表格 —— 這正是課程單元二「數位土壤」在講的事。</div>
+      <div class="wm">ECO×STRAT ｜ 非結構化 → 結構化</div>
+    </div>
+  </section>
+
+  <!-- 7 知識3 三種引擎 -->
+  <section class="slide" data-title="三種辨識引擎">
+    <div class="in">
+      <div class="tag green">知識補給 · 原理 ③</div>
+      <h1>辨識引擎有<span style="color:var(--teal)">三種</span>,各有取捨</h1>
+      <div class="grid g3">
+        <div class="card"><div class="num">本地 OCR</div><h3>資料不出門</h3><p>如 Tesseract。免費、<b>隱私最好(不上雲)</b>;但準度普通、複雜版面較弱。</p></div>
+        <div class="card"><div class="num">雲端 Vision</div><h3>準又便宜</h3><p>Google／Azure。準、快、成本低;但文件要上雲。</p></div>
+        <div class="card gold"><div class="num">大模型 Vision</div><h3>最會「理解」</h3><p>GPT／Claude。能照你的欄位抽、懂上下文;成本較高、要顧隱私。</p></div>
+      </div>
+      <div class="callout gold">取捨三角:<strong>準度 · 成本 · 隱私</strong> —— 依文件量與敏感度選,也可以混用(hybrid)。</div>
+      <div class="wm">ECO×STRAT ｜ 辨識引擎三種</div>
+    </div>
+  </section>
+
+  <!-- 8 知識4 人工複核 -->
+  <section class="slide" data-title="為什麼要人工複核">
+    <div class="in">
+      <div class="tag red">知識補給 · 原理 ④</div>
+      <h1>為什麼一定要<span style="color:var(--red)">人工複核</span></h1>
+      <div class="grid g2">
+        <div class="card sm red"><h3>AI 會看錯的情況</h3><ul><li>模糊、傾斜、影印太淡</li><li>手寫字、潦草簽名</li><li>相似字:0/O、1/l、6/8</li><li>蓋章、浮水印遮住數字</li></ul></div>
+        <div class="card sm"><h3>錯一筆就出事的欄位</h3><ul><li><b>金額</b>:報價、發票、理賠</li><li><b>日期</b>:交期、效期</li><li><b>單號 / 統編</b>:對不上帳</li><li>→ 這些一定要人再看一眼</li></ul></div>
+      </div>
+      <div class="callout red"><strong>AI 起稿、人定稿。</strong>呼應課程「金額、承諾、宣稱永遠留人覆核」—— 好的產品會設「AI 辨識 → 人工複核」這一關。</div>
+      <div class="wm">ECO×STRAT ｜ 人工複核</div>
+    </div>
+  </section>
+
+  <!-- 9 知識5 資料安全 -->
+  <section class="slide" data-title="資料安全">
+    <div class="in">
+      <div class="tag red">知識補給 · 原理 ⑤</div>
+      <h1>上傳文件給 AI,<span style="color:var(--red)">安全嗎</span>?</h1>
+      <div class="grid g2">
+        <div class="card sm red"><h3>風險:這些是敏感資料</h3><ul><li>發票、合約、證件、病歷、名單</li><li>上傳到雲端 AI,可能被記錄或用於訓練</li><li>個資外洩在採購/法遵上是大扣分</li></ul></div>
+        <div class="card sm green"><h3>對策</h3><ul><li>敏感的用<b>本地 OCR</b>(不出門)</li><li>先<b>去識別化</b>:遮掉身分證/帳號再上傳</li><li>挑有<b>隱私承諾、不拿去訓練</b>的服務</li></ul></div>
+      </div>
+      <div class="callout">呼應「把 AI 當第一天上班的新人」:先想清楚「<strong>哪些文件可以給、哪些不行</strong>」,再開始用。</div>
+      <div class="wm">ECO×STRAT ｜ 資料安全</div>
+    </div>
+  </section>
+
+  <!-- 10 知識6 一張到一條流程 -->
+  <section class="slide" data-title="從一張到一條流程">
+    <div class="in">
+      <div class="tag">知識補給 · 原理 ⑥</div>
+      <h1>從「讀一張」到「<span style="color:var(--teal)">一條流程</span>」</h1>
+      <div class="flow">
+        <div class="fstep"><div class="n">1</div><h4>上傳</h4><p>拍照/掃描/信箱進來的檔</p></div>
+        <div class="fstep"><div class="n">2</div><h4>解析</h4><p>AI 讀出欄位</p></div>
+        <div class="fstep gold"><div class="n">3</div><h4>複核</h4><p>人確認關鍵欄位</p></div>
+        <div class="fstep navy"><div class="n">4</div><h4>拋轉</h4><p>自動寫進 ERP／進銷存</p></div>
+      </div>
+      <div class="callout">「讀一張」是自己動手;把這條流程<strong>自動化、可控、可追</strong>,就是產品化(後面 L4 會講什麼時候值得)。</div>
+      <div class="wm">ECO×STRAT ｜ 上傳 → 解析 → 複核 → 拋轉</div>
+    </div>
+  </section>
+
+  <!-- 11 核心心法 -->
+  <section class="slide" data-title="核心心法 先試再買">
+    <div class="in">
+      <div class="tag gold">最重要的一句</div>
+      <h1><span style="color:var(--teal)">先試,再決定值不值得花錢</span></h1>
+      <div class="lead">懂原理之後,別急著買。先理解 AI → 拿自己的痛點用<strong>免費 AI 試 30 分鐘</strong> → 能解決嗎?量大嗎?值得嗎? → <strong>再</strong>決定要不要花錢導入。</div>
+      <div class="keybar">別一開始就買貴的 —— <span class="hl">先花 30 分鐘試,答案自己會浮現。</span></div>
+      <div class="wm">ECO×STRAT ｜ 先試再買</div>
+    </div>
+  </section>
+
+  <!-- 12 五階梯 -->
+  <section class="slide" data-title="五階梯總覽">
+    <div class="in">
+      <div class="tag">自己處理的五個層級</div>
+      <h1>從<span style="color:var(--teal)">免費自己試</span>,到<span style="color:var(--gold)">值得才導入</span></h1>
+      <div class="ladder">
+        <div class="lad"><div class="n">L0</div><div class="h">先試</div><div class="d">拍照丟 AI 讀欄位</div><div class="pay">免費</div></div>
+        <div class="lad"><div class="n">L1</div><div class="h">產檔</div><div class="d">AI 直接輸出 Excel</div><div class="pay">免費</div></div>
+        <div class="lad"><div class="n">L2</div><div class="h">固定流程</div><div class="d">存成 Project／GPT</div><div class="pay">訂閱</div></div>
+        <div class="lad"><div class="n">L3</div><div class="h">串 API</div><div class="d">程式自動批次讀</div><div class="pay">按量付費</div></div>
+        <div class="lad"><div class="n">L4</div><div class="h">導入產品</div><div class="d">DocBridge 這類</div><div class="pay">投資</div></div>
+      </div>
+      <div class="callout">量小,<strong>自己做就好</strong>;量大、要穩、要接系統,才需要往右邊走。</div>
+      <div class="wm">ECO×STRAT ｜ 五階梯</div>
+    </div>
+  </section>
+
+  <!-- 13 L0 -->
+  <section class="slide" data-title="L0 先試">
+    <div class="in">
+      <div class="tag green">L0 先試 · 免費</div>
+      <h1>拍一張單,叫 AI <span style="color:var(--teal)">讀出欄位</span></h1>
+      <div class="docbody">
+        <div class="howto"><div class="hs"><div class="i">1</div>拍一張單據</div><div class="hs"><div class="i">2</div>丟給 AI</div><div class="hs"><div class="i">3</div>貼下面提示詞</div></div>
+        <div class="plabel">✏️ 提示詞照抄</div>
+        <div class="prompt"><span class="t">〔附上一張發票／送貨單照片〕</span>
+請讀出這張單據的欄位,整理成表格:
+廠商／單號／日期／品項／數量／單價／金額／總計。
+讀不到的欄位標「—」,不要自己編。</div>
+        <div class="pcap">準不準<b>當場就知道</b> —— Gemini / ChatGPT / Claude 都行。</div>
+      </div>
+      <div class="wm">ECO×STRAT ｜ L0 先試</div>
+    </div>
+  </section>
+
+  <!-- 14 L1 -->
+  <section class="slide" data-title="L1 產檔">
+    <div class="in">
+      <div class="tag green">L1 產檔 · 免費</div>
+      <h1>讓 AI <span style="color:var(--teal)">直接輸出 Excel 檔</span></h1>
+      <div class="docbody">
+        <div class="howto"><div class="hs"><div class="i">1</div>拍多張單據</div><div class="hs"><div class="i">2</div>一次全部上傳</div><div class="hs"><div class="i">3</div>貼下面提示詞</div></div>
+        <div class="plabel">✏️ 提示詞照抄</div>
+        <div class="prompt">請讀出這幾張單據,整理成一個表格:
+廠商／單號／日期／品項／數量／單價／金額／總計,一張單一列,讀不到標「—」。
+最後<span class="t">直接輸出成 Excel(.csv)檔給我下載。</span></div>
+        <div class="pcap">一次丟多張、批次讀 —— <b>不用自己一格一格貼</b>。</div>
+      </div>
+      <div class="wm">ECO×STRAT ｜ L1 產檔</div>
+    </div>
+  </section>
+
+  <!-- 15 L2 -->
+  <section class="slide" data-title="L2 固定流程">
+    <div class="in">
+      <div class="tag green">L2 固定流程 · 訂閱</div>
+      <h1>存成範本,<span style="color:var(--teal)">同事丟照片就有表格</span></h1>
+      <div class="docbody">
+        <div class="howto"><div class="hs"><div class="i">1</div>建 Claude Project／自訂 GPT</div><div class="hs"><div class="i">2</div>把指令貼進「指令」欄</div><div class="hs"><div class="i">3</div>以後丟照片即可</div></div>
+        <div class="plabel">✏️ 指令照抄(貼進 Project／GPT 指令欄)</div>
+        <div class="prompt">你是單據登錄助理,使用者每次會上傳單據照片。
+請一律讀出:廠商／單號／日期／品項／數量／單價／金額／總計,
+整理成表格、一張單一列,讀不到標「—」、不要自己編,
+最後輸出成可下載的 CSV。</div>
+      </div>
+      <div class="wm">ECO×STRAT ｜ L2 固定流程</div>
+    </div>
+  </section>
+
+  <!-- 16 L3 -->
+  <section class="slide" data-title="L3 串 API">
+    <div class="in">
+      <div class="tag navy">L3 串 API · 按量付費</div>
+      <h1>讓程式<span style="color:var(--teal)">自動讀一整批</span></h1>
+      <div class="docbody">
+        <div class="howto"><div class="hs"><div class="i">1</div>單據放進一個資料夾</div><div class="hs"><div class="i">2</div>請工程師/外包用 API 做</div><div class="hs"><div class="i">3</div>交辦時附下面規格</div></div>
+        <div class="plabel">✏️ 交辦規格照抄</div>
+        <div class="prompt">用 OpenAI／Claude 的 Vision API,讀取資料夾內所有單據圖片,
+擷取:廠商／單號／日期／品項／數量／單價／金額／總計,
+輸出成一個 CSV(或寫進 Google Sheet)。
+無法辨識的欄位留空,標記「待人工確認」。</div>
+        <div class="pcap">按用量計費、讀幾張算幾張;<b>寫一次之後就自動跑</b>。</div>
+      </div>
+      <div class="wm">ECO×STRAT ｜ L3 串 API</div>
+    </div>
+  </section>
+
+  <!-- 17 L4 值得才導入 -->
+  <section class="slide" data-title="L4 值得才導入">
+    <div class="in">
+      <div class="tag gold">L4 值得才導入(投資)</div>
+      <h1>什麼時候,<span style="color:var(--teal)">該花錢上產品</span>?</h1>
+      <ul class="chk">
+        <li><b>量大</b>:每天幾百張、多人同時上傳</li>
+        <li><b>要準</b>:錯一筆就出事(財務、報關、理賠)</li>
+        <li><b>要接系統</b>:辨識完自動拋進 ERP／進銷存</li>
+        <li><b>要控管</b>:多人、權限、稽核紀錄</li>
+      </ul>
+      <div class="sell">四項都中 → 這時 <b>DocBridge 這類產品</b>才划算:AI 辨識 → 人工複核 → 自動拋轉,<b>穩定、可控、可追</b>(就是前面「一條流程」的產品化)。</div>
+      <div class="wm">ECO×STRAT ｜ L4 值得才導入</div>
+    </div>
+  </section>
+
+  <!-- 18 收尾 -->
+  <section class="slide cover" data-title="收尾">
+    <div class="in">
+      <div class="eyebrow">一句話收尾</div>
+      <h1>先<span class="gold">試</span>,能解決再投資</h1>
+      <div class="sub">AI 是你的試金石。把生活/工作的痛點,先用<strong style="color:#fff">免費 AI 試一次</strong>;能解決、量又大、真的值得,再花錢導入產品。</div>
+      <div class="meta"><div><span>先</span>理解 → 先試</div><div><span>再</span>能解決,才決定花錢</div></div>
+      <div class="wm">ECO×STRAT ｜ 先試再買</div>
+    </div>
+  </section>
+
+</div>
+
+<div class="slide-nav" aria-label="簡報導覽">
+  <button class="nav-btn nav-prev" type="button" aria-label="上一頁" data-slide-prev>&#8592;</button>
+  <button class="nav-btn nav-next" type="button" aria-label="下一頁" data-slide-next>&#8594;</button>
+  <div class="slide-status" data-slide-status>01 / 18</div>
+</div>
+<button class="menu-btn" type="button" data-outline-toggle>☰ 目錄</button>
+<div class="dots" data-dots></div>
+<div class="outline" data-outline>
+  <div class="outline-panel">
+    <button class="outline-close" type="button" data-outline-toggle aria-label="關閉目錄">&times;</button>
+    <h2>AI 幫你讀文件 · 大綱</h2>
+    <div class="osub">點任一頁即可跳轉　·　快捷鍵 O 開關目錄　·　Esc 關閉</div>
+    <div data-outline-list></div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const prevBtn = document.querySelector('[data-slide-prev]');
+  const nextBtn = document.querySelector('[data-slide-next]');
+  const status = document.querySelector('[data-slide-status]');
+  const dotsWrap = document.querySelector('[data-dots]');
+  const outline = document.querySelector('[data-outline]');
+  const outlineList = document.querySelector('[data-outline-list]');
+  const pad = v => String(v).padStart(2, '0');
+  const clamp = v => Math.max(0, Math.min(slides.length - 1, v));
+  let current = 0, pointerStart = null;
+  function titleOf(s, i){
+    const dt = s.getAttribute('data-title'); if (dt) return dt;
+    const h = s.querySelector('h1'); if (h && h.textContent.trim()) return h.textContent.trim().replace(/\s+/g,' ');
+    return '第 ' + (i + 1) + ' 頁';
+  }
+  const titles = slides.map(titleOf);
+  slides.forEach((s, i) => { let pg = s.querySelector('.pg'); if (!pg){ pg = document.createElement('div'); pg.className='pg'; s.querySelector('.in').appendChild(pg);} pg.textContent = pad(i + 1); });
+  const dotBtns = slides.map((s, i) => {
+    const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', titles[i]);
+    b.addEventListener('click', () => showSlide(i)); dotsWrap.appendChild(b); return b;
+  });
+  const outItems = slides.map((s, i) => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'outline-item';
+    b.innerHTML = '<span class="oi-n">' + pad(i + 1) + '</span><span class="oi-t"></span>';
+    b.querySelector('.oi-t').textContent = titles[i];
+    b.addEventListener('click', () => { showSlide(i); closeOutline(); }); outlineList.appendChild(b); return b;
+  });
+  function fitSlide(){ const scale = Math.max(0.2, Math.min(window.innerWidth/1280, window.innerHeight/720)*0.98); document.documentElement.style.setProperty('--slide-scale', scale.toFixed(4)); }
+  function showSlide(index, updateHash = true){
+    current = clamp(index);
+    slides.forEach((s, i) => { s.classList.toggle('is-active', i === current); });
+    prevBtn.disabled = current === 0; nextBtn.disabled = current === slides.length - 1;
+    status.textContent = pad(current + 1) + ' / ' + pad(slides.length);
+    dotBtns.forEach((b, i) => b.classList.toggle('on', i === current));
+    outItems.forEach((b, i) => b.classList.toggle('on', i === current));
+    if (updateHash) history.replaceState(null, '', '#slide-' + pad(current + 1));
+  }
+  function indexFromHash(){ const m = window.location.hash.match(/slide-(\d+)/); if (!m) return 0; const i = parseInt(m[1],10)-1; return Number.isFinite(i) ? clamp(i) : 0; }
+  function toggleOutline(){ outline.classList.toggle('open'); }
+  function closeOutline(){ outline.classList.remove('open'); }
+  document.querySelectorAll('[data-outline-toggle]').forEach(b => b.addEventListener('click', toggleOutline));
+  outline.addEventListener('click', e => { if (e.target === outline) closeOutline(); });
+  prevBtn.addEventListener('click', () => showSlide(current - 1));
+  nextBtn.addEventListener('click', () => showSlide(current + 1));
+  window.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeOutline(); return; }
+    if (e.key === 'o' || e.key === 'O') { e.preventDefault(); toggleOutline(); return; }
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); showSlide(current + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); showSlide(current - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); showSlide(0); }
+    else if (e.key === 'End') { e.preventDefault(); showSlide(slides.length - 1); }
+  });
+  window.addEventListener('pointerdown', e => { pointerStart = { x: e.clientX, y: e.clientY }; });
+  window.addEventListener('pointerup', e => {
+    if (!pointerStart) return; const dx = e.clientX-pointerStart.x, dy = e.clientY-pointerStart.y;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) { showSlide(current + (dx < 0 ? 1 : -1)); } pointerStart = null;
+  });
+  window.addEventListener('resize', fitSlide);
+  window.addEventListener('hashchange', () => showSlide(indexFromHash()));
+  fitSlide(); showSlide(indexFromHash(), false);
+})();
+</script>
+</body>
+</html>

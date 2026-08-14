@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>從數位化到 AI 行銷 · 小店家的第一步（中衛教育訓練）</title>
+<style>
+  :root{
+    --navy:#10243E; --teal:#00A6A6; --teal-light:#2FC5BB; --green-ops:#2F7D68;
+    --gold:#D2A84A; --gold-hi:#FFE08A; --red:#C0492F;
+    --cream:#F7F8FA; --cream-deep:#E9EEF3; --paper:#FFFFFF; --soft:#F1F4F7;
+    --ink:#172033; --ink-soft:#415066; --ink-faint:#7B8796; --line:#DDE4EC;
+    --teal-bg:#E5F7F6; --gold-bg:#FFF3D1; --green-bg:#E7F2EE; --red-bg:#FBEAE5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{width:100%;height:100%;overflow:hidden;}
+  body{font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif;background:#111827;color:var(--ink);}
+  .deck{width:100vw;height:100vh;display:grid;place-items:center;overflow:hidden;}
+  .slide{width:1280px;height:720px;position:relative;overflow:hidden;background:var(--cream);
+    border-radius:6px;box-shadow:0 10px 40px rgba(16,36,62,.22);display:none;
+    transform:scale(var(--slide-scale,1));transform-origin:center center;}
+  .slide.is-active{display:block;}
+  .slide::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(90deg,rgba(16,36,62,.045) 1px,transparent 1px),
+               linear-gradient(0deg,rgba(16,36,62,.035) 1px,transparent 1px);
+    background-size:48px 48px;opacity:.45;}
+  .in{position:absolute;inset:0;padding:40px 68px 66px;display:flex;flex-direction:column;}
+  .wm{position:absolute;left:72px;bottom:24px;font-size:14px;color:var(--ink-faint);letter-spacing:.04em;max-width:900px;}
+  .pg{position:absolute;right:72px;bottom:24px;font-size:14px;color:var(--ink-faint);}
+  .tag{display:inline-block;background:var(--teal);color:#fff;font-size:16px;font-weight:600;
+    letter-spacing:1.6px;padding:7px 16px;border-radius:5px;margin-bottom:16px;align-self:flex-start;}
+  .tag.gold{background:var(--gold);} .tag.green{background:var(--green-ops);} .tag.navy{background:var(--navy);} .tag.red{background:var(--red);}
+  h1{color:var(--navy);font-size:38px;font-weight:700;letter-spacing:-.4px;line-height:1.22;margin-bottom:6px;}
+  h1,.lead,.card p,.card li,.callout{text-wrap:pretty;}
+  .lead{color:var(--ink-soft);font-size:20px;line-height:1.6;max-width:1120px;margin-top:6px;}
+  .lead strong{color:var(--navy);}
+  .eyebrow{font-size:16px;letter-spacing:.22em;color:var(--teal);font-weight:600;text-transform:uppercase;margin-bottom:16px;}
+  /* cover */
+  .cover{background:linear-gradient(135deg,var(--navy) 0%,#14385B 52%,var(--teal) 100%);}
+  .cover::before{background:linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px),
+               linear-gradient(0deg,rgba(255,255,255,.04) 1px,transparent 1px),
+               linear-gradient(135deg,transparent 0 64%,rgba(255,224,138,.18) 64% 72%,transparent 72%);
+    background-size:54px 54px,54px 54px,100% 100%;opacity:1;}
+  .cover .in{justify-content:center;color:#fff;}
+  .cover .eyebrow{color:rgba(255,255,255,.82);}
+  .cover .unit-no{font-size:23px;font-weight:700;letter-spacing:.3em;color:var(--gold-hi);margin-bottom:14px;}
+  .cover h1{color:#fff;font-size:58px;line-height:1.18;letter-spacing:-.5px;}
+  .cover .gold{color:var(--gold-hi);}
+  .cover .sub{font-size:23px;color:rgba(255,255,255,.94);font-weight:300;margin-top:20px;max-width:980px;line-height:1.65;}
+  .cover .meta{margin-top:38px;display:flex;gap:38px;font-size:17px;color:rgba(255,255,255,.9);flex-wrap:wrap;}
+  .cover .meta span{opacity:.6;margin-right:6px;}
+  .cover .wm,.cover .pg{color:rgba(255,255,255,.6);}
+  /* divider */
+  .divider{background:linear-gradient(135deg,#14385B,var(--navy));}
+  .divider .in{justify-content:center;color:#fff;}
+  .divider h1{color:#fff;font-size:46px;}
+  .divider .lead{color:rgba(255,255,255,.9);max-width:960px;}
+  .divider .eyebrow{color:var(--gold-hi);}
+  .divider .unit-no{font-size:110px;font-weight:800;color:rgba(255,255,255,.14);line-height:1;letter-spacing:.08em;margin-bottom:6px;}
+  .divider .wm,.divider .pg{color:rgba(255,255,255,.55);}
+  .divider .mins{margin-top:20px;font-size:20px;font-weight:700;color:var(--gold-hi);}
+  /* grid + cards */
+  .grid{display:grid;gap:16px;margin-top:auto;margin-bottom:auto;}
+  .g2{grid-template-columns:1fr 1fr;} .g3{grid-template-columns:repeat(3,1fr);} .g4{grid-template-columns:repeat(4,1fr);} .g5{grid-template-columns:repeat(5,1fr);gap:12px;}
+  .card{background:var(--paper);border-radius:10px;padding:22px 24px;box-shadow:0 6px 22px rgba(16,36,62,.07);border:1px solid var(--line);}
+  .card h3{color:var(--navy);font-size:22px;font-weight:700;margin-bottom:8px;line-height:1.35;}
+  .card p{color:var(--ink-soft);font-size:18px;line-height:1.55;}
+  .card .num{font-size:15px;font-weight:700;color:var(--teal);letter-spacing:1px;margin-bottom:7px;}
+  .card ul{margin:9px 0 0 2px;list-style:none;} .card li{color:var(--ink-soft);font-size:17px;line-height:1.55;margin-bottom:6px;padding-left:20px;position:relative;}
+  .card li::before{content:"›";position:absolute;left:3px;color:var(--teal);font-weight:700;}
+  .card.hl{border:2px solid var(--teal);background:#fbfdfd;}
+  .card.gold li::before{color:var(--gold);} .card.green li::before{color:var(--green-ops);} .card.red li::before{color:var(--red);} .card.navy li::before{color:var(--navy);}
+  .card .cap{color:var(--green-ops);font-size:16px;background:var(--green-bg);border-radius:8px;padding:9px 13px;margin-top:11px;line-height:1.5;}
+  .card.sm{padding:18px 20px;} .card.sm h3{font-size:20px;} .card.sm p{font-size:16.5px;} .card.sm li{font-size:16px;}
+  /* vs */
+  .vs{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:auto 0;position:relative;}
+  .vs .side{border-radius:12px;padding:26px 30px;}
+  .vs .side.a{background:var(--cream-deep);border:1px solid var(--line);} .vs .side.b{background:var(--navy);color:#fff;}
+  .vs .side.red{background:var(--red-bg);border:1px solid #eecdc5;} .vs .side.green{background:var(--green-bg);border:1px solid #cfe6dc;}
+  .vs .side h3{font-size:24px;font-weight:700;margin-bottom:12px;}
+  .vs .side.a h3{color:var(--ink-soft);} .vs .side.b h3{color:var(--gold-hi);} .vs .side.red h3{color:var(--red);} .vs .side.green h3{color:var(--green-ops);}
+  .vs .side p{font-size:18px;line-height:1.6;} .vs .side.a p,.vs .side.red p,.vs .side.green p{color:var(--ink-soft);} .vs .side.b p{color:rgba(255,255,255,.92);}
+  .vs .side ul{list-style:none;margin-top:10px;} .vs .side li{font-size:17px;line-height:1.6;padding-left:22px;position:relative;margin-bottom:6px;}
+  .vs .side.a li::before{content:"—";position:absolute;left:2px;color:var(--ink-faint);}
+  .vs .side.red li::before{content:"✗";position:absolute;left:2px;color:var(--red);font-weight:700;}
+  .vs .side.green li{color:var(--ink-soft);} .vs .side.green li::before{content:"✓";position:absolute;left:2px;color:var(--green-ops);font-weight:700;}
+  .vs .side.b li{color:rgba(255,255,255,.92);} .vs .side.b li::before{content:"✓";position:absolute;left:2px;color:var(--teal-light);font-weight:700;}
+  .vs .vs-badge{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:58px;height:58px;border-radius:50%;background:var(--gold);color:#fff;font-weight:800;font-size:19px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.2);z-index:2;}
+  /* stats */
+  .stats{display:flex;gap:16px;margin:auto 0;}
+  .stat{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:24px 22px;box-shadow:0 6px 22px rgba(16,36,62,.07);}
+  .stat .big{font-size:52px;font-weight:800;color:var(--red);letter-spacing:-1px;line-height:1;}
+  .stat.teal .big{color:var(--teal);} .stat.gold .big{color:var(--gold);} .stat.green .big{color:var(--green-ops);}
+  .stat .lab{font-size:18.5px;color:var(--navy);font-weight:700;margin-top:11px;} .stat .src{font-size:14px;color:var(--ink-faint);margin-top:7px;line-height:1.45;}
+  /* flow */
+  .flow{display:flex;align-items:stretch;gap:10px;margin:auto 0;}
+  .fstep{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:22px 15px;text-align:center;box-shadow:0 6px 22px rgba(16,36,62,.06);}
+  .fstep .n{width:46px;height:46px;border-radius:50%;background:var(--teal);color:#fff;font-weight:700;font-size:19px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;}
+  .fstep.gold .n{background:var(--gold);} .fstep.red .n{background:var(--red);} .fstep.green .n{background:var(--green-ops);} .fstep.navy .n{background:var(--navy);}
+  .fstep h4{color:var(--navy);font-size:19px;font-weight:700;margin-bottom:7px;} .fstep p{color:var(--ink-soft);font-size:15.5px;line-height:1.5;}
+  /* table */
+  .tbl{width:100%;border-collapse:collapse;margin:auto 0;font-size:17px;}
+  .tbl th{background:var(--navy);color:#fff;font-weight:700;text-align:left;padding:11px 14px;font-size:16px;}
+  .tbl td{border:1px solid var(--line);background:#fff;color:var(--ink-soft);padding:10px 14px;line-height:1.5;vertical-align:top;}
+  .tbl tr:nth-child(even) td{background:#fbfcfe;}
+  .tbl td b,.tbl td strong{color:var(--navy);}
+  .tbl.sm{font-size:15.5px;} .tbl.sm th{font-size:15px;padding:9px 12px;} .tbl.sm td{padding:8px 12px;}
+  /* callout */
+  .callout{background:var(--soft);border-left:6px solid var(--teal);border-radius:0 10px 10px 0;padding:17px 24px;margin-top:16px;font-size:19px;color:var(--ink-soft);line-height:1.55;}
+  .callout strong{color:var(--navy);}
+  .callout.gold{border-left-color:var(--gold);background:#faf4e6;} .callout.gold strong{color:#8a6414;}
+  .callout.green{border-left-color:var(--green-ops);background:var(--green-bg);} .callout.green strong{color:var(--green-ops);}
+  .callout.red{border-left-color:var(--red);background:var(--red-bg);} .callout.red strong{color:var(--red);}
+  .callout.sm{font-size:17px;padding:14px 20px;}
+  /* prompt */
+  .prompt{background:var(--navy);color:#e8eef5;border-radius:10px;padding:20px 26px;margin:auto 0;font-size:18px;line-height:1.62;white-space:pre-wrap;box-shadow:0 8px 24px rgba(16,36,62,.18);}
+  .prompt .t{color:var(--gold-hi);font-weight:700;}
+  /* big slogan */
+  .bigslogan{font-size:44px;font-weight:800;color:var(--navy);line-height:1.3;letter-spacing:-.5px;margin:auto 0;}
+  .divider .bigslogan{color:#fff;}
+  .bigslogan .hl{color:var(--teal);} .bigslogan .gd{color:var(--gold);}
+  /* numbered question list */
+  .qlist{display:flex;flex-direction:column;gap:12px;margin:auto 0;}
+  .qitem{display:flex;gap:18px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 24px;box-shadow:0 4px 16px rgba(16,36,62,.05);}
+  .qitem .qn{flex:none;width:42px;height:42px;border-radius:50%;background:var(--teal);color:#fff;font-weight:700;font-size:19px;display:flex;align-items:center;justify-content:center;}
+  .qitem p{font-size:20px;color:var(--ink-soft);line-height:1.45;} .qitem b{color:var(--navy);}
+  /* nav */
+  .nav-btn{position:fixed;top:50%;width:48px;height:64px;border:0;border-radius:999px;transform:translateY(-50%);display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.92);color:var(--navy);font-size:34px;line-height:1;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.22);transition:background .18s;}
+  .nav-btn:hover{background:#fff;} .nav-btn:disabled{opacity:.32;cursor:default;}
+  .nav-prev{left:18px;} .nav-next{right:18px;}
+  .slide-status{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);min-width:82px;padding:7px 13px;border-radius:999px;text-align:center;background:rgba(255,255,255,.9);color:var(--navy);font-size:13px;font-weight:700;letter-spacing:.08em;box-shadow:0 8px 24px rgba(0,0,0,.18);}
+  .dots{position:fixed;right:14px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:25;max-height:88vh;flex-wrap:wrap;}
+  .dots button{width:11px;height:11px;border-radius:50%;border:0;padding:0;cursor:pointer;background:rgba(255,255,255,.5);box-shadow:0 1px 4px rgba(0,0,0,.28);transition:background .18s,transform .18s;}
+  .dots button:hover{background:var(--teal-light);transform:scale(1.25);} .dots button.on{background:var(--gold);transform:scale(1.4);}
+  .menu-btn{position:fixed;top:16px;right:16px;z-index:28;border:0;cursor:pointer;letter-spacing:.06em;background:rgba(255,255,255,.92);color:var(--navy);font-size:14px;font-weight:700;padding:9px 15px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.2);}
+  .menu-btn:hover{background:#fff;}
+  .outline{position:fixed;inset:0;z-index:30;background:rgba(16,36,62,.55);backdrop-filter:blur(3px);display:none;}
+  .outline.open{display:block;}
+  .outline-panel{position:absolute;right:0;top:0;height:100%;width:420px;max-width:88vw;background:#fff;box-shadow:-12px 0 40px rgba(0,0,0,.3);overflow-y:auto;padding:26px 24px 44px;}
+  .outline-panel h2{color:var(--navy);font-size:20px;font-weight:700;margin-bottom:4px;}
+  .outline-panel .osub{color:var(--ink-faint);font-size:12.5px;margin-bottom:18px;line-height:1.6;}
+  .outline-item{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;border:0;background:transparent;cursor:pointer;padding:10px 12px;border-radius:8px;}
+  .outline-item:hover{background:var(--soft);} .outline-item.on{background:var(--teal-bg);}
+  .outline-item .oi-n{flex:none;width:26px;height:26px;border-radius:6px;background:var(--cream-deep);color:var(--ink-soft);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+  .outline-item.on .oi-n{background:var(--teal);color:#fff;}
+  .outline-item .oi-t{color:var(--ink);font-size:15px;line-height:1.4;font-weight:500;}
+  .outline-close{position:absolute;top:14px;right:16px;border:0;background:transparent;font-size:26px;color:var(--ink-faint);cursor:pointer;line-height:1;}
+  @media print{@page{size:1280px 720px;margin:0;}
+    .deck{display:flex;flex-direction:column;gap:0;padding:0;width:auto;height:auto;overflow:visible;}
+    .slide{display:block!important;border-radius:0;box-shadow:none;break-after:page;page-break-after:always;margin:0;transform:none!important;}
+    .slide-nav,.dots,.menu-btn,.outline{display:none!important;}}
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- 1 封面 -->
+  <section class="slide cover is-active" data-title="封面">
+    <div class="in">
+      <div class="eyebrow">中衛發展中心｜AI 行銷開店 教育訓練</div>
+      <div class="unit-no">從數位化到 AI 行銷</div>
+      <h1>小店家的<span class="gold">第一步</span></h1>
+      <div class="sub">AI 不是從買工具開始,是從「你有沒有可以給 AI 用的東西」開始。<br>先打地基 → 再談應用 → 最後看成效。</div>
+      <div class="meta"><div><span>講者</span>古傑仁 Jay Ku</div><div><span>單位</span>ECO×STRAT 全感生態策略</div><div><span>日期</span>2026.08.15</div><div><span>時間</span>課程 60 分＋Q&A 15 分</div></div>
+      <div class="wm">ECO×STRAT ｜ 從數位化到 AI 行銷</div>
+    </div>
+  </section>
+
+  <!-- 2 學員組成 -->
+  <section class="slide" data-title="學員組成">
+    <div class="in">
+      <div class="tag">開場</div>
+      <h1>上課前,我先把你們的<span style="color:var(--teal)">名單看完了</span></h1>
+      <p class="lead">59 筆報名、去重後約 51 家企業。今天講的每一段,都是照這份名單設計的。</p>
+      <table class="tbl sm">
+        <tr><th style="width:42%">產業群</th><th style="width:10%">家數</th><th>代表</th></tr>
+        <tr><td><b>食品·農特產·茶·農場觀光</b></td><td>18</td><td>麻糬、蜂蜜、醬料、辣椒、豆腐、茶莊、休閒農場</td></tr>
+        <tr><td><b>科技·B2B·貿易·顧問</b></td><td>10</td><td>系統開發、行銷代理、國際貿易</td></tr>
+        <tr><td><b>傳統製造·工藝·建材</b></td><td>9</td><td>鶯歌陶瓷、窯業、鋼鐵、實業社</td></tr>
+        <tr><td><b>設計·文創·會展·娛樂</b></td><td>8</td><td>設計工作室、文創旅宿、會展、影音</td></tr>
+        <tr><td><b>門市·美業·照護·不動產</b></td><td>6</td><td>美容坊、居家長照、房仲、保全</td></tr>
+        <tr><td><b>法人·機構·醫療·個人</b></td><td>8</td><td>主辦單位、基金會、醫院、自由工作者</td></tr>
+      </table>
+      <div class="callout gold sm">共同點:幾乎都是<strong>老闆兼行銷、行銷兼客服、客服兼出貨</strong>。今天的建議前提是——一個人、下班後、也做得完。</div>
+      <div class="wm">ECO×STRAT ｜ 學員組成（母體 59 筆報名，統編去重 51 家）</div>
+    </div>
+  </section>
+
+  <!-- 3 提問分類 -->
+  <section class="slide" data-title="提問分類">
+    <div class="in">
+      <div class="tag">開場</div>
+      <h1>你們問的 42 個問題,其實只有 <span style="color:var(--teal)">8 種</span></h1>
+      <table class="tbl sm">
+        <tr><th style="width:50%">問題類型</th><th style="width:12%">題數</th><th>今天在哪講</th></tr>
+        <tr><td><b>F</b> 怎麼下指令、怎麼開始用</td><td>10</td><td>第二段·核心技能</td></tr>
+        <tr><td><b>A</b> 精準客群 / TA 怎麼找</td><td>8</td><td>第二段·想</td></tr>
+        <tr><td><b>C</b> 自動化 / 流程串接 / 數據分析</td><td>7</td><td>第二段·答＋看</td></tr>
+        <tr><td><b>G</b> 零基礎、先來了解</td><td>7</td><td>第一段（整段）</td></tr>
+        <tr><td><b>B</b> 工具怎麼選、費用多少</td><td>4</td><td>第二段·工具地圖</td></tr>
+        <tr><td><b>D</b> 開店 / 網站 / 上架 / 系統</td><td>4</td><td>第一段·四個資產</td></tr>
+        <tr><td><b>E</b> 內容產製（影片/文案/短影音）</td><td>1</td><td>第二段·做</td></tr>
+      </table>
+      <div class="callout red sm">最大兩類:<strong>「不知道怎麼開始」10 題＋「找不到精準客群」8 題＝43%</strong>。這是方法問題,不是工具問題——所以今天講方法多於講工具。</div>
+      <div class="wm">ECO×STRAT ｜ 提問分類（42 筆有實質提問）</div>
+    </div>
+  </section>
+
+  <!-- 4 課程路線 -->
+  <section class="slide" data-title="課程路線">
+    <div class="in">
+      <div class="tag">今天的路線</div>
+      <h1>三段路,<span style="color:var(--teal)">一條線走完</span></h1>
+      <p class="lead">先確認你有東西可給 AI 用,再教它怎麼幫你,最後教你怎麼判斷有沒有效。</p>
+      <table class="tbl sm">
+        <tr><th style="width:7%">段</th><th style="width:28%">主題</th><th>內容</th><th style="width:11%">時間</th></tr>
+        <tr><td><b>1</b></td><td>數位化 · AI 的地基</td><td>為什麼導不起來、四個數位資產、官網 vs 社群</td><td>15 分</td></tr>
+        <tr><td><b>2</b></td><td>AI × 社群 應用</td><td>AI 幫小店做四件事、五個實作技巧、工具地圖</td><td>18 分</td></tr>
+        <tr><td><b>3</b></td><td>AI 短影音</td><td>製作成本崩塌、三條路線、會賣的影片結構</td><td>10 分</td></tr>
+        <tr><td><b>4</b></td><td>趨勢與願景</td><td>搜尋變對話、三個理由、三年後的小店</td><td>10 分</td></tr>
+        <tr><td><b>5</b></td><td>成效追蹤</td><td>別看讚數、真正的四個數字、30/60/90 天</td><td>7 分</td></tr>
+      </table>
+      <div class="callout sm"><strong>今天不做:</strong>不推銷系統、不叫你買訂閱、不談要工程師才做得到的事。所有示範都以<strong>免費或每月千元以內</strong>為前提。</div>
+      <div class="wm">ECO×STRAT ｜ 課程路線</div>
+    </div>
+  </section>
+
+  <!-- 5 互動 五問 -->
+  <section class="slide" data-title="互動 · 五個問題">
+    <div class="in">
+      <div class="tag green">互動 · 開始之前</div>
+      <h1>五個問題,<span style="color:var(--teal)">符合的請舉手</span></h1>
+      <div class="qlist">
+        <div class="qitem"><div class="qn">1</div><p>有在用 <b>Facebook 或 Instagram</b> 做生意的</p></div>
+        <div class="qitem"><div class="qn">2</div><p>有 <b>自己的網站</b> 的（粉專不算,是有網址的那種）</p></div>
+        <div class="qitem"><div class="qn">3</div><p>有 <b>LINE 官方帳號</b> 的（個人 LINE 不算）</p></div>
+        <div class="qitem"><div class="qn">4</div><p>這半年 <b>用過 ChatGPT</b> 或類似 AI 的</p></div>
+        <div class="qitem"><div class="qn">5</div><p>用 AI 做出來的東西,<b>真的拿去用在生意上</b>的</p></div>
+      </div>
+      <div class="wm">ECO×STRAT ｜ 互動</div>
+    </div>
+  </section>
+
+  <!-- 6 divider 01 -->
+  <section class="slide divider" data-title="第一段 · 數位化地基">
+    <div class="in">
+      <div class="unit-no">01</div>
+      <div class="eyebrow">FOUNDATION</div>
+      <h1>先講數位化<br>因為它是 AI 的前提</h1>
+      <p class="lead">回答「完全沒有概念」和「開店必備條件有哪些」。已經有官網有社群也別跳——多數人的地基缺一角。</p>
+      <div class="mins">約 18 分鐘</div>
+      <div class="wm">ECO×STRAT ｜ 從數位化到 AI 行銷</div>
+    </div>
+  </section>
+
+  <!-- 7 互動 客人怎麼找到你 -->
+  <section class="slide" data-title="客人怎麼找到你">
+    <div class="in">
+      <div class="tag green">互動 · 第一段開場</div>
+      <h1>你的客人,是<span style="color:var(--teal)">怎麼找到你的</span>?</h1>
+      <div class="grid g4">
+        <div class="card"><div class="num">口碑</div><h3>老客介紹</h3><p>朋友帶朋友、做很多年的口碑</p></div>
+        <div class="card"><div class="num">位置</div><h3>路過看到</h3><p>店面位置、市集展場</p></div>
+        <div class="card"><div class="num">搜尋</div><h3>Google 搜到</h3><p>地圖、看評論找上門</p></div>
+        <div class="card"><div class="num">社群</div><h3>社群刷到</h3><p>FB／IG／短影音、朋友分享</p></div>
+      </div>
+      <div class="callout gold">很多人只能選「<strong>老實說,我不知道</strong>」——不知道客人從哪來不是你的問題,是沒人教過怎麼看。今天最後一段就在解決這件事。</div>
+      <div class="wm">ECO×STRAT ｜ 互動</div>
+    </div>
+  </section>
+
+  <!-- 8 為什麼沒效 stats -->
+  <section class="slide" data-title="為什麼用了AI沒效果">
+    <div class="in">
+      <div class="tag red">問題診斷</div>
+      <h1>為什麼很多人「用了 AI,卻<span style="color:var(--red)">沒有效果</span>」</h1>
+      <p class="lead">這不是你的錯覺,也不是你不夠聰明。這是全世界都在發生的事,原因已經被查得很清楚。</p>
+      <div class="stats">
+        <div class="stat"><div class="big">95%</div><div class="lab">大企業也失敗</div><div class="src">MIT 2025:企業導入生成式 AI 試辦,約 95% 沒有可衡量效益。敗因是學習斷層、沒接上流程、資料不能用。</div></div>
+        <div class="stat gold"><div class="big">60%</div><div class="lab">資料不到位就會死</div><div class="src">Gartner:2026 年將放棄 60% 缺「AI 可用資料」的專案;63% 沒有適合 AI 的資料管理方式。</div></div>
+        <div class="stat teal"><div class="big">週末</div><div class="lab">但對小店是好消息</div><div class="src">大企業資料散在十幾套系統要盤點一年;你的只散在腦袋、手機相簿、LINE 對話——一個週末就夠。</div></div>
+      </div>
+      <div class="callout"><strong>今天最重要的一句:</strong>AI 不會憑空生出你的生意,它只能整理、加工、放大「已經存在的東西」。</div>
+      <div class="wm">資料來源:MIT NANDA《The GenAI Divide》2025-08 ｜ Gartner 2025-02-26</div>
+    </div>
+  </section>
+
+  <!-- 9 四資產 -->
+  <section class="slide" data-title="數位化四資產">
+    <div class="in">
+      <div class="tag">觀念校正</div>
+      <h1>「數位化」不是買系統,是<span style="color:var(--teal)">四個資產</span></h1>
+      <p class="lead">對一家小微企業,數位化其實只有四件事——都能自己做。順序:01 → 02 → 03 → 04。</p>
+      <div class="grid g4">
+        <div class="card"><div class="num">01 FINDABLE</div><h3>找得到你</h3><p>有人 Google 搜「南投 麻糬」時,你出不出得來。</p></div>
+        <div class="card"><div class="num">02 CLEAR</div><h3>說得清楚</h3><p>有人問「做什麼、多少錢、怎麼買」,有沒有地方可丟連結。</p></div>
+        <div class="card"><div class="num">03 RETAIN</div><h3>留得住人</h3><p>來過一次的客人,有沒有辦法再找到他。</p></div>
+        <div class="card hl"><div class="num" style="color:var(--gold)">04 AI FUEL</div><h3>AI 的糧食</h3><p>把腦袋裡的東西寫成檔案,決定 AI 對你多有用。</p></div>
+      </div>
+      <div class="callout gold">很多人跳過前三項直接玩 AI,做出來的東西「<strong>看起來很厲害,但沒地方放、沒人看得到</strong>」。</div>
+      <div class="wm">ECO×STRAT ｜ 小微企業數位地基四資產</div>
+    </div>
+  </section>
+
+  <!-- 10 資產01 -->
+  <section class="slide" data-title="資產01 Google商家">
+    <div class="in">
+      <div class="tag">資產 01 · 找得到你</div>
+      <h1>只能做一件事,先做 <span style="color:var(--teal)">Google 商家檔案</span></h1>
+      <p class="lead">免費、當天做完、對有實體場所效果最直接。CP 值最高的第一步。</p>
+      <div class="grid g2">
+        <div class="card sm"><h3>為什麼是它先</h3><ul><li>客人找店多從<b>手機地圖</b>開始,不是 FB</li><li>你不做,Google 可能已自動生成一筆</li><li>顯示營業中/打烊、一鍵撥號、一鍵導航</li><li>評論就是社會證明,30 則四星勝過任何文案</li></ul></div>
+        <div class="card sm hl"><h3>今天回去就能做完</h3><ul><li>認領商家 ＋ 完成驗證</li><li>類別選<b>最精確</b>的,不要選最大的</li><li>放 10 張以上照片:門面、內部、產品、人</li><li>營業時間填正確 ＋ 自問自答 Q&A</li></ul></div>
+      </div>
+      <div class="wm">ECO×STRAT ｜ 資產 01（茶莊、麻糬、豆腐、農場、美容坊、陶瓷、長照請當作業）</div>
+    </div>
+  </section>
+
+  <!-- 11 資產02 -->
+  <section class="slide" data-title="資產02 一頁式官網">
+    <div class="in">
+      <div class="tag">資產 02 · 說得清楚</div>
+      <h1>一頁式官網:你在網路上的<span style="color:var(--teal)">門牌</span></h1>
+      <div class="grid g2">
+        <div class="card sm"><h3>一頁要有的六區塊</h3><ul><li>你是誰、做什麼（一句話）</li><li>主力產品/服務 ＋ 照片</li><li>價格或價格區間</li><li>怎麼買、怎麼聯絡</li><li>在哪裡（地址/服務範圍）</li><li>信任證明（客戶、認證、媒體）</li></ul></div>
+        <div class="card sm"><h3>不用寫程式的做法</h3><ul><li>Google 協作平台（免費、最無痛）</li><li>Canva 網站（會做圖就會做網站）</li><li>Wix／Strikingly（有中文範本）</li><li>要賣東西:Shopline／Cyberbiz／91APP</li></ul></div>
+      </div>
+      <div class="callout">你能把 IG 連結傳給客戶,但<strong>不能控制 IG</strong>。官網是唯一你能決定「客人第一眼看到什麼」、也是 <strong>AI 抓得到</strong>的地方（抓不到你的 IG 限動）。</div>
+      <div class="wm">ECO×STRAT ｜ 資產 02</div>
+    </div>
+  </section>
+
+  <!-- 12 官網vs社群 -->
+  <section class="slide" data-title="官網 vs 社群">
+    <div class="in">
+      <div class="tag">觀念校正</div>
+      <h1>官網和社群不是二選一,是<span style="color:var(--teal)">分工</span></h1>
+      <div class="vs">
+        <div class="side a"><h3>社群（FB／IG／Threads）</h3><ul><li>租來的攤位,演算法一改觸及腰斬</li><li>製造相遇——讓陌生人刷到你</li><li>一則貼文黃金期 24～72 小時</li><li>粉絲不屬於你,拿不到聯絡方式</li><li>Google 搜不太到貼文</li></ul></div>
+        <div class="side b"><h3>官網（一頁式／開店平台）</h3><ul><li>自己的房子,你說了算、不會被關</li><li>促成決定——讓有興趣的人下手</li><li>一頁產品說明能用兩三年</li><li>Email／LINE／訂單是你的資產</li><li>Google 和 AI 都能讀到、引用</li></ul></div>
+        <div class="vs-badge">VS</div>
+      </div>
+      <div class="callout green">社群負責<strong>被看到</strong>,官網負責<strong>被相信</strong>,LINE 負責<strong>被記住</strong>。三個都要,不能互相取代。</div>
+      <div class="wm">ECO×STRAT ｜ 通道分工</div>
+    </div>
+  </section>
+
+  <!-- 13 資產03 LINE -->
+  <section class="slide" data-title="資產03 LINE官方帳號">
+    <div class="in">
+      <div class="tag">資產 03 · 留得住人</div>
+      <h1>LINE 官方帳號:<span style="color:var(--teal)">最被低估的資產</span></h1>
+      <div class="grid g2">
+        <div class="card sm"><h3>為什麼是 LINE</h3><ul><li>台灣人幾乎都用,不用教育客人</li><li>訊息推到手機,不是等他來刷</li><li>可做標籤:買過什麼、何時、喜歡什麼</li><li>免費方案就能開始</li></ul></div>
+        <div class="card sm hl"><h3>三步驟上手</h3><ul><li>開帳號 ＋ 圖文選單（菜單/訂購/地址）</li><li>歡迎訊息 ＋ 自動回覆常見問題</li><li><b>設一個加好友的理由</b>:首購折扣、內行優惠</li></ul></div>
+      </div>
+      <div class="callout gold"><strong>照護、美業、房仲、保全特別注意:</strong>你們是「關係型」生意,回購與轉介紹佔營收大半,LINE 的價值高於任何廣告投放。</div>
+      <div class="wm">ECO×STRAT ｜ 資產 03</div>
+    </div>
+  </section>
+
+  <!-- 14 資產04 AI糧食 -->
+  <section class="slide" data-title="資產04 AI的糧食">
+    <div class="in">
+      <div class="tag red">資產 04 · 最關鍵、最少人做</div>
+      <h1>AI 的糧食:把腦袋裡的東西<span style="color:var(--gold)">寫成檔案</span></h1>
+      <p class="lead">AI 的表現,<strong>八成取決於你餵它什麼</strong>。同一工具有人用得神、有人用得空,差別幾乎都在這。</p>
+      <div class="grid g2">
+        <div class="card sm"><h3>一份「AI 用的產品資料表」該有</h3><ul><li>品名、規格、售價、成本區間</li><li>它<b>解決什麼問題</b>（不是有什麼功能）</li><li>誰在買（年齡、場合、送禮還是自用）</li><li>客人最常問的三個問題</li></ul></div>
+        <div class="card sm gold"><h3>為什麼「原話」最重要</h3><ul><li>客人稱讚時的<b>原話（這是黃金）</b></li><li>手機開錄音,好話當場記下來</li><li>一個月存 20 句 = 一整年的文案素材</li><li>不能亂講的限制（法規、保存、療效）</li></ul></div>
+      </div>
+      <div class="callout">門檻不是技術,是願不願意花兩晚寫出來。寫完之後,<strong>後面所有 AI 應用的品質會直接跳一級,而且永久</strong>。</div>
+      <div class="wm">ECO×STRAT ｜ 資產 04</div>
+    </div>
+  </section>
+
+  <!-- 15 自評 -->
+  <section class="slide" data-title="數位地基自評">
+    <div class="in">
+      <div class="tag">第一段小結</div>
+      <h1>先自評:你的數位地基<span style="color:var(--teal)">缺哪一角</span></h1>
+      <div class="grid g2">
+        <div class="card sm navy"><ul><li>Google 商家已認領驗證、照片 10 張、時間正確</li><li>有一個可傳給客人的網址,講清做什麼多少錢怎麼買</li><li>至少一個社群帳號在活的（近 30 天有更新）</li><li>有 LINE 官方帳號並設了加好友理由</li></ul></div>
+        <div class="card sm navy"><ul><li>產品照統一風格、可直接用</li><li><b>有一份產品資料表（電子檔）</b></li><li><b>知道上月幾個新客、從哪來</b></li><li><b>有客人聯絡方式的名單</b></li></ul></div>
+      </div>
+      <div class="callout red">多數小微企業勾到 3～4 題,缺的通常是第 <strong>6、7、8</strong> 題——資料、數字、名單。這三個剛好是 AI 最需要的,所以「AI 沒效」往往卡在這。</div>
+      <div class="wm">ECO×STRAT ｜ 數位地基自評表</div>
+    </div>
+  </section>
+
+  <!-- 16 divider 02 -->
+  <section class="slide divider" data-title="第二段 · AI×社群應用">
+    <div class="in">
+      <div class="unit-no">02</div>
+      <div class="eyebrow">APPLICATION</div>
+      <h1>從觀念到應用<br>AI × 社群,實際怎麼做</h1>
+      <p class="lead">回答「怎麼找精準客群」「工具怎麼選」「怎麼下指令」「怎麼自動化」四類問題。</p>
+      <div class="mins">約 27 分鐘</div>
+      <div class="wm">ECO×STRAT ｜ 從數位化到 AI 行銷</div>
+    </div>
+  </section>
+
+  <!-- 17 互動 用AI做過什麼 -->
+  <section class="slide" data-title="你用AI做過什麼">
+    <div class="in">
+      <div class="tag green">互動 · 第二段開場</div>
+      <h1>你用 AI <span style="color:var(--teal)">做過什麼</span>?（做過哪項就舉哪項）</h1>
+      <div class="grid g5">
+        <div class="card sm"><div class="num">A</div><h3>問過問題</h3><p>查東西、問意見</p></div>
+        <div class="card sm"><div class="num">B</div><h3>寫過文案</h3><p>貼文、介紹、信</p></div>
+        <div class="card sm"><div class="num">C</div><h3>做過圖</h3><p>產品圖、海報</p></div>
+        <div class="card sm"><div class="num">D</div><h3>做過影片</h3><p>腳本、配音、字幕</p></div>
+        <div class="card sm hl"><div class="num" style="color:var(--gold)">E</div><h3>都沒有</h3><p>第一次認真了解</p></div>
+      </div>
+      <div class="wm">ECO×STRAT ｜ 互動</div>
+    </div>
+  </section>
+
+  <!-- 18 想做答看 -->
+  <section class="slide" data-title="AI幫小店做四種事">
+    <div class="in">
+      <div class="tag">應用地圖</div>
+      <h1>AI 幫小店做的事,只有<span style="color:var(--teal)">四種</span>:想 · 做 · 答 · 看</h1>
+      <div class="grid g4">
+        <div class="card"><div class="num">想</div><h3>幫你思考</h3><p>客群拆解、賣點盤點、競品觀察、活動企劃、命名定價。</p></div>
+        <div class="card"><div class="num">做</div><h3>幫你產出</h3><p>文案、產品說明、圖片、短影音腳本與成片、配音字幕。</p></div>
+        <div class="card"><div class="num">答</div><h3>幫你回應</h3><p>常見問答、LINE 自動回覆、私訊初覆、報價、預約確認。</p></div>
+        <div class="card"><div class="num">看</div><h3>幫你判讀</h3><p>銷售摘要、貼文成效比較、客訴分類、回購週期。</p></div>
+      </div>
+      <div class="callout gold">上手順序:<strong>做 → 想 → 看 → 答</strong>。「做」最有感最快;「答」牽涉客人、做錯代價最高,放最後,而且一定要留人覆核。</div>
+      <div class="wm">ECO×STRAT ｜ 想 · 做 · 答 · 看</div>
+    </div>
+  </section>
+
+  <!-- 19 客群拆解 -->
+  <section class="slide" data-title="精準客群是拆出來的">
+    <div class="in">
+      <div class="tag">想 · 回答 8 位學員</div>
+      <h1>「精準客群」不是猜出來的,是<span style="color:var(--teal)">拆出來的</span></h1>
+      <div class="vs">
+        <div class="side red"><h3>✗ 錯的做法</h3><p>直接問 AI「我的客群是誰」→ 得到「25-45 歲注重健康的都會女性」。這句話對每家店都成立,所以<strong>毫無用處</strong>。</p></div>
+        <div class="side green"><h3>✓ 對的做法:三步拆解</h3><ul><li>翻紀錄:列最近 30 筆訂單「買什麼、為什麼、什麼場合」</li><li>讓 AI 分群:找出 3～5 種重複模式</li><li>各寫一句:什麼人、何時、為了什麼、買了什麼</li></ul></div>
+      </div>
+      <div class="callout"><strong>同一批產品、四種語言</strong>（極限辣友/伴手禮客/家常採購/觀光客）。精準不是找到更少的人,是<strong>對不同的人講不同的話</strong>。</div>
+      <div class="wm">ECO×STRAT ｜ 客群拆解法</div>
+    </div>
+  </section>
+
+  <!-- 20 指令五要素 -->
+  <section class="slide" data-title="指令五要素">
+    <div class="in">
+      <div class="tag">核心技能 · 回答 10 位學員</div>
+      <h1>怎麼下有效指令:<span style="color:var(--teal)">五個要素</span></h1>
+      <p class="lead">把 AI 當一個很聰明、但完全不認識你的新員工。你會怎麼交辦,就怎麼下指令。</p>
+      <div class="prompt"><span class="t">【角色】</span>你是南投在地麻糬品牌的社群小編,語氣親切不浮誇。
+<span class="t">【背景】</span>草屯做傳統米麻糬,主客回鄉買伴手禮的中年人與家庭客,中秋想推禮盒。
+<span class="t">【材料】</span>六入禮盒 320 元,花生/紅豆/芝麻;客人常說「跟小時候市場吃的一樣」。
+<span class="t">【格式】</span>寫 3 版 IG 貼文,各 120 字內,第一句要抓人,附 5 個 hashtag。
+<span class="t">【限制】</span>不用「嚴選/職人/初心」;不宣稱療效;金額照給。</div>
+      <div class="callout sm">學會這頁就會用所有 AI 工具——ChatGPT、Gemini、Claude 底層都同一件事:<strong>你講得多清楚,它就做得多準</strong>。</div>
+      <div class="wm">ECO×STRAT ｜ 指令五要素</div>
+    </div>
+  </section>
+
+  <!-- 21 技巧01 -->
+  <section class="slide" data-title="技巧01 先設定">
+    <div class="in">
+      <div class="tag green">實作技巧 01</div>
+      <h1>不要一打開就問——先花 30 秒<span style="color:var(--teal)">做設定</span></h1>
+      <p class="lead">AI 每一次新對話,都是完全失憶的新人。不先告訴它「你是誰、我是誰、在幹嘛」,它只能用平均值回答。</p>
+      <div class="prompt">先貼這三句（存手機備忘錄,每次複製）:
+「你是熟悉台灣中小品牌的行銷顧問,講話直接、不寫空話。
+我是南投草屯的傳統米麻糬品牌,一家店三個人,主客是回鄉買伴手禮的人。
+接下來每件事都用這個前提回答,<span class="t">不確定的地方直接問我。</span>」</div>
+      <div class="callout sm gold">「不確定的地方直接問我」很關鍵:加了這句,AI 會反過來問你,而不是自己編——擋掉大半「聽起來很順但根本不是你」的內容。</div>
+      <div class="wm">ECO×STRAT ｜ 技巧 01</div>
+    </div>
+  </section>
+
+  <!-- 22 技巧02 -->
+  <section class="slide" data-title="技巧02 給參考">
+    <div class="in">
+      <div class="tag green">實作技巧 02</div>
+      <h1>給它參考——AI <span style="color:var(--teal)">模仿</span>遠強過原創</h1>
+      <div class="grid g4">
+        <div class="card sm"><div class="num">圖</div><h3>參考圖</h3><p>看到喜歡的版面/配色,截圖丟它「照這感覺做,換成我的產品」。比 20 個形容詞準。</p></div>
+        <div class="card sm"><div class="num">文</div><h3>你最好的</h3><p>把反應最好的三則貼文貼上「這是我的語氣,學起來」。</p></div>
+        <div class="card sm"><div class="num">習</div><h3>你的偏好</h3><p>「短句、不用驚嘆號、稱『您』、不用嚴選職人、價格一定寫」。</p></div>
+        <div class="card sm"><div class="num">牌</div><h3>品牌素材</h3><p>Logo、主色色碼、字型、產品照。做圖前先給,不用重做。</p></div>
+      </div>
+      <div class="callout">開一個「<strong>我的 AI 素材</strong>」資料夾,把四類都放進去。前置一分鐘,省掉後面二十分鐘來回改。</div>
+      <div class="wm">ECO×STRAT ｜ 技巧 02</div>
+    </div>
+  </section>
+
+  <!-- 23 技巧03 三輪 -->
+  <section class="slide" data-title="技巧03 三輪迭代">
+    <div class="in">
+      <div class="tag green">實作技巧 03</div>
+      <h1>不要一次要完美:<span style="color:var(--teal)">拆成三輪</span></h1>
+      <div class="flow">
+        <div class="fstep"><div class="n">1</div><h4>先要方向</h4><p>「先給我 5 個切入角度,各一句話,先不要寫完整。」→ 30 秒你挑一個</p></div>
+        <div class="fstep"><div class="n">2</div><h4>選一個展開</h4><p>「第 3 個很好,寫成 3 版 IG 貼文,各 120 字。」→ 你挑一版</p></div>
+        <div class="fstep gold"><div class="n">3</div><h4>修細節</h4><p>「第 2 版最好,但太文青,改口語;第一句更抓人;加價格。」→ 收工</p></div>
+      </div>
+      <div class="callout">整段不到 3 分鐘,每步你都在<strong>掌控方向</strong>。反模式:一次下 500 字指令,寫指令比對話還久,還得到說不上哪裡不對的東西。</div>
+      <div class="wm">ECO×STRAT ｜ 技巧 03</div>
+    </div>
+  </section>
+
+  <!-- 24 技巧04 存指令 -->
+  <section class="slide" data-title="技巧04 建指令模板庫">
+    <div class="in">
+      <div class="tag green">實作技巧 04</div>
+      <h1>跑出好結果的指令,<span style="color:var(--teal)">一定要存下來</span></h1>
+      <p class="lead">存下來的指令,三個月後就是店裡的資產——新員工照著貼也能做出同水準。用手機備忘錄即可,一行標題 ＋ 整段指令。</p>
+      <div class="grid g2">
+        <div class="card sm"><h3>五個一定要有的模板</h3><ul><li><b>新品貼文</b>｜換產品名和賣點就能重用</li><li><b>產品說明</b>｜官網、平台上架都要用</li><li><b>客訴回覆</b>｜情緒最高時最需要穩定起草</li></ul></div>
+        <div class="card sm"><h3>（續）＋ 進階做法</h3><ul><li><b>活動企劃</b>｜檔期一到就套</li><li><b>月報摘要</b>｜當月銷售丟進去出一頁重點</li><li>進階:建「專屬助手/GPTs」一次存好（第二步）</li></ul></div>
+      </div>
+      <div class="wm">ECO×STRAT ｜ 技巧 04</div>
+    </div>
+  </section>
+
+  <!-- 25 技巧05 七錯 -->
+  <section class="slide" data-title="技巧05 七個常見錯誤">
+    <div class="in">
+      <div class="tag red">實作技巧 05</div>
+      <h1>七個最常見的錯誤,<span style="color:var(--red)">先避開就贏一半</span></h1>
+      <div class="grid g2">
+        <div class="card sm red"><ul><li>① 沒給材料就要它寫 → 只能寫通用話</li><li>② 一次問太多件事 → 每件都做得淺</li><li>③ 相信它給的<b>數字/法規/日期</b> → 幻覺,自己再查</li><li>④ 直接把原文發出去 → 「都對但沒人味」</li></ul></div>
+        <div class="card sm red"><ul><li>⑤ 每次都開新對話 → 同主題留同一對話越聊越準</li><li>⑥ 只用免費版然後嫌它笨 → 認真評估前先試付費版</li><li>⑦ 當它是「知道答案的人」→ 它是「很會幫你想的人」</li></ul></div>
+      </div>
+      <div class="callout gold">心態換成:別再問「AI 準不準」,開始問「<strong>我給它的東西夠不夠</strong>」——這句轉換,價值大過今天所有工具。</div>
+      <div class="wm">ECO×STRAT ｜ 技巧 05</div>
+    </div>
+  </section>
+
+  <!-- 26 工具地圖 -->
+  <section class="slide" data-title="工具地圖與費用">
+    <div class="in">
+      <div class="tag">做 · 回答 4 位學員</div>
+      <h1>工具怎麼選、<span style="color:var(--teal)">要花多少錢</span></h1>
+      <table class="tbl sm">
+        <tr><th style="width:24%">要做的事</th><th>0 元起步</th><th>每月千元以內</th></tr>
+        <tr><td><b>文案·企劃·客群</b></td><td>ChatGPT／Gemini／Claude 免費版</td><td>付費約 600～700／月（更穩、可傳檔）</td></tr>
+        <tr><td><b>圖片·設計</b></td><td>Canva 免費版（範本多、好上手）</td><td>Canva Pro 約 300/月（去背、AI 生圖）</td></tr>
+        <tr><td><b>短影音剪輯</b></td><td>CapCut 剪映（免費版就很強）</td><td>Vrew／MyEdit 自動字幕</td></tr>
+        <tr><td><b>AI 生成影片</b></td><td>Kling 可靈（每日免費、有浮水印）</td><td>約 200～400/月（去浮水印、可商用）</td></tr>
+        <tr><td><b>社群排程·成效</b></td><td>Meta 商業套件（免費排程＋洞察）</td><td>跨平台排程約 900 起/月</td></tr>
+      </table>
+      <div class="callout sm">三原則:① 先把免費用到額度不夠再付費 ② 一次只加一個工具 ③ <strong>中文（台灣用語）差很多,一定要自己試打一段</strong>再決定。</div>
+      <div class="wm">ECO×STRAT ｜ 工具地圖（費用為 2026-08 概估,以各平台公告為準）</div>
+    </div>
+  </section>
+
+  <!-- 27 產業三群 -->
+  <section class="slide" data-title="三個產業三條路">
+    <div class="in">
+      <div class="tag">做 · 對照名單三大群</div>
+      <h1>三個產業,三條<span style="color:var(--teal)">最省力的路</span></h1>
+      <div class="grid g3">
+        <div class="card sm"><div class="num">18 家 · 最大群</div><h3>食品·農特產·茶·農場</h3><ul><li>產品情境照:手機拍、Canva 統一底色</li><li>節慶檔期:提前 6 週排整季</li><li>產地短影音:製程 30 秒、自動字幕</li></ul></div>
+        <div class="card sm"><div class="num">9 家</div><h3>傳統製造·工藝·建材</h3><ul><li>把規格寫成人話:翻成「能解決什麼」</li><li>案例頁:B2B 客戶只看這個</li><li>詢價自動回覆:規格/交期/最小量</li></ul></div>
+        <div class="card sm"><div class="num">6 家 ＋ 服務業</div><h3>門市·美業·照護·不動產</h3><ul><li>Google 評論:服務完當場請客人留評</li><li>客人的問題就是內容:每週 60 秒</li><li>LINE 分群關懷:到期前主動提醒</li></ul></div>
+      </div>
+      <div class="callout gold">同樣是 AI,不同生意的「<strong>第一支箭</strong>」不一樣。B2B 不必追短影音流量,要的是「客戶查得到、看得懂、敢問你」。</div>
+      <div class="wm">ECO×STRAT ｜ 產業對照</div>
+    </div>
+  </section>
+
+  <!-- 28 自動化四階段 -->
+  <section class="slide" data-title="自動化四階段">
+    <div class="in">
+      <div class="tag">答 · 回答 7 位學員</div>
+      <h1>「自動化」<span style="color:var(--teal)">該從哪裡開始</span></h1>
+      <p class="lead">小店不需要「全自動」,需要的是「少做三成重複動作」,而且從最不會出事的地方開始。</p>
+      <div class="flow">
+        <div class="fstep green"><div class="n">1</div><h4>先自動化「回答」</h4><p>常見問題做成 LINE 自動回覆。省最多、風險最低</p></div>
+        <div class="fstep"><div class="n">2</div><h4>再自動化「排程」</h4><p>貼文一次寫好排整月。自動發布,不是自動生成</p></div>
+        <div class="fstep"><div class="n">3</div><h4>然後「整理」</h4><p>每月銷售丟 AI 出一頁摘要,你只看和決定</p></div>
+        <div class="fstep red"><div class="n">4</div><h4>最後才「串接」</h4><p>系統對系統,需要專業協助,別自己硬幹</p></div>
+      </div>
+      <div class="callout red"><strong>三條紅線一定要留人:</strong>金額（報價/折扣/退款）、承諾（交期/保固/合約）、宣稱（療效/成分/法規）。AI 是放大產能,不是取代判斷。</div>
+      <div class="wm">ECO×STRAT ｜ 自動化四階段</div>
+    </div>
+  </section>
+
+  <!-- 29 divider 03 -->
+  <section class="slide divider" data-title="第三段 · AI短影音">
+    <div class="in">
+      <div class="unit-no">03</div>
+      <div class="eyebrow">SHORT VIDEO</div>
+      <h1>AI 短影音<br>為什麼是「現在」要懂</h1>
+      <p class="lead">短影音不是新東西,新的是——它突然變成小店拍得起的東西。這段講的是成本結構的改變。</p>
+      <div class="mins">約 10 分鐘</div>
+      <div class="wm">ECO×STRAT ｜ 從數位化到 AI 行銷</div>
+    </div>
+  </section>
+
+  <!-- 30 互動 滑幾支 -->
+  <section class="slide" data-title="昨天滑了幾支短影音">
+    <div class="in">
+      <div class="tag green">互動 · 第三段開場</div>
+      <h1>昨天,你滑了<span style="color:var(--teal)">幾支短影音</span>?</h1>
+      <div class="grid g4">
+        <div class="card"><h3>一支都沒</h3><p>我不看那個</p></div>
+        <div class="card"><h3>1～5 支</h3><p>偶爾滑到</p></div>
+        <div class="card"><h3>5～20 支</h3><p>睡前會看一下</p></div>
+        <div class="card hl"><h3>數不清</h3><p>一滑就一小時</p></div>
+      </div>
+      <div class="callout gold">你每天花一小時看的東西,你的客人也在看——<strong>但你沒有出現在那裡。</strong></div>
+      <div class="wm">ECO×STRAT ｜ 互動</div>
+    </div>
+  </section>
+
+  <!-- 31 成本崩塌 -->
+  <section class="slide" data-title="真正改變的是成本">
+    <div class="in">
+      <div class="tag gold">關鍵轉折</div>
+      <h1>真正改變的不是流行,是<span style="color:var(--gold)">成本</span></h1>
+      <table class="tbl sm">
+        <tr><th style="width:30%"></th><th>傳統做法</th><th>現在（AI 輔助）</th></tr>
+        <tr><td><b>一支產品短片</b></td><td>找創作者拍攝後製,US$50～500+</td><td>AI 生成 UGC 影片,US$2～20</td></tr>
+        <tr><td><b>每分鐘成品</b></td><td>約 US$4,200～4,500／分</td><td>約 US$20～220／分</td></tr>
+        <tr><td><b>長片轉短片</b></td><td>人工切片、上字幕,5 小時以上</td><td>AI 自動抓亮點,約 12 分產 16 支</td></tr>
+        <tr><td><b>製作時間</b></td><td>基準</td><td>縮短 70～80%</td></tr>
+      </table>
+      <div class="callout sm">意義不是「省錢」,是「<strong>可以試錯</strong>」:以前花五萬拍一支只能成功;現在同樣預算測 20 支,把資源押在跑得動的那支。</div>
+      <div class="wm">來源:AI 短影音工具平台研究 2026-07（金額為國際市場行情概估）</div>
+    </div>
+  </section>
+
+  <!-- 32 短影音數據 -->
+  <section class="slide" data-title="短影音成效數據">
+    <div class="in">
+      <div class="tag">趨勢佐證</div>
+      <h1>而且,這是目前<span style="color:var(--teal)">投報最高</span>的內容形式</h1>
+      <div class="stats">
+        <div class="stat teal"><div class="big">3 年</div><div class="lab">ROI 連續第一</div><div class="src">60 秒內短影音,連三年是社群行銷投報率最高的格式。</div></div>
+        <div class="stat"><div class="big">78%</div><div class="lab">手機直式為主</div><div class="src">78% 影音在手機以 9:16 直式觀看,橫式吃虧。</div></div>
+        <div class="stat gold"><div class="big">73%</div><div class="lab">每天都在看</div><div class="src">73% 消費者每天多次看短影音,你的客人就在裡面。</div></div>
+        <div class="stat green"><div class="big">87%</div><div class="lab">AI 做的也吃得開</div><div class="src">一般場景,AI 生成影片能拿到真人約 87% 的互動。</div></div>
+      </div>
+      <div class="callout red sm">但書:需要<strong>細膩情感或深層品牌故事</strong>時,AI 影片接受度掉到 61%。分工是:<strong>AI 做「量」,你自己做「情感」</strong>。</div>
+      <div class="wm">ECO×STRAT ｜ 短影音成效數據</div>
+    </div>
+  </section>
+
+  <!-- 33 三條路線 -->
+  <section class="slide" data-title="短影音三條路線">
+    <div class="in">
+      <div class="tag">實作</div>
+      <h1>三條製作路線:<span style="color:var(--teal)">看你手上有什麼</span></h1>
+      <div class="grid g3">
+        <div class="card sm"><div class="num">A · 最省力</div><h3>已有長影片 → 自動切片</h3><ul><li>拍過教學/直播/受訪的人</li><li>一小時 → 十幾支短片</li><li>工具:Vizard 類</li></ul></div>
+        <div class="card sm"><div class="num">B · 沒影片也行</div><h3>只有產品照 → 圖生影片</h3><ul><li>只有商品照、不便實拍</li><li>注意浮水印與商用授權</li><li>工具:Kling 可靈</li></ul></div>
+        <div class="card sm hl"><div class="num" style="color:var(--gold)">C · 效果最好</div><h3>自拍 30 秒 → AI 後製</h3><ul><li>有店面、製程、人味（多數人）</li><li>真實感是小店最大優勢</li><li>CapCut 自動上繁中字幕</li></ul></div>
+      </div>
+      <div class="callout gold">食品/工藝製造 → <strong>C</strong>（製程就是最好的內容）;電商多 SKU → B 快速量產;有大量既有影片 → A 先把庫存榨乾。</div>
+      <div class="wm">ECO×STRAT ｜ 短影音三條路線</div>
+    </div>
+  </section>
+
+  <!-- 34 影片結構 -->
+  <section class="slide" data-title="會賣的短影音結構">
+    <div class="in">
+      <div class="tag">實作</div>
+      <h1>一支「<span style="color:var(--teal)">會賣東西</span>」的短影音,長這樣</h1>
+      <div class="flow">
+        <div class="fstep red"><div class="n">3秒</div><h4>停下的理由</h4><p>一個問題/衝擊畫面/數字。別放 Logo 動畫</p></div>
+        <div class="fstep gold"><div class="n">15秒</div><h4>一個好處</h4><p>只講一個,講具體、講得有畫面</p></div>
+        <div class="fstep"><div class="n">25秒</div><h4>證明</h4><p>製程、原料、現場、客人的話——小店贏大品牌處</p></div>
+        <div class="fstep green"><div class="n">最後</div><h4>一個動作</h4><p>私訊/點連結/來店,選一個。三選擇＝沒人動</p></div>
+      </div>
+      <div class="callout red"><strong>別全丟給 AI:</strong>你的臉、你的店、你做東西的手,是 AI 生不出來的,而那恰好是小店最有說服力的部分。AI 負責產量,你負責真實。</div>
+      <div class="wm">ECO×STRAT ｜ 短影音結構與紅線</div>
+    </div>
+  </section>
+
+  <!-- 35 divider 04 -->
+  <section class="slide divider" data-title="第四段 · 趨勢與願景">
+    <div class="in">
+      <div class="unit-no">04</div>
+      <div class="eyebrow">WHAT'S NEXT</div>
+      <h1>未來會變成什麼樣<br>以及為什麼是「現在」開始</h1>
+      <p class="lead">前面講「怎麼做」。這段講「為什麼非做不可」——原因遠不只是省力。</p>
+      <div class="mins">約 10 分鐘</div>
+      <div class="wm">ECO×STRAT ｜ 從數位化到 AI 行銷</div>
+    </div>
+  </section>
+
+  <!-- 36 互動 先開哪個 -->
+  <section class="slide" data-title="想找東西先開哪個">
+    <div class="in">
+      <div class="tag green">互動 · 第四段開場</div>
+      <h1>最近一次想找東西,<span style="color:var(--teal)">你先開哪一個</span>?</h1>
+      <div class="grid g4">
+        <div class="card"><div class="num">關鍵字</div><h3>開 Google</h3><p>打關鍵字、看前幾筆</p></div>
+        <div class="card"><div class="num">社群</div><h3>開 FB／IG</h3><p>社團問或直接搜</p></div>
+        <div class="card"><div class="num">人</div><h3>問朋友</h3><p>LINE 群、打電話</p></div>
+        <div class="card hl"><div class="num" style="color:var(--gold)">對話</div><h3>問 AI</h3><p>ChatGPT 直接問答案</p></div>
+      </div>
+      <div class="callout gold">用 AI 找答案的比例正快速上升——改變的不只是「用哪個工具」,是<strong>客人找到你的整個機制</strong>。</div>
+      <div class="wm">ECO×STRAT ｜ 互動</div>
+    </div>
+  </section>
+
+  <!-- 37 搜尋變對話 -->
+  <section class="slide" data-title="搜尋變成對話">
+    <div class="in">
+      <div class="tag">趨勢 01</div>
+      <h1>搜尋正從「關鍵字」變成「<span style="color:var(--teal)">對話</span>」</h1>
+      <div class="vs">
+        <div class="side a"><h3>過去:在「排名」裡競爭</h3><ul><li>客人打「草屯 麻糬」→ 得到 10 條連結</li><li>自己一個一個點、自己比較</li><li>你的工作:想辦法排到前面</li><li>第 8 名還是有人點</li></ul></div>
+        <div class="side b"><h3>現在:在「答案」裡競爭</h3><ul><li>客人問「買南投伴手禮送長輩,500 內不太甜」</li><li>AI 直接給 3 個建議＋理由,已幫你比完</li><li>你的工作:讓 AI 讀得懂、願意引用你</li><li>沒有第 8 名,只有有跟沒有</li></ul></div>
+      </div>
+      <div class="callout red">以前排名掉了是「客人變少」;在 AI 答案裡沒被提到,是「<strong>整個消失</strong>」——客人根本不知道有你這家店。</div>
+      <div class="wm">ECO×STRAT ｜ 趨勢 01</div>
+    </div>
+  </section>
+
+  <!-- 38 GEO -->
+  <section class="slide" data-title="AI才會推薦你 GEO">
+    <div class="in">
+      <div class="tag">趨勢 02</div>
+      <h1>那要怎樣,<span style="color:var(--teal)">AI 才會推薦你</span>?</h1>
+      <div class="grid g3">
+        <div class="card sm"><div class="num">01</div><h3>放在 AI 讀得到的地方</h3><p>讀得到:官網、Google 商家、公開網頁、商品頁。讀不到:IG 限動、封閉社團、LINE 對話、你腦袋。</p></div>
+        <div class="card sm"><div class="num">02</div><h3>寫成「回答問題」</h3><p>✗ 嚴選在地食材傳承三代 ✓ 六入禮盒 320 元,三口味,常溫 7 天,適合送長輩。具體資訊才會被引用。</p></div>
+        <div class="card sm"><div class="num">03</div><h3>資訊到處一致</h3><p>店名、地址、電話、時間各處要完全一樣。對不起來 AI 就不敢引用你（它怕講錯）。</p></div>
+      </div>
+      <div class="callout gold">這件事有個名字叫 <strong>GEO（生成式引擎最佳化）</strong>,但對小店實作非常樸素:寫清楚、放對地方、到處一致。沒有預算門檻,只有做跟沒做。</div>
+      <div class="wm">ECO×STRAT ｜ 趨勢 02</div>
+    </div>
+  </section>
+
+  <!-- 39 三理由 -->
+  <section class="slide" data-title="現在就開始的三個理由">
+    <div class="in">
+      <div class="tag">核心論點</div>
+      <h1>「省力」以外,現在就要開始的<span style="color:var(--teal)">三個理由</span></h1>
+      <div class="grid g3">
+        <div class="card"><div class="num">理由一</div><h3>資料有複利</h3><p>今天整理的產品資料、客人原話、成效數字,會在未來每個新工具重複發揮。但它不回頭補算——晚一年就少一年累積。</p></div>
+        <div class="card"><div class="num">理由二</div><h3>「被看見」規則在換</h3><p>AI 只推薦它看得見的店。看不見不是排名落後,是不存在。這是客人習慣在變,不會等你。</p></div>
+        <div class="card"><div class="num">理由三</div><h3>差距會拉開</h3><p>AI 靠實際用出手感,買不到、外包不了。會用的老闆三年後差距不是 10%,是好幾倍。</p></div>
+      </div>
+      <div class="callout gold">最好的開始時間是三年前,其次是<strong>今天下班後</strong>。在地生意在 AI 搜尋裡反而更有優勢——競爭者本來就少。</div>
+      <div class="wm">ECO×STRAT ｜ 為什麼是現在</div>
+    </div>
+  </section>
+
+  <!-- 40 兩面觀 -->
+  <section class="slide" data-title="不用追最新把基本做完">
+    <div class="in">
+      <div class="tag red">但也要冷靜</div>
+      <h1>不用追最新,要把<span style="color:var(--teal)">基本做完</span></h1>
+      <div class="vs">
+        <div class="side red"><h3>市場現況（冷水）</h3><ul><li>Gartner:40%+ AI 代理專案 2027 前被取消（成本失控、價值講不清）</li><li>號稱做 AI 代理數千家,真做到只一小部分</li><li>McKinsey:88% 已用 AI,只 23% 真規模化</li></ul></div>
+        <div class="side green"><h3>對小店（好消息）</h3><ul><li>現在進場一點都不晚,連大企業都在摸索</li><li>不用追最新模型,紅利在「把基本功做完」</li><li>小店決策快、包袱小,今天下班就能開始</li></ul></div>
+      </div>
+      <div class="callout">該急的是「<strong>開始累積</strong>」,不該急的是「買最新工具」。避開那 40% 的失敗模式:沒想清楚要解決什麼,就先買工具。</div>
+      <div class="wm">來源:Gartner 2025-06 ｜ McKinsey State of AI 2025-11</div>
+    </div>
+  </section>
+
+  <!-- 41 三年後 -->
+  <section class="slide" data-title="三年後的小店">
+    <div class="in">
+      <div class="tag">願景</div>
+      <h1>三年後,一家做對事情的小店<span style="color:var(--teal)">長什麼樣</span></h1>
+      <div class="grid g2">
+        <div class="card sm"><ul><li><b>東西都在一個地方</b>:新員工看資料就上手,換工具直接搬</li><li><b>新品上市＝半小時</b>:AI 出官網文案、貼文、腳本、老客訊息,你只挑和改</li><li><b>八成問題不用親自回</b>:AI 先答,你只處理兩成真正需判斷的</li></ul></div>
+        <div class="card sm hl"><ul><li><b>每月一份自動報告</b>:客人從哪來、哪個產品在成長,看數字決定</li><li><b>最重要:你的時間回來了</b>——回到做產品、見客人、想方向</li></ul></div>
+      </div>
+      <div class="callout gold">AI 不會讓你變成科技公司。它會讓你<strong>變回一個能專心把生意做好的老闆</strong>。</div>
+      <div class="wm">ECO×STRAT ｜ 三年後的樣子</div>
+    </div>
+  </section>
+
+  <!-- 42 divider 05 -->
+  <section class="slide divider" data-title="第五段 · 成效追蹤">
+    <div class="in">
+      <div class="unit-no">05</div>
+      <div class="eyebrow">MEASUREMENT</div>
+      <h1>行銷與成效追蹤<br>怎麼知道有沒有效</h1>
+      <p class="lead">這段最短,但決定前面四段有沒有價值。不會看成效,就只能憑感覺——錢會花在錯的地方。</p>
+      <div class="mins">約 7 分鐘</div>
+      <div class="wm">ECO×STRAT ｜ 從數位化到 AI 行銷</div>
+    </div>
+  </section>
+
+  <!-- 43 互動 最後一題 -->
+  <section class="slide" data-title="最後一題">
+    <div class="in">
+      <div class="tag green">互動 · 最後一段開場</div>
+      <h1>最後一題,也是<span style="color:var(--teal)">最重要的一題</span></h1>
+      <div class="bigslogan" style="font-size:38px;">「你講得出上個月有幾個新客人、<br>他們<span class="hl">從哪裡來</span>的,請舉手。」</div>
+      <div class="callout">這正是小微企業行銷最大的<strong>隱形成本</strong>——不是花錯錢,是不知道錢花對沒有,只能一直用感覺重來。接下來 7 分鐘,就是要讓你三個月後能舉起這隻手。</div>
+      <div class="wm">ECO×STRAT ｜ 互動</div>
+    </div>
+  </section>
+
+  <!-- 44 四漏斗 -->
+  <section class="slide" data-title="別看讚數看四個數字">
+    <div class="in">
+      <div class="tag">觀念校正</div>
+      <h1>別再看讚數,看這<span style="color:var(--teal)">四個數字</span></h1>
+      <table class="tbl sm">
+        <tr><th style="width:14%">層級</th><th style="width:32%">要看的數字</th><th>數字不好代表什麼</th></tr>
+        <tr><td><b>① 曝光</b></td><td>觸及人數/瀏覽次數</td><td>沒人刷到——內容形式或發布時間要換</td></tr>
+        <tr><td><b>② 互動</b></td><td>停留、儲存、分享（不是讚）</td><td>看到沒興趣——說的話沒打到痛點</td></tr>
+        <tr><td><b>③ 行動</b></td><td>點連結、加 LINE、打電話</td><td>有興趣不敢下一步——信任或資訊不足</td></tr>
+        <tr><td><b>④ 成交</b></td><td>訂單數、客單價、回購率</td><td>問了不買——價格、產品或轉單有問題</td></tr>
+      </table>
+      <div class="callout sm">從下往上看:成交少先看行動,沒行動先看互動。<strong>大部分人卡在第 ③ 層</strong>——有人看沒人動,通常是官網和 LINE 沒做好,不是貼文不好。</div>
+      <div class="wm">ECO×STRAT ｜ 成效四層漏斗</div>
+    </div>
+  </section>
+
+  <!-- 45 追蹤三件套 -->
+  <section class="slide" data-title="免費追蹤三件套">
+    <div class="in">
+      <div class="tag">實作</div>
+      <h1>免費的<span style="color:var(--teal)">追蹤三件套</span>,今天就能裝</h1>
+      <p class="lead">不用買任何工具。這也是所有 AI 分析的前提:沒有數據,AI 分析不出東西。</p>
+      <div class="grid g3">
+        <div class="card sm"><div class="num">01</div><h3>Google Analytics 4</h3><p>裝在官網上,免費。看多少人來、從哪來、看哪頁、停多久。越早裝越好,不補算過去。</p></div>
+        <div class="card sm"><div class="num">02</div><h3>商家＋社群洞察</h3><p>現成的不用裝。多少人搜到你、按導航、打電話;哪則貼文被儲存最多。</p></div>
+        <div class="card sm"><div class="num">03</div><h3>UTM 追蹤網址</h3><p>最被低估的一招。同一連結加標記,就知道客人從哪來。搜「Campaign URL Builder」。</p></div>
+      </div>
+      <div class="callout gold">一個月後你能講出:「上月 42 個新客,18 個從 Google 地圖、15 個從 IG、9 個朋友介紹;IG 客單價最高。」——預算就不會亂花。</div>
+      <div class="wm">ECO×STRAT ｜ 追蹤三件套</div>
+    </div>
+  </section>
+
+  <!-- 46 90天 -->
+  <section class="slide" data-title="30-60-90天行動">
+    <div class="in">
+      <div class="tag">行動計畫</div>
+      <h1>你的 <span style="color:var(--teal)">30 · 60 · 90 天</span></h1>
+      <div class="flow">
+        <div class="fstep"><div class="n">30</div><h4>打地基</h4><p>把「找得到、說得清」做完。驗收:能講出上月幾個新客、從哪來</p></div>
+        <div class="fstep"><div class="n">60</div><h4>練產出</h4><p>讓 AI 開始幫你做事。驗收:一週產出多一倍,時間沒變多</p></div>
+        <div class="fstep gold"><div class="n">90</div><h4>看數據調方向</h4><p>從「有做」到「做對」。驗收:說得出哪類內容最有效、為什麼</p></div>
+      </div>
+      <div class="callout">不要回去就開十個帳號、訂五個工具——那是最常見的失敗方式。<strong>一次一步,每步都能單獨看到成果。</strong>90 天後再談進階應用、系統串接、廣告投放。</div>
+      <div class="wm">ECO×STRAT ｜ 90 天行動表</div>
+    </div>
+  </section>
+
+  <!-- 47 六件事 -->
+  <section class="slide" data-title="只能記住六件事">
+    <div class="in">
+      <div class="tag gold">總結</div>
+      <h1>如果今天只能記住<span style="color:var(--gold)">六件事</span></h1>
+      <div class="grid g2">
+        <div class="card sm navy"><ul><li><b>01</b> AI 只能放大已存在的東西——先有料,再有 AI</li><li><b>02</b> 三通道分工:社群被看到、官網被相信、LINE 被記住</li><li><b>03</b> 下指令＝交辦工作:設定、給參考、三輪迭代、存起來</li></ul></div>
+        <div class="card sm navy"><ul><li><b>04</b> 短影音拍得起了,能測 20 支再押注;真實感 AI 生不出</li><li><b>05</b> 被 AI 找到取代被搜尋到;沒被引用不是落後,是消失</li><li><b>06</b> 金額、承諾、宣稱永遠留人覆核:AI 起稿,人定稿</li></ul></div>
+      </div>
+      <div class="callout gold" style="text-align:center;font-size:22px;"><strong>先把地基打好,AI 才有東西可以幫你。</strong></div>
+      <div class="wm">ECO×STRAT ｜ 五件事</div>
+    </div>
+  </section>
+
+  <!-- 48 Q&A -->
+  <section class="slide" data-title="Q&A">
+    <div class="in">
+      <div class="tag">Q&A · 15 分鐘</div>
+      <h1>換你們說</h1>
+      <p class="lead">報名時的問題我都看過了,沒展開的現在補;也歡迎直接講你的產業、你卡在哪一步,我們現場拆。</p>
+      <div class="grid g4">
+        <div class="card sm"><p>「我完全沒基礎,該從哪一步開始?」</p></div>
+        <div class="card sm"><p>「我這個產業適合用 AI 嗎?」</p></div>
+        <div class="card sm"><p>「一個月要花多少錢才做得起來?」</p></div>
+        <div class="card sm"><p>「我試過了,但寫出來的東西很爛」</p></div>
+      </div>
+      <div class="wm">ECO×STRAT ｜ Q&A</div>
+    </div>
+  </section>
+
+  <!-- 49 謝謝 -->
+  <section class="slide cover" data-title="謝謝">
+    <div class="in">
+      <div class="eyebrow">謝謝各位</div>
+      <h1>數位化不是為了跟上 AI<br>是為了讓你的<span class="gold">經驗留得下來</span></h1>
+      <div class="sub">你們手上都有別人沒有的東西——做了二十年的手感、認識十年的老客人、只有你知道的訣竅。數位化和 AI 要做的,是讓這些不再只存在你一個人的腦袋裡。</div>
+      <div class="meta"><div><span>講者</span>古傑仁 Jay Ku</div><div><span>單位</span>ECO×STRAT 全感生態策略</div><div><span>主辦</span>中衛發展中心</div><div><span>日期</span>2026.08.15</div></div>
+      <div class="wm">ECO×STRAT 全感生態策略</div>
+    </div>
+  </section>
+
+</div>
+
+<div class="slide-nav" aria-label="簡報導覽">
+  <button class="nav-btn nav-prev" type="button" aria-label="上一頁" data-slide-prev>&#8592;</button>
+  <button class="nav-btn nav-next" type="button" aria-label="下一頁" data-slide-next>&#8594;</button>
+  <div class="slide-status" data-slide-status>01 / 49</div>
+</div>
+<button class="menu-btn" type="button" data-outline-toggle>☰ 目錄</button>
+<div class="dots" data-dots></div>
+<div class="outline" data-outline>
+  <div class="outline-panel">
+    <button class="outline-close" type="button" data-outline-toggle aria-label="關閉目錄">&times;</button>
+    <h2>從數位化到 AI 行銷 · 大綱</h2>
+    <div class="osub">點任一頁即可跳轉　·　快捷鍵 O 開關目錄　·　Esc 關閉</div>
+    <div data-outline-list></div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const prevBtn = document.querySelector('[data-slide-prev]');
+  const nextBtn = document.querySelector('[data-slide-next]');
+  const status = document.querySelector('[data-slide-status]');
+  const dotsWrap = document.querySelector('[data-dots]');
+  const outline = document.querySelector('[data-outline]');
+  const outlineList = document.querySelector('[data-outline-list]');
+  const pad = v => String(v).padStart(2, '0');
+  const clamp = v => Math.max(0, Math.min(slides.length - 1, v));
+  let current = 0, pointerStart = null;
+  function titleOf(s, i){
+    const dt = s.getAttribute('data-title'); if (dt) return dt;
+    const h = s.querySelector('h1'); if (h && h.textContent.trim()) return h.textContent.trim().replace(/\s+/g,' ');
+    return '第 ' + (i + 1) + ' 頁';
+  }
+  const titles = slides.map(titleOf);
+  slides.forEach((s, i) => { let pg = s.querySelector('.pg'); if (!pg){ pg = document.createElement('div'); pg.className='pg'; s.querySelector('.in').appendChild(pg);} pg.textContent = pad(i + 1); });
+  const dotBtns = slides.map((s, i) => {
+    const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', titles[i]);
+    b.addEventListener('click', () => showSlide(i)); dotsWrap.appendChild(b); return b;
+  });
+  const outItems = slides.map((s, i) => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'outline-item';
+    b.innerHTML = '<span class="oi-n">' + pad(i + 1) + '</span><span class="oi-t"></span>';
+    b.querySelector('.oi-t').textContent = titles[i];
+    b.addEventListener('click', () => { showSlide(i); closeOutline(); }); outlineList.appendChild(b); return b;
+  });
+  function fitSlide(){ const scale = Math.max(0.2, Math.min(window.innerWidth/1280, window.innerHeight/720)*0.98); document.documentElement.style.setProperty('--slide-scale', scale.toFixed(4)); }
+  function showSlide(index, updateHash = true){
+    current = clamp(index);
+    slides.forEach((s, i) => { s.classList.toggle('is-active', i === current); });
+    prevBtn.disabled = current === 0; nextBtn.disabled = current === slides.length - 1;
+    status.textContent = pad(current + 1) + ' / ' + pad(slides.length);
+    dotBtns.forEach((b, i) => b.classList.toggle('on', i === current));
+    outItems.forEach((b, i) => b.classList.toggle('on', i === current));
+    if (updateHash) history.replaceState(null, '', '#slide-' + pad(current + 1));
+  }
+  function indexFromHash(){ const m = window.location.hash.match(/slide-(\d+)/); if (!m) return 0; const i = parseInt(m[1],10)-1; return Number.isFinite(i) ? clamp(i) : 0; }
+  function toggleOutline(){ outline.classList.toggle('open'); }
+  function closeOutline(){ outline.classList.remove('open'); }
+  document.querySelectorAll('[data-outline-toggle]').forEach(b => b.addEventListener('click', toggleOutline));
+  outline.addEventListener('click', e => { if (e.target === outline) closeOutline(); });
+  prevBtn.addEventListener('click', () => showSlide(current - 1));
+  nextBtn.addEventListener('click', () => showSlide(current + 1));
+  window.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeOutline(); return; }
+    if (e.key === 'o' || e.key === 'O') { e.preventDefault(); toggleOutline(); return; }
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); showSlide(current + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); showSlide(current - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); showSlide(0); }
+    else if (e.key === 'End') { e.preventDefault(); showSlide(slides.length - 1); }
+  });
+  window.addEventListener('pointerdown', e => { pointerStart = { x: e.clientX, y: e.clientY }; });
+  window.addEventListener('pointerup', e => {
+    if (!pointerStart) return; const dx = e.clientX-pointerStart.x, dy = e.clientY-pointerStart.y;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) { showSlide(current + (dx < 0 ? 1 : -1)); } pointerStart = null;
+  });
+  window.addEventListener('resize', fitSlide);
+  window.addEventListener('hashchange', () => showSlide(indexFromHash()));
+  fitSlide(); showSlide(indexFromHash(), false);
+})();
+</script>
+</body>
+</html>

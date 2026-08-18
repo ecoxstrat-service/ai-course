@@ -22,6 +22,8 @@
   a.card{display:block;background:#fff;border-radius:12px;padding:22px 22px;text-decoration:none;box-shadow:0 8px 26px rgba(0,0,0,.18);border-top:5px solid var(--teal);transition:transform .15s,box-shadow .15s;}
   a.card:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(0,0,0,.28);}
   a.card.gold{border-top-color:var(--gold);} a.card.navy{border-top-color:var(--navy);}
+  .card.off{display:block;background:#eef1f6;border-radius:12px;padding:22px 22px;border-top:5px solid #c3cddb;box-shadow:0 4px 14px rgba(0,0,0,.08);opacity:.75;cursor:not-allowed;}
+  .card.off .u{color:#8894a3;} .card.off h3{color:#66727c;} .card.off p{color:#8894a3;}
   .card .u{font-size:13px;font-weight:700;letter-spacing:1.5px;color:var(--teal);}
   .card.gold .u{color:var(--gold);} .card.navy .u{color:var(--navy);}
   .card h3{color:var(--navy);font-size:20px;font-weight:700;margin:7px 0 6px;}
@@ -41,7 +43,7 @@
     <h2>課前前測 · 課後後測（給學員）</h2>
     <div class="grid">
       <a class="card gold" href="ECOxSTRAT_前測_學員入口_20260706_V1.0.html" target="_blank" rel="noopener"><div class="u">學員 · QR＋連結</div><h3>🎯 課前前測</h3><p>掃 QR 或點連結填寫；知識題自動計分（免登入）</p></a>
-      <a class="card gold" href="ECOxSTRAT_後測_學員入口_20260714_V1.0.html" target="_blank" rel="noopener"><div class="u">學員 · QR＋連結</div><h3>🏁 課後後測</h3><p>掃 QR 或點連結填寫；20 題自動計分（免登入）</p></a>
+      <div class="card off" aria-disabled="true" title="後測將於課程結束前開放"><div class="u">🔒 課後開放</div><h3>🏁 課後後測</h3><p>後測將於課程結束前開放，敬請稍候</p></div>
     </div>
 
     <h2>課程簡報</h2>

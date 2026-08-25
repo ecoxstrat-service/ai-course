@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Claude Skills 初心者指南</title>
+<style>
+  :root{
+    --navy:#10243E; --teal:#00A6A6; --teal-light:#2FC5BB; --green-ops:#2F7D68;
+    --gold:#D2A84A; --gold-hi:#FFE08A; --red:#C0492F;
+    --cream:#F7F8FA; --cream-deep:#E9EEF3; --paper:#FFFFFF; --soft:#F1F4F7;
+    --ink:#172033; --ink-soft:#415066; --ink-faint:#7B8796; --line:#DDE4EC;
+    --teal-bg:#E5F7F6; --gold-bg:#FFF3D1; --green-bg:#E7F2EE; --red-bg:#FBEAE5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{width:100%;height:100%;overflow:hidden;}
+  body{font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif;background:#111827;color:var(--ink);}
+  .deck{width:100vw;height:100vh;display:grid;place-items:center;overflow:hidden;}
+  .slide{width:1280px;height:720px;position:relative;overflow:hidden;background:var(--cream);
+    border-radius:6px;box-shadow:0 10px 40px rgba(16,36,62,.22);display:none;
+    transform:scale(var(--slide-scale,1));transform-origin:center center;}
+  .slide.is-active{display:block;}
+  .slide::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(90deg,rgba(16,36,62,.045) 1px,transparent 1px),
+               linear-gradient(0deg,rgba(16,36,62,.035) 1px,transparent 1px);
+    background-size:48px 48px;opacity:.45;}
+  .in{position:absolute;inset:0;padding:40px 66px 62px;display:flex;flex-direction:column;}
+  .wm{position:absolute;left:68px;bottom:22px;font-size:13.5px;color:var(--ink-faint);letter-spacing:.04em;max-width:920px;}
+  .pg{position:absolute;right:68px;bottom:22px;font-size:13.5px;color:var(--ink-faint);}
+  .tag{display:inline-block;background:var(--teal);color:#fff;font-size:16px;font-weight:600;letter-spacing:1.5px;padding:7px 16px;border-radius:5px;margin-bottom:14px;align-self:flex-start;}
+  .tag.gold{background:var(--gold);} .tag.green{background:var(--green-ops);} .tag.navy{background:var(--navy);} .tag.red{background:var(--red);}
+  h1{color:var(--navy);font-size:40px;font-weight:700;letter-spacing:-.4px;line-height:1.18;margin-bottom:8px;}
+  h1,.lead,.card p,.card li,.callout{text-wrap:pretty;}
+  .lead{color:var(--ink-soft);font-size:22px;line-height:1.55;max-width:1150px;margin-top:8px;} .lead strong{color:var(--navy);}
+  .eyebrow{font-size:16px;letter-spacing:.22em;color:var(--teal);font-weight:600;text-transform:uppercase;margin-bottom:16px;}
+  .cover{background:linear-gradient(135deg,var(--navy) 0%,#14385B 52%,var(--teal) 100%);}
+  .cover::before{background:linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px),linear-gradient(0deg,rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(135deg,transparent 0 64%,rgba(255,224,138,.18) 64% 72%,transparent 72%);background-size:54px 54px,54px 54px,100% 100%;opacity:1;}
+  .cover .in{justify-content:center;color:#fff;}
+  .cover .eyebrow{color:rgba(255,255,255,.82);}
+  .cover .unit-no{font-size:23px;font-weight:700;letter-spacing:.3em;color:var(--gold-hi);margin-bottom:14px;}
+  .cover h1{color:#fff;font-size:60px;line-height:1.14;letter-spacing:-.5px;}
+  .cover .gold{color:var(--gold-hi);}
+  .cover .sub{font-size:23px;color:rgba(255,255,255,.94);font-weight:300;margin-top:20px;max-width:1010px;line-height:1.6;}
+  .cover .meta{margin-top:34px;display:flex;gap:36px;font-size:16.5px;color:rgba(255,255,255,.9);flex-wrap:wrap;}
+  .cover .meta span{opacity:.6;margin-right:6px;}
+  .cover .wm,.cover .pg{color:rgba(255,255,255,.6);}
+  .divider{background:linear-gradient(135deg,#14385B,var(--navy));}
+  .divider .in{justify-content:center;color:#fff;}
+  .divider h1{color:#fff;font-size:46px;}
+  .divider .lead{color:rgba(255,255,255,.9);max-width:960px;}
+  .divider .eyebrow{color:var(--gold-hi);}
+  .divider .unit-no{font-size:120px;font-weight:800;color:rgba(255,255,255,.14);line-height:1;letter-spacing:.08em;}
+  .divider .wm,.divider .pg{color:rgba(255,255,255,.55);}
+  .grid{display:grid;gap:16px;margin-top:auto;margin-bottom:auto;}
+  .g2{grid-template-columns:1fr 1fr;} .g3{grid-template-columns:repeat(3,1fr);} .g4{grid-template-columns:repeat(4,1fr);} .g5{grid-template-columns:repeat(5,1fr);gap:12px;}
+  .card{background:var(--paper);border-radius:10px;padding:22px 24px;box-shadow:0 6px 20px rgba(16,36,62,.07);border:1px solid var(--line);}
+  .card h3{color:var(--navy);font-size:22px;font-weight:700;margin-bottom:7px;line-height:1.3;}
+  .card p{color:var(--ink-soft);font-size:18px;line-height:1.5;}
+  .card .num{font-size:15px;font-weight:700;color:var(--teal);letter-spacing:1px;margin-bottom:6px;}
+  .card ul{margin:8px 0 0 2px;list-style:none;} .card li{color:var(--ink-soft);font-size:17px;line-height:1.5;margin-bottom:6px;padding-left:20px;position:relative;}
+  .card li::before{content:"›";position:absolute;left:3px;color:var(--teal);font-weight:700;}
+  .card.hl{border:2px solid var(--teal);background:#fbfdfd;}
+  .card.gold li::before{color:var(--gold);} .card.green li::before{color:var(--green-ops);} .card.navy li::before{color:var(--navy);}
+  .card.sm{padding:16px 18px;} .card.sm h3{font-size:20px;} .card.sm p{font-size:16px;} .card.sm li{font-size:15.5px;margin-bottom:4px;}
+  .card .big{font-size:36px;font-weight:800;color:var(--teal);line-height:1;margin-bottom:5px;} .card.gold .big{color:var(--gold);} .card.navy .big{color:var(--navy);}
+  .vs{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:auto 0;position:relative;}
+  .vs .side{border-radius:12px;padding:24px 28px;}
+  .vs .side.a{background:var(--cream-deep);border:1px solid var(--line);} .vs .side.b{background:var(--navy);color:#fff;}
+  .vs .side.red{background:var(--red-bg);border:1px solid #eecdc5;} .vs .side.green{background:var(--green-bg);border:1px solid #cfe6dc;}
+  .vs .side h3{font-size:24px;font-weight:700;margin-bottom:11px;}
+  .vs .side.a h3{color:var(--ink-soft);} .vs .side.b h3{color:var(--gold-hi);} .vs .side.red h3{color:var(--red);} .vs .side.green h3{color:var(--green-ops);}
+  .vs .side p{font-size:18px;line-height:1.55;} .vs .side.a p,.vs .side.red p,.vs .side.green p{color:var(--ink-soft);} .vs .side.b p{color:rgba(255,255,255,.92);}
+  .vs .side ul{list-style:none;margin-top:9px;} .vs .side li{font-size:17px;line-height:1.5;padding-left:22px;position:relative;margin-bottom:6px;}
+  .vs .side.a li::before,.vs .side.green li::before{content:"✓";position:absolute;left:2px;color:var(--green-ops);font-weight:700;}
+  .vs .side.red li::before{content:"✗";position:absolute;left:2px;color:var(--red);font-weight:700;}
+  .vs .side.b li{color:rgba(255,255,255,.92);} .vs .side.b li::before{content:"✓";position:absolute;left:2px;color:var(--teal-light);font-weight:700;}
+  .flow{display:flex;align-items:stretch;gap:12px;margin:auto 0;}
+  .fstep{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:20px 15px;text-align:center;box-shadow:0 6px 20px rgba(16,36,62,.06);}
+  .fstep .n{width:46px;height:46px;border-radius:50%;background:var(--teal);color:#fff;font-weight:700;font-size:19px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;}
+  .fstep.gold .n{background:var(--gold);} .fstep.navy .n{background:var(--navy);} .fstep.green .n{background:var(--green-ops);}
+  .fstep h4{color:var(--navy);font-size:19px;font-weight:700;margin-bottom:6px;} .fstep p{color:var(--ink-soft);font-size:15.5px;line-height:1.45;}
+  .tbl{width:100%;border-collapse:collapse;margin:auto 0;font-size:18px;}
+  .tbl th{background:var(--navy);color:#fff;font-weight:700;text-align:left;padding:11px 14px;font-size:16.5px;}
+  .tbl td{border:1px solid var(--line);background:#fff;color:var(--ink-soft);padding:11px 14px;line-height:1.45;vertical-align:top;}
+  .tbl tr:nth-child(even) td{background:#fbfcfe;} .tbl td b{color:var(--navy);}
+  .tbl.sm{font-size:16px;} .tbl.sm th{font-size:15px;padding:9px 12px;} .tbl.sm td{padding:9px 12px;}
+  .callout{background:var(--soft);border-left:6px solid var(--teal);border-radius:0 10px 10px 0;padding:16px 22px;margin-top:14px;font-size:19px;color:var(--ink-soft);line-height:1.5;} .callout strong{color:var(--navy);}
+  .callout.gold{border-left-color:var(--gold);background:#faf4e6;} .callout.gold strong{color:#8a6414;}
+  .callout.green{border-left-color:var(--green-ops);background:var(--green-bg);} .callout.green strong{color:var(--green-ops);}
+  .callout.red{border-left-color:var(--red);background:var(--red-bg);} .callout.red strong{color:var(--red);}
+  .callout.sm{font-size:17px;padding:13px 18px;}
+  .prompt{background:var(--navy);color:#e8eef5;border-radius:10px;padding:20px 26px;margin:auto 0;font-size:17px;line-height:1.55;white-space:pre-wrap;box-shadow:0 8px 24px rgba(16,36,62,.18);} .prompt.sm{font-size:15px;line-height:1.5;padding:18px 22px;} .prompt .t{color:var(--gold-hi);font-weight:700;}
+  .bignum{display:flex;gap:14px;align-items:stretch;margin:auto 0;}
+  .lvl{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px 12px;text-align:center;box-shadow:0 5px 16px rgba(16,36,62,.06);border-top:5px solid var(--teal);}
+  .lvl:nth-child(1){border-top-color:#c3cddb;} .lvl:nth-child(2){border-top-color:var(--teal-light);} .lvl:nth-child(3){border-top-color:var(--teal);} .lvl:nth-child(4){border-top-color:var(--gold);} .lvl:nth-child(5){border-top-color:var(--navy);}
+  .lvl .lv{font-size:16px;font-weight:800;color:var(--teal);} .lvl:nth-child(3) .lv{color:var(--teal);} .lvl:nth-child(4) .lv{color:var(--gold);} .lvl:nth-child(5) .lv{color:var(--navy);}
+  .lvl h4{color:var(--navy);font-size:18px;font-weight:800;margin:5px 0;} .lvl p{color:var(--ink-soft);font-size:14.5px;line-height:1.35;}
+  .lvl.here{border:2px solid var(--gold);background:#fffdf5;}
+  .nav-btn{position:fixed;top:50%;width:48px;height:64px;border:0;border-radius:999px;transform:translateY(-50%);display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.92);color:var(--navy);font-size:34px;line-height:1;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.22);transition:background .18s;}
+  .nav-btn:hover{background:#fff;} .nav-btn:disabled{opacity:.32;cursor:default;}
+  .nav-prev{left:18px;} .nav-next{right:18px;}
+  .slide-status{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);min-width:82px;padding:7px 13px;border-radius:999px;text-align:center;background:rgba(255,255,255,.9);color:var(--navy);font-size:13px;font-weight:700;letter-spacing:.08em;box-shadow:0 8px 24px rgba(0,0,0,.18);}
+  .dots{position:fixed;right:14px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:7px;z-index:25;max-height:90vh;flex-wrap:wrap;}
+  .dots button{width:10px;height:10px;border-radius:50%;border:0;padding:0;cursor:pointer;background:rgba(255,255,255,.5);box-shadow:0 1px 4px rgba(0,0,0,.28);transition:.18s;}
+  .dots button:hover{background:var(--teal-light);transform:scale(1.25);} .dots button.on{background:var(--gold);transform:scale(1.4);}
+  .menu-btn{position:fixed;top:16px;right:16px;z-index:28;border:0;cursor:pointer;letter-spacing:.06em;background:rgba(255,255,255,.92);color:var(--navy);font-size:14px;font-weight:700;padding:9px 15px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.2);}
+  .menu-btn:hover{background:#fff;}
+  .outline{position:fixed;inset:0;z-index:30;background:rgba(16,36,62,.55);backdrop-filter:blur(3px);display:none;} .outline.open{display:block;}
+  .outline-panel{position:absolute;right:0;top:0;height:100%;width:430px;max-width:88vw;background:#fff;box-shadow:-12px 0 40px rgba(0,0,0,.3);overflow-y:auto;padding:26px 24px 44px;}
+  .outline-panel h2{color:var(--navy);font-size:20px;font-weight:700;margin-bottom:4px;} .outline-panel .osub{color:var(--ink-faint);font-size:12.5px;margin-bottom:18px;line-height:1.6;}
+  .outline-item{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;border:0;background:transparent;cursor:pointer;padding:9px 12px;border-radius:8px;} .outline-item:hover{background:var(--soft);} .outline-item.on{background:var(--teal-bg);}
+  .outline-item .oi-n{flex:none;width:26px;height:26px;border-radius:6px;background:var(--cream-deep);color:var(--ink-soft);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px;} .outline-item.on .oi-n{background:var(--teal);color:#fff;}
+  .outline-item .oi-t{color:var(--ink);font-size:14.5px;line-height:1.4;font-weight:500;}
+  .outline-close{position:absolute;top:14px;right:16px;border:0;background:transparent;font-size:26px;color:var(--ink-faint);cursor:pointer;line-height:1;}
+  @media print{@page{size:1280px 720px;margin:0;} .deck{display:flex;flex-direction:column;gap:0;padding:0;width:auto;height:auto;overflow:visible;} .slide{display:block!important;border-radius:0;box-shadow:none;break-after:page;page-break-after:always;margin:0;transform:none!important;} .slide-nav,.dots,.menu-btn,.outline{display:none!important;}}
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- 1 封面 -->
+  <section class="slide cover is-active" data-title="封面">
+    <div class="in">
+      <div class="eyebrow">AI 進階應用 · 初心者指南</div>
+      <div class="unit-no">CLAUDE SKILLS</div>
+      <h1>Claude Skills <span class="gold">初心者指南</span></h1>
+      <div class="sub">把重複的工作流程,包裝成「自動啟動的小工具」——讓 Claude 從每次都要重新認識你的聊天機器人,變成記得你是誰、知道怎麼做事的專屬工作夥伴。</div>
+      <div class="meta"><div><span>四單元</span>為什麼學 → 動手做 → 進階調校 → 何時用 Project/MCP</div></div>
+      <div class="wm">Claude Skills 初心者指南</div>
+    </div>
+  </section>
+
+  <!-- 2 引言 -->
+  <section class="slide" data-title="你卡在 prompt 工匠階段">
+    <div class="in">
+      <div class="tag red">你可能正卡在這裡</div>
+      <h1>每開一次新對話,就要<span style="color:var(--red)">重新解釋一次自己</span></h1>
+      <div class="lead">每次上傳的那份風格指南、每次貼上的那段背景說明、每次交代的「請不要用條列式」——全都要重複一次。這就是多數人卡住的地方。</div>
+      <div class="callout"><strong>你不是不會用 AI,而是還停留在「prompt 工匠」階段</strong>:跟 AI 的對話落落長,卻脫離不了重複勞動。本期就是要帶你跨過這個檻。</div>
+      <div class="callout gold"><strong>方法:</strong>用 <strong>Skills</strong> 把重複流程變成可自動啟動的小工具,再用 <strong>profile instructions</strong> 把「我是誰」寫清楚——工作流的記憶,從你身上轉到 Claude 身上。</div>
+      <div class="wm">Claude Skills 初心者指南 · 引言</div>
+    </div>
+  </section>
+
+  <!-- 3 目錄 -->
+  <section class="slide" data-title="本期四單元">
+    <div class="in">
+      <div class="tag">本期地圖</div>
+      <h1>四個單元,把你推進<span style="color:var(--teal)">工作流建構者</span></h1>
+      <div class="grid g4">
+        <div class="card"><div class="num">單元一</div><h3>為什麼學 Skills</h3><p>五個使用者等級、Skill 與 prompt 的差別。</p></div>
+        <div class="card"><div class="num">單元二</div><h3>動手做第一個</h3><p>skill-creator 訪談、上傳、profile instructions。</p></div>
+        <div class="card"><div class="num">單元三</div><h3>進階:能用到好用</h3><p>四區塊結構、觸發機率、negative trigger。</p></div>
+        <div class="card"><div class="num">單元四</div><h3>Skills 不是萬能</h3><p>什麼時候該用 Project / MCP。</p></div>
+      </div>
+      <div class="callout green"><strong>讀完你會完成三件事:</strong>做出第一個工作流 Skill、設定 profile instructions 讓 Claude 認識你、學會判斷任務該用 Skill / Project / MCP。</div>
+      <div class="wm">Claude Skills 初心者指南 · 目錄</div>
+    </div>
+  </section>
+
+  <!-- 4 divider 單元一 -->
+  <section class="slide divider" data-title="單元一 · 為什麼學 Skills">
+    <div class="in"><div class="unit-no">01</div><div class="eyebrow">WHY SKILLS</div><h1>單元一｜為什麼現在要學 Skills</h1><p class="lead">先搞懂你站在哪個等級、Skill 到底是什麼、跟 prompt 差在哪。</p><div class="wm">Claude Skills 初心者指南</div></div>
+  </section>
+
+  <!-- 5 五等級 -->
+  <section class="slide" data-title="AI 使用者五個等級">
+    <div class="in">
+      <div class="tag">AI 使用者五個等級</div>
+      <h1>你現在站在<span style="color:var(--teal)">哪一級</span>?下一步往哪去?</h1>
+      <div class="bignum">
+        <div class="lvl"><div class="lv">Level 1</div><h4>對話使用者</h4><p>打開免費 AI,問什麼答什麼</p></div>
+        <div class="lvl"><div class="lv">Level 2</div><h4>進階對話</h4><p>用付費模型+深度思考、下長 prompt</p></div>
+        <div class="lvl here"><div class="lv">Level 3</div><h4>Workflow 建構者</h4><p>用 Skills/Projects 把重複工作自動化</p></div>
+        <div class="lvl"><div class="lv">Level 4</div><h4>檔案協作者</h4><p>讓 AI 讀電腦裡的檔案(Cowork)</p></div>
+        <div class="lvl"><div class="lv">Level 5</div><h4>自主 Agent</h4><p>用 Claude Code 讓 AI 自己執行整個任務</p></div>
+      </div>
+      <div class="callout gold"><strong>本期目標:把你從 Level 1／2 推進到 Level 3。</strong>五個等級是能力光譜,不是必經路徑——Skills 在網頁版/Chat 模式就能直接設定,不用裝 App。</div>
+      <div class="wm">Claude Skills 初心者指南 · 單元一</div>
+    </div>
+  </section>
+
+  <!-- 6 Level5 想像 -->
+  <section class="slide" data-title="Level 5 的畫面">
+    <div class="in">
+      <div class="tag navy">先看終點:Level 5 長什麼樣</div>
+      <h1>AI 正從「對話夥伴」變成「<span style="color:var(--teal)">自主執行者</span>」</h1>
+      <div class="lead">想像 Level 5 的畫面:你在 Claude Code 打一句「幫我把這個 bug 修掉並跑完測試」,AI 就自己讀程式碼、定位問題、改檔、跑測試、失敗再改一輪,最後把結果交給你。</div>
+      <div class="callout">這是目前 AI 操作能力的最高階段。對非工程師還有段距離,但趨勢明確。<strong>不用急著跳到 Level 5——先把 Level 3 的 Skills 打穩,複利最大。</strong></div>
+      <div class="wm">Claude Skills 初心者指南 · 單元一</div>
+    </div>
+  </section>
+
+  <!-- 7 Skill 是什麼 -->
+  <section class="slide" data-title="Skill 是什麼">
+    <div class="in">
+      <div class="tag">Skills 是什麼?</div>
+      <h1>一個資料夾,裝著<span style="color:var(--teal)">指令、範本、必要時一段小程式</span></h1>
+      <div class="lead">Claude 會根據你交辦的任務,<strong>自動判斷要不要載入哪個 Skill</strong>,不用你每次提醒「請先讀那個檔案」,它就會自己啟動。</div>
+      <div class="grid g3">
+        <div class="card"><div class="num">內容</div><h3>指令</h3><p>這個工作怎麼一步步做。</p></div>
+        <div class="card"><div class="num">內容</div><h3>範本</h3><p>輸出要長成什麼格式。</p></div>
+        <div class="card"><div class="num">內容</div><h3>小程式(選配)</h3><p>需要時附一段可執行的程式。</p></div>
+      </div>
+      <div class="callout gold">Chat 模式下的 Skill 存放在 <strong>Claude 雲端</strong>(隨帳號存在),不是本機——你不必維護一份越長越亂的 prompt 清單。</div>
+      <div class="wm">Claude Skills 初心者指南 · 單元一</div>
+    </div>
+  </section>
+
+  <!-- 8 Skill vs prompt -->
+  <section class="slide" data-title="Skill vs prompt 三個差別">
+    <div class="in">
+      <div class="tag">Skill vs prompt</div>
+      <h1>跟「每次重貼 prompt」差在<span style="color:var(--teal)">三件事</span></h1>
+      <div class="grid g3">
+        <div class="card"><div class="num">差別一</div><h3>存在雲端</h3><p>指令存在 Claude 雲端,不用自己維護一份越長越亂的 prompt 清單。</p></div>
+        <div class="card"><div class="num">差別二</div><h3>自動觸發</h3><p>不必手動上傳,Claude 看你輸入的內容,自己判斷要載入哪個 Skill。</p></div>
+        <div class="card"><div class="num">差別三</div><h3>結構更有彈性</h3><p>可拆成「前置作業／執行步驟／輸出格式／自查清單」四段,變成可維護的工作流。</p></div>
+      </div>
+      <div class="callout"><strong>把同一件事做 10 次以上的人,Skill 比 prompt 划算。</strong>一次設定、之後自動生效——等於把工作流的記憶,從你身上轉到 Claude 身上。</div>
+      <div class="wm">Claude Skills 初心者指南 · 單元一</div>
+    </div>
+  </section>
+
+  <!-- 9 divider 單元二 -->
+  <section class="slide divider" data-title="單元二 · 動手做第一個 Skill">
+    <div class="in"><div class="unit-no">02</div><div class="eyebrow">BUILD YOUR FIRST SKILL</div><h1>單元二｜動手做第一個 Skill</h1><p class="lead">從最具體的開始:用 skill-creator 訪談你,自動產出一個馬上能用的 Skill。</p><div class="wm">Claude Skills 初心者指南</div></div>
+  </section>
+
+  <!-- 10 挑什麼當第一個 -->
+  <section class="slide" data-title="第一個 Skill 挑什麼">
+    <div class="in">
+      <div class="tag">第一個 Skill 挑什麼</div>
+      <h1>挑一件<span style="color:var(--teal)">重複性高、步驟固定、格式固定</span>的任務</h1>
+      <div class="lead">不要從複雜題目開始。每個人的清單不一樣:</div>
+      <div class="grid g3">
+        <div class="card"><div class="num">媒體工作者</div><ul><li>英文新聞翻成中文初稿</li><li>採訪逐字稿濃縮成社群貼文</li></ul></div>
+        <div class="card"><div class="num">一般上班族</div><ul><li>會議紀錄轉成 PPTX 大綱</li><li>資料表寫成週報摘要</li></ul></div>
+        <div class="card"><div class="num">行銷人員</div><ul><li>產品更新整理成 LinkedIn 貼文</li><li>活動成效寫成短報告</li></ul></div>
+      </div>
+      <div class="callout gold">判準:一件事你會<strong>做 10 次以上、有固定步驟、輸出有相對固定格式</strong>,它就是好的第一個 Skill。</div>
+      <div class="wm">Claude Skills 初心者指南 · 單元二</div>
+    </div>
+  </section>
+
+  <!-- 11 現成範例 -->
+  <section class="slide" data-title="任何人都能做的 Skill 範例">
+    <div class="in">
+      <div class="tag">想不出來?五個現成範例</div>
+      <h1>任何人都能立刻動手做的 <span style="color:var(--teal)">Skill 範例</span></h1>
+      <table class="tbl sm">
+        <tr><th style="width:26%">Skill</th><th>做什麼</th></tr>
+        <tr><td><b>Brand Voice</b></td><td>把品牌調性、慣用句、禁忌詞封裝成一份檔案,每次寫文案都套用</td></tr>
+        <tr><td><b>Document Summarizer</b></td><td>對任何文章/報告產出固定格式摘要(重點 / 引述 / 我的判斷)</td></tr>
+        <tr><td><b>ELI5</b></td><td>把複雜主題用大白話解釋給非專業讀者聽</td></tr>
+        <tr><td><b>Job Application</b></td><td>知道你的履歷與定位,每次生成貼合該職缺的求職信</td></tr>
+        <tr><td><b>Weekly Report</b></td><td>把一週工作紀錄整理成你慣用的週報格式</td></tr>
+      </table>
+      <div class="callout sm">本指南以泛用度高的 <strong>weekly-report(週報)</strong> 當示範,但同樣流程套到上面任何一種都通用。</div>
+      <div class="wm">Claude Skills 初心者指南 · 單元二</div>
+    </div>
+  </section>
+
+  <!-- 12 skill-creator 流程 -->
+  <section class="slide" data-title="用 skill-creator 跑訪談">
+    <div class="in">
+      <div class="tag green">用官方 skill-creator 產出 Skill</div>
+      <h1>讓 Claude <span style="color:var(--teal)">訪談你</span>,自動生出 Skill</h1>
+      <div class="flow">
+        <div class="fstep"><div class="n">1</div><h4>確認安裝</h4><p>Chat 模式、模型 Opus。Customize → Skills → ＋ → Browse Skills → Anthropic &amp; Partners,確認 skill-creator 已裝</p></div>
+        <div class="fstep"><div class="n">2</div><h4>啟動訪談</h4><p>輸入「利用 skill-creator 幫我打造一個 weekly-report skill」,進入訪談模式</p></div>
+        <div class="fstep gold"><div class="n">3</div><h4>一題一題答</h4><p>用 AskUserQuestion 跳選項,可選選項或選「Other」自己回答</p></div>
+        <div class="fstep navy"><div class="n">4</div><h4>產出 SKILL.md</h4><p>跑完一輪,自動產出符合規格的 SKILL.md</p></div>
+      </div>
+      <div class="callout"><strong>skill-creator 是 Anthropic 官方 Skill</strong>,任何人都能透過它創造自己的 Skill。訪談會問:週報給誰看?固定包含哪幾個區塊?什麼該被砍掉?哪種寫法你絕對不要?</div>
+      <div class="wm">Claude Skills 初心者指南 · 單元二</div>
+    </div>
+  </section>
+
+  <!-- 13 訪談要具體 -->
+  <section class="slide" data-title="訪談最容易踩的坑">
+    <div class="in">
+      <div class="tag red">最容易踩的坑</div>
+      <h1>給<span style="color:var(--red)">模糊答案</span>——Claude 不會通靈</h1>
+      <div class="vs">
+        <div class="side red"><h3>✗ 模糊,沒意義</h3><p style="font-size:22px;font-weight:700;color:var(--red)">「希望週報簡潔」</p><p>對 Claude 來說無法執行——它不知道你的「簡潔」長什麼樣。</p></div>
+        <div class="side green"><h3>✓ 具體,可檢查</h3><ul><li>每個段落最多 3 句話</li><li>結論放最前面</li><li>別用「值得注意的是」這類開場白</li></ul></div>
+      </div>
+      <div class="callout gold"><strong>把抽象標準拆成可檢查的條件。</strong>回答越具體,做出來的 Skill 越能用。</div>
+      <div class="wm">Claude Skills 初心者指南 · 單元二</div>
+    </div>
+  </section>
+
+  <!-- 14 上傳 Skill -->
+  <section class="slide" data-title="上傳 Skill">
+    <div class="in">
+      <div class="tag">上傳 Skill</div>
+      <h1>把 SKILL.md 上傳,之後<span style="color:var(--teal)">打關鍵詞就接手</span></h1>
+      <div class="flow">
+        <div class="fstep"><div class="n">1</div><h4>路徑</h4><p>主頁 Customize → Skills → ＋ → Upload a Skill</p></div>
+        <div class="fstep"><div class="n">2</div><h4>選檔上傳</h4><p>選剛剛下載的 SKILL.md 上傳</p></div>
+        <div class="fstep gold"><div class="n">3</div><h4>待命</h4><p>該 Skill 在你所有對話裡待命</p></div>
+        <div class="fstep navy"><div class="n">4</div><h4>觸發</h4><p>打一句「開始寫週報」,Skill 就接手</p></div>
+      </div>
+      <div class="callout gold">SKILL.md 檔最上方是 <strong>YAML frontmatter</strong>(name / description),下方是 Markdown 指令正文——把訪談整理出的規則寫進去。(下一單元細談)</div>
+      <div class="wm">Claude Skills 初心者指南 · 單元二</div>
+    </div>
+  </section>
+
+  <!-- 15 profile instructions -->
+  <section class="slide" data-title="Profile instructions:我是誰">
+    <div class="in">
+      <div class="tag navy">個人化偏好走另一條路</div>
+      <h1>Skill 是「我要做什麼」;<span style="color:var(--teal)">Profile instructions 是「我是誰」</span></h1>
+      <div class="vs">
+        <div class="side a"><h3>Skill</h3><p>處理「動作」——這件事怎麼做。自動觸發、可有多個。</p></div>
+        <div class="side b"><h3>Profile instructions</h3><p>處理「你是誰」——角色、語氣偏好、寫作禁忌。<strong style="color:#fff">自動套用到所有對話</strong>,不必每次提醒。</p></div>
+      </div>
+      <div class="callout"><strong>位置:</strong>左下角頭像 → Settings → General →「Instructions for Claude」文字方框。它和 Skill 各走各的,不會互相打架。</div>
+      <div class="callout gold"><strong>複利:</strong>下一期 Cowork/Code 時,同一份內容可直接搬成本機的 <strong>CLAUDE.md</strong>(AI 每次工作前必讀、跨 session 持久)——越早建立越省時。</div>
+      <div class="wm">Claude Skills 初心者指南 · 單元二</div>
+    </div>
+  </section>
+
+  <!-- 16 20題訪談 prompt(可照抄) -->
+  <section class="slide" data-title="20 題訪談提示詞(照抄)">
+    <div class="in">
+      <div class="tag gold">可照抄 · 讓 Claude 用 20 題訪談你</div>
+      <h1>一段 prompt,倒過來<span style="color:var(--teal)">建立你的 Profile</span></h1>
+      <div class="prompt sm">你的任務是替我建立一份 profile instructions 文字,會被貼到 Claude.ai 的 Settings → General → Instructions for Claude,自動載入到我所有 Chat 對話。
+你的工作分兩步:
+1. 用 AskUserQuestion 元件<span class="t">訪談我(共 20 題)</span>,一次只問一題
+2. 把答案整理成純 Markdown,<span class="t">總長度壓在 500 字以內</span>
+【訪談規則】我可選選項或選「Other」;回答太模糊要追問要具體例子;不要接受「我希望寫得清楚」這種抽象答案,要追問「清楚在你的工作裡長什麼樣子?」</div>
+      <div class="callout sm">第一次跑約 20–30 分鐘,但這份結構化內容價值很高——之後能直接變成 CLAUDE.md。下一頁看題綱。</div>
+      <div class="wm">Claude Skills 初心者指南 · 單元二</div>
+    </div>
+  </section>
+
+  <!-- 17 訪談題綱 -->
+  <section class="slide" data-title="20 題訪談題綱">
+    <div class="in">
+      <div class="tag">20 題訪談題綱(可依角色微調)</div>
+      <h1>六個面向,問出「<span style="color:var(--teal)">真正的你</span>」</h1>
+      <div class="grid g3">
+        <div class="card sm"><div class="num">我是誰(3)</div><ul><li>做什麼工作、角色、產業</li><li>為誰工作(客戶/團隊/讀者)</li><li>好的工作週長什麼樣</li></ul></div>
+        <div class="card sm"><div class="num">我怎麼工作(4)</div><ul><li>每天用哪些工具、怎麼用</li><li>典型任務的步驟</li><li>審稿/品管流程</li><li>「完成」的標準是什麼</li></ul></div>
+        <div class="card sm"><div class="num">什麼是好產出(4)</div><ul><li>最近做最好的一份、為什麼好</li><li>頂尖 vs 平庸差在哪</li><li>看到好作品你在反應什麼</li><li>要判斷你的作品該看什麼</li></ul></div>
+        <div class="card sm"><div class="num">我討厭什麼(4)</div><ul><li>一個爛作品、為什麼爛</li><li>看了皺眉的套路/捷徑</li><li>Claude 不對勁通常錯哪</li><li>絕不希望出現的寫法</li></ul></div>
+        <div class="card sm"><div class="num">我的規則(3)</div><ul><li>絕對不做的硬底線</li><li>每份產出 2–3 個不可妥協條件</li></ul></div>
+        <div class="card sm"><div class="num">我的觀點(2)</div><ul><li>多數同行會反對的信念</li><li>被過譽/被低估的工具方法</li></ul></div>
+      </div>
+      <div class="wm">Claude Skills 初心者指南 · 單元二</div>
+    </div>
+  </section>
+
+  <!-- 18 輸出格式 -->
+  <section class="slide" data-title="Profile 輸出格式">
+    <div class="in">
+      <div class="tag">訪談完的輸出格式</div>
+      <h1>整理成純 Markdown,<span style="color:var(--teal)">500 字以內</span></h1>
+      <div class="prompt sm"># ABOUT ME
+## 我是誰
+## 我怎麼工作
+## 什麼是好的產出
+## 我討厭什麼
+## 我的規則
+## 給 Claude 的指令(10 條編號規則)</div>
+      <div class="callout sm"><strong>不要</strong>保留原始問答逐字稿,要從答案中<strong>萃取模式</strong>;<strong>不需要</strong> YAML frontmatter(profile 是純文字方框,不是 Skill)。結構與標題請保留——未來原封不動搬進 Cowork/Claude Code 的 CLAUDE.md。</div>
+      <div class="wm">Claude Skills 初心者指南 · 單元二</div>
+    </div>
+  </section>
+
+  <!-- 19 為什麼500字 -->
+  <section class="slide" data-title="為什麼精簡到 500 字">
+    <div class="in">
+      <div class="tag red">為什麼要精簡</div>
+      <h1>控制在 <span style="color:var(--teal)">500 字以內、4–6 段</span></h1>
+      <div class="lead">Profile instructions 每次新對話 Claude 都會讀一次。太長有兩個副作用:</div>
+      <div class="grid g2">
+        <div class="card sm red"><h3>① 吃對話額度</h3><p>你打的字、Claude 回的字,加上這份檔案,三者共用同一個工作記憶空間——越長越吃資源。</p></div>
+        <div class="card sm red"><h3>② 規則自相矛盾</h3><p>規則一多就容易打架,同一份檔案兩條規則衝突,Claude 不知道該聽哪個。</p></div>
+      </div>
+      <div class="callout gold"><strong>刪減判準:</strong>「這句話 Claude 看了會改變行為嗎?」不會就刪。回頭砍掉抽象敘述,只留具體規則。</div>
+      <div class="wm">Claude Skills 初心者指南 · 單元二</div>
+    </div>
+  </section>
+
+  <!-- 20 divider 單元三 -->
+  <section class="slide divider" data-title="單元三 · 能用到好用">
+    <div class="in"><div class="unit-no">03</div><div class="eyebrow">FROM WORKS TO WORKS WELL</div><h1>單元三｜讓 Skill 從能用到好用</h1><p class="lead">frontmatter 兩欄、正文四區塊、觸發率的兩個關鍵。</p><div class="wm">Claude Skills 初心者指南</div></div>
+  </section>
+
+  <!-- 21 frontmatter -->
+  <section class="slide" data-title="frontmatter 最小結構">
+    <div class="in">
+      <div class="tag">官方最小結構</div>
+      <h1>兩欄 frontmatter,決定 Skill <span style="color:var(--teal)">好不好用</span></h1>
+      <div class="prompt">---
+name: [lowercase-identifier-with-hyphens]
+description: [what-the-skill-does-and-when-to-use-it]
+---</div>
+      <div class="grid g2">
+        <div class="card sm"><h3>name</h3><p>小寫字母 + 連字號。例:weekly-report。</p></div>
+        <div class="card sm hl"><h3>description(關鍵)</h3><p>兩件事合一:<b>這個 Skill 做什麼</b> + <b>什麼時候該用</b>。看似簡單,卻決定 Skill 會不會被正確觸發。</p></div>
+      </div>
+      <div class="callout sm">實際建立 Skill,還是建議透過 Claude(skill-creator)來做,不要自己硬寫。</div>
+      <div class="wm">Claude Skills 初心者指南 · 單元三</div>
+    </div>
+  </section>
+
+  <!-- 22 四區塊 -->
+  <section class="slide" data-title="成熟 Skill 的四區塊">
+    <div class="in">
+      <div class="tag">成熟 Skill 正文</div>
+      <h1>四區塊「<span style="color:var(--teal)">四件套</span>」,比只有指令穩定得多</h1>
+      <div class="grid g4">
+        <div class="card"><div class="num">1</div><h3>前置作業</h3><p>Skill 啟動時先做什麼:讀哪個檔、確認哪個條件。</p></div>
+        <div class="card"><div class="num">2</div><h3>執行步驟</h3><p>任務的標準動作,一步一步寫清楚。</p></div>
+        <div class="card"><div class="num">3</div><h3>輸出格式</h3><p>產出物長什麼樣:結構、長度、禁用詞。</p></div>
+        <div class="card"><div class="num">4</div><h3>自查清單</h3><p>產出後 Claude 要自己檢查哪些事。</p></div>
+      </div>
+      <div class="callout">四件套不是硬性規定,但實測下來,<strong>有這四段的 Skill 明顯比只有指令的穩定。</strong></div>
+      <div class="wm">Claude Skills 初心者指南 · 單元三</div>
+    </div>
+  </section>
+
+  <!-- 23 觸發率 關鍵一 -->
+  <section class="slide" data-title="觸發率關鍵一">
+    <div class="in">
+      <div class="tag red">Skill 不啟動?</div>
+      <h1>你的 Skill 好不好用,<span style="color:var(--teal)">description 佔 80%</span></h1>
+      <div class="lead">寫不好 Skill 就不會啟動,你以為它壞了,其實是 Claude 根本沒認出該用它。</div>
+      <div class="callout"><strong>關鍵一 · 直接問 Claude:</strong>「你什麼時候會用這個 Skill?」Claude 會告訴你它認定的觸發時機,你一看就知道哪裡定義不清。<strong>認出問題 → 跟 Claude 對話修改 → 重新上傳</strong>,就能解決大部分觸發問題。</div>
+      <div class="callout red sm"><strong>注意:</strong>不要自己打開 .md 檔手動改,請告訴 Claude 怎麼改。</div>
+      <div class="wm">Claude Skills 初心者指南 · 單元三</div>
+    </div>
+  </section>
+
+  <!-- 24 negative trigger -->
+  <section class="slide" data-title="觸發率關鍵二 · negative trigger">
+    <div class="in">
+      <div class="tag">觸發率關鍵二</div>
+      <h1>寫清楚「<span style="color:var(--red)">不要用在哪</span>」(negative trigger)</h1>
+      <div class="lead">大家反射性寫「這個 Skill 用來做 X」,但更關鍵的是寫清楚「不要用在哪」。</div>
+      <div class="vs">
+        <div class="side red"><h3>✗ 只寫正面</h3><p>linkedin-post 的 description 只寫「用來生成 LinkedIn 貼文」——你請 Claude 摘要文件時它也可能跑出來,因為「寫東西」和「生成貼文」在 AI 眼中可能重疊。</p></div>
+        <div class="side green"><h3>✓ 加反向限制</h3><p>加一句「請勿用於部落格文章、電子報、email 或一般摘要任務」。Skill 才會<strong>只在該出現時出現</strong>。</p></div>
+      </div>
+      <div class="wm">Claude Skills 初心者指南 · 單元三</div>
+    </div>
+  </section>
+
+  <!-- 25 生產級案例 -->
+  <section class="slide" data-title="生產級案例:官方 Skills repo">
+    <div class="in">
+      <div class="tag navy">生產級參照</div>
+      <h1>想看「天花板」?<span style="color:var(--teal)">Anthropic 官方 Skills repo</span></h1>
+      <div class="lead">官方範例放在 GitHub:<strong>github.com/anthropics/skills</strong>,分四大類:</div>
+      <div class="grid g4">
+        <div class="card sm"><h3>Creative &amp; Design</h3><p>Apache 2.0 開源</p></div>
+        <div class="card sm"><h3>Development &amp; Technical</h3><p>Apache 2.0 開源</p></div>
+        <div class="card sm"><h3>Enterprise &amp; Communication</h3><p>Apache 2.0 開源</p></div>
+        <div class="card sm hl"><h3>Document Skills</h3><p>處理 PDF/DOCX/PPTX/XLSX,官方自家在用、source-available 的生產級 Skill</p></div>
+      </div>
+      <div class="callout gold">下載 Document Skills 的 SKILL.md 來看:它們的 <strong>description 多精準、執行步驟多細緻</strong>,是 Skill 設計的天花板參照。</div>
+      <div class="wm">Claude Skills 初心者指南 · 單元三</div>
+    </div>
+  </section>
+
+  <!-- 26 divider 單元四 -->
+  <section class="slide divider" data-title="單元四 · Skills 不是萬能">
+    <div class="in"><div class="unit-no">04</div><div class="eyebrow">SKILLS · PROJECTS · MCP</div><h1>單元四｜Skills 不是萬能<br>什麼時候該用 Project／MCP</h1><p class="lead">三個工具,各自回應不同的問題。</p><div class="wm">Claude Skills 初心者指南</div></div>
+  </section>
+
+  <!-- 27 三工具分工 -->
+  <section class="slide" data-title="Skills / Projects / MCP 分工">
+    <div class="in">
+      <div class="tag">三者是分工,不是替代</div>
+      <h1>三個工具,回答<span style="color:var(--teal)">三個不同的問題</span></h1>
+      <table class="tbl">
+        <tr><th style="width:20%">工具</th><th style="width:42%">回答的問題</th><th>比喻</th></tr>
+        <tr><td><b>Skills</b></td><td>Claude 該<b>怎麼做</b>這件事?(可重複的工作流程)</td><td>受訓員工(標準動作)</td></tr>
+        <tr><td><b>Projects</b></td><td>Claude 該<b>知道什麼</b>?(靜態參考資料)</td><td>圖書館(靜態知識)</td></tr>
+        <tr><td><b>MCP</b></td><td>Claude 能<b>連到什麼活資料</b>?(外部連線)</td><td>對講機(外部連線)</td></tr>
+      </table>
+      <div class="callout gold"><strong>能活用這三種,才算完整利用了 Claude 的性能。</strong></div>
+      <div class="wm">Claude Skills 初心者指南 · 單元四</div>
+    </div>
+  </section>
+
+  <!-- 28 Projects / MCP 情境 -->
+  <section class="slide" data-title="Projects 與 MCP 的情境">
+    <div class="in">
+      <div class="tag">各自適合什麼</div>
+      <h1>Projects 放<span style="color:var(--teal)">靜態知識</span>,MCP 連<span style="color:var(--gold)">活資料</span></h1>
+      <div class="vs">
+        <div class="side a"><h3>Projects · 靜態參考</h3><ul><li>品牌指南、模板、政策文件</li><li>Claude 會查閱、但不一定執行動作</li><li>適合長期客戶、追蹤中的研究、持續產品線</li></ul></div>
+        <div class="side b"><h3>MCP · 外部活資料</h3><ul><li>GitHub 撈今天的 commit</li><li>Gmail 看新信、行事曆查空檔</li><li>Control Chrome 查資料、Notion MCP 改內容</li></ul></div>
+      </div>
+      <div class="callout"><strong>MCP(模型脈絡協定)</strong>就是 AI 跟外部服務的接線標準。要 Claude 操縱哪個第三方軟體,就打開對應的 MCP。</div>
+      <div class="wm">Claude Skills 初心者指南 · 單元四</div>
+    </div>
+  </section>
+
+  <!-- 29 兩個判準 -->
+  <section class="slide" data-title="兩個快速判準">
+    <div class="in">
+      <div class="tag green">怎麼選?兩個快速判準</div>
+      <h1>新任務該用哪個工具,<span style="color:var(--teal)">問兩句就知道</span></h1>
+      <div class="grid g2">
+        <div class="card"><div class="num">判準一</div><h3>這件事我會做幾次?</h3><ul><li>做幾次就停 → 直接開新對話</li><li>長期反覆(如每週寫週報)→ 做成 <b>Skill</b></li></ul></div>
+        <div class="card"><div class="num">判準二</div><h3>Claude 需要哪份資料?</h3><ul><li>穩定不變的參考(品牌指南、合約模板)→ 放 <b>Project</b></li><li>當下實時資料(最新銷售、本週 commit)→ 接 <b>MCP</b></li></ul></div>
+      </div>
+      <div class="callout gold"><strong>本期為什麼專注 Skills?</strong>對多數人,Skills 是入門 CP 值最高的工具。</div>
+      <div class="wm">Claude Skills 初心者指南 · 單元四</div>
+    </div>
+  </section>
+
+  <!-- 30 收尾 -->
+  <section class="slide cover" data-title="收尾:複利">
+    <div class="in">
+      <div class="eyebrow">一句話收尾</div>
+      <h1>一支 Skill,<span class="gold">每週省半小時</span><br>半年就是十幾個小時的複利</h1>
+      <div class="sub">一支 weekly-report Skill 從建好那天起,每週為你省半小時。先把 Skills 和 profile instructions 打穩,下一階段(Cowork / Claude Code)才有底子接下去。</div>
+      <div class="meta"><div><span>先做</span>第一個 Skill ＋ profile instructions</div><div><span>再進</span>Cowork / Code、CLAUDE.md</div></div>
+      <div class="wm">Claude Skills 初心者指南</div>
+    </div>
+  </section>
+
+</div>
+
+<div class="slide-nav" aria-label="簡報導覽">
+  <button class="nav-btn nav-prev" type="button" aria-label="上一頁" data-slide-prev>&#8592;</button>
+  <button class="nav-btn nav-next" type="button" aria-label="下一頁" data-slide-next>&#8594;</button>
+  <div class="slide-status" data-slide-status>01 / 30</div>
+</div>
+<button class="menu-btn" type="button" data-outline-toggle>☰ 目錄</button>
+<div class="dots" data-dots></div>
+<div class="outline" data-outline>
+  <div class="outline-panel">
+    <button class="outline-close" type="button" data-outline-toggle aria-label="關閉目錄">&times;</button>
+    <h2>Claude Skills 初心者指南 · 大綱</h2>
+    <div class="osub">點任一頁即可跳轉　·　快捷鍵 O 開關目錄　·　Esc 關閉</div>
+    <div data-outline-list></div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const prevBtn = document.querySelector('[data-slide-prev]');
+  const nextBtn = document.querySelector('[data-slide-next]');
+  const status = document.querySelector('[data-slide-status]');
+  const dotsWrap = document.querySelector('[data-dots]');
+  const outline = document.querySelector('[data-outline]');
+  const outlineList = document.querySelector('[data-outline-list]');
+  const pad = v => String(v).padStart(2, '0');
+  const clamp = v => Math.max(0, Math.min(slides.length - 1, v));
+  let current = 0, pointerStart = null;
+  function titleOf(s, i){
+    const dt = s.getAttribute('data-title'); if (dt) return dt;
+    const h = s.querySelector('h1'); if (h && h.textContent.trim()) return h.textContent.trim().replace(/\s+/g,' ');
+    return '第 ' + (i + 1) + ' 頁';
+  }
+  const titles = slides.map(titleOf);
+  slides.forEach((s, i) => { let pg = s.querySelector('.pg'); if (!pg){ pg = document.createElement('div'); pg.className='pg'; s.querySelector('.in').appendChild(pg);} pg.textContent = pad(i + 1); });
+  const dotBtns = slides.map((s, i) => { const b = document.createElement('button'); b.type='button'; b.setAttribute('aria-label', titles[i]); b.addEventListener('click', () => showSlide(i)); dotsWrap.appendChild(b); return b; });
+  const outItems = slides.map((s, i) => { const b = document.createElement('button'); b.type='button'; b.className='outline-item'; b.innerHTML='<span class="oi-n">'+pad(i+1)+'</span><span class="oi-t"></span>'; b.querySelector('.oi-t').textContent = titles[i]; b.addEventListener('click', () => { showSlide(i); closeOutline(); }); outlineList.appendChild(b); return b; });
+  function fitSlide(){ const scale = Math.max(0.2, Math.min(window.innerWidth/1280, window.innerHeight/720)*0.98); document.documentElement.style.setProperty('--slide-scale', scale.toFixed(4)); }
+  function showSlide(index, updateHash = true){
+    current = clamp(index);
+    slides.forEach((s, i) => s.classList.toggle('is-active', i === current));
+    prevBtn.disabled = current === 0; nextBtn.disabled = current === slides.length - 1;
+    status.textContent = pad(current + 1) + ' / ' + pad(slides.length);
+    dotBtns.forEach((b, i) => b.classList.toggle('on', i === current));
+    outItems.forEach((b, i) => b.classList.toggle('on', i === current));
+    if (updateHash) history.replaceState(null, '', '#slide-' + pad(current + 1));
+  }
+  function indexFromHash(){ const m = window.location.hash.match(/slide-(\d+)/); if (!m) return 0; const i = parseInt(m[1],10)-1; return Number.isFinite(i) ? clamp(i) : 0; }
+  function toggleOutline(){ outline.classList.toggle('open'); }
+  function closeOutline(){ outline.classList.remove('open'); }
+  document.querySelectorAll('[data-outline-toggle]').forEach(b => b.addEventListener('click', toggleOutline));
+  outline.addEventListener('click', e => { if (e.target === outline) closeOutline(); });
+  prevBtn.addEventListener('click', () => showSlide(current - 1));
+  nextBtn.addEventListener('click', () => showSlide(current + 1));
+  window.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeOutline(); return; }
+    if (e.key === 'o' || e.key === 'O') { e.preventDefault(); toggleOutline(); return; }
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); showSlide(current + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); showSlide(current - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); showSlide(0); }
+    else if (e.key === 'End') { e.preventDefault(); showSlide(slides.length - 1); }
+  });
+  window.addEventListener('pointerdown', e => { pointerStart = { x: e.clientX, y: e.clientY }; });
+  window.addEventListener('pointerup', e => { if (!pointerStart) return; const dx=e.clientX-pointerStart.x, dy=e.clientY-pointerStart.y; if (Math.abs(dx)>60 && Math.abs(dx)>Math.abs(dy)) showSlide(current + (dx<0?1:-1)); pointerStart=null; });
+  window.addEventListener('resize', fitSlide);
+  window.addEventListener('hashchange', () => showSlide(indexFromHash()));
+  fitSlide(); showSlide(indexFromHash(), false);
+})();
+</script>
+</body>
+</html>
